@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owner Command Center | Faizan</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #09090b; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
+    header { border-bottom: 1px solid #27272a; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand { font-size: 1.25rem; font-weight: 700; color: #fff; text-decoration: none; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: #a1a1aa; text-decoration: none; }
+    nav a:hover { color: #fff; }
+    main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    h1 { font-size: 2.25rem; margin-bottom: 1.5rem; }
+    .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.2rem; margin-bottom: 0.75rem; color: #fff; }
+    input, button { padding: 0.65rem; border-radius: 6px; border: 1px solid #27272a; background: #09090b; color: #fff; font-size: 0.95rem; }
+    button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; }
+    button:hover { background: #1d4ed8; }
+    .btn-muted { background: #3f3f46; }
+    .btn-muted:hover { background: #52525b; }
+    .row { display: flex; gap: 0.65rem; margin-bottom: 0.65rem; flex-wrap: wrap; align-items: center; }
+    .badge { padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; }
+    .bg-green { background: #16a34a; }
+    .bg-red { background: #dc2626; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.65rem; border-bottom: 1px solid #27272a; }
+    .hidden { display: none; }
+    .scroll-box { max-height: 420px; overflow-y: auto; border: 1px solid #27272a; padding: 0.75rem; border-radius: 6px; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="brand">FAIZAN // OWNER COMMAND</a>
+  <nav>
+    <a href="index.html">Public Home</a>
+    <a href="portal.html">Member Portal</a>
+  </nav>
+</header>
+
+<main>
+  <div id="admin-lock" class="card" style="max-width: 400px; margin: 2rem auto;">
+    <h2>Owner Authentication</h2>
+    <p style="font-size: 0.95rem; color: #a1a1aa; margin-bottom: 1rem;">Enter your owner password to unlock controls.</p>
+    <div class="row" style="flex-direction: column; align-items: stretch;">
+      <input type="password" id="admin-pass-input" aria-label="Admin Password" placeholder="Admin Password" />
+      <button type="button" id="unlock-btn">Unlock Command Center</button>
+    </div>
+    <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+  </div>
+
+  <div id="admin-panel" class="hidden">
+    <h1>Owner Command Center</h1>
+
+    <div class="card">
+      <h2>1. Publish Video or Resource</h2>
+      <div class="row">
+        <input type="text" id="item-title" aria-label="Item Title" placeholder="Title (e.g. Briefing 1)" style="flex: 1;" />
+        <input type="text" id="item-url" aria-label="Item URL" placeholder="YouTube or Direct File URL" style="flex: 2;" />
+        <button type="button" id="publish-btn">Publish</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2. Content Access Control (Accessible vs Private)</h2>
+      <div id="items-list">Loading...</div>
+    </div>
+
+    <div class="card">
+      <h2>3. 30 Member Slots (Custom Logins &amp; Ban Controls)</h2>
+      <p style="font-size: 0.9rem; color: #a1a1aa; margin-bottom: 0.75rem;">Assign up to 30 usernames and passwords. Check Banned to immediately block a user.</p>
+      <div id="member-slots" class="scroll-box"></div>
+      <button type="button" id="save-members-btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
+    </div>
+
+    <div class="card">
+      <h2>4. Permanent Member Directory (Saved Even If Removed)</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>First Joined</th>
+        </tr>
+        </thead>
+        <tbody id="contacts-table"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>5. Member Time &amp; Activity Tracker</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Username</th>
+          <th>Total Time Spent</th>
+          <th>Last Active</th>
+          <th>Recent Actions / Watched</th>
+        </tr>
+        </thead>
+        <tbody id="activity-table"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<script type="module">
+  import { initializeApp } from "https://gstatic.com";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://gstatic.com";
+
+  // CHANGE THIS TO YOUR SECRET OWNER PASSWORD
+  const ADMIN_PASSWORD = "faizan1234";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+    authDomain: "://firebaseapp.com",
+    projectId: "faizan-platform",
+    storageBucket: "faizan-platform.firebasestorage.app",
+    messagingSenderId: "801904702555",
+    appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const unlockBtn = document.getElementById("unlock-btn");
+  const publishBtn = document.getElementById("publish-btn");
+  const saveMembersBtn = document.getElementById("save-members-btn");
+
+  unlockBtn.addEventListener("click", async () => {
+    const val = document.getElementById("admin-pass-input").value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById("admin-lock").classList.add("hidden");
+      document.getElementById("admin-panel").classList.remove("hidden");
+      await initDashboard();
+    } else {
+      document.getElementById("lock-err").textContent = "Incorrect owner password.";
+    }
+  });
+
+  publishBtn.addEventListener("click", async () => {
+    const titleInput = document.getElementById("item-title");
+    const urlInput = document.getElementById("item-url");
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+    if (!title || !url) {
+      alert("Enter both title and URL.");
+      return;
+    }
+    await addDoc(collection(db, "videos"), { title: title, url: url, accessible: true });
+    titleInput.value = "";
+    urlInput.value = "";
+    await loadItems();
+  });
+
+  saveMembersBtn.addEventListener("click", async () => {
+    for (let i = 1; i <= 30; i++) {
+      const username = document.getElementById("u" + i).value.trim();
+      const password = document.getElementById("p" + i).value.trim();
+      const banned = document.getElementById("b" + i).checked;
+      await setDoc(doc(db, "visitors", "slot" + i), {
+        username: username,
+        password: password,
+        banned: banned
+      });
+    }
+    alert("All 30 member accounts updated!");
+    await load30Slots();
+  });
+
+  async function initDashboard() {
+    await loadItems();
+    await load30Slots();
+    await loadContacts();
+    await loadActivity();
+  }
+
+  async function loadItems() {
+    const box = document.getElementById("items-list");
+    box.innerHTML = "";
+    const snap = await getDocs(collection(db, "videos"));
+
+    snap.forEach((docSnap) => {
+      const v = docSnap.data();
+      const row = document.createElement("div");
+      row.className = "row";
+      row.style.justifyContent = "space-between";
+
+      const left = document.createElement("div");
+      const strong = document.createElement("strong");
+      strong.textContent = v.title;
+      const badge = document.createElement("span");
+      badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
+      badge.textContent = v.accessible ? "Accessible" : "Private";
+      left.appendChild(strong);
+      left.appendChild(badge);
+
+      const right = document.createElement("div");
+      right.className = "row";
+      right.style.marginBottom = "0";
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.type = "button";
+      toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
+      toggleBtn.addEventListener("click", async () => {
+        await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
+        await loadItems();
+      });
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "btn-muted";
+      delBtn.textContent = "Delete";
+      delBtn.addEventListener("click", async () => {
+        await deleteDoc(doc(db, "videos", docSnap.id));
+        await loadItems();
+      });
+
+      right.appendChild(toggleBtn);
+      right.appendChild(delBtn);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      box.appendChild(row);
+    });
+
+    if (box.innerHTML === "") {
+      box.textContent = "No videos or resources published yet.";
+    }
+  }
+
+  async function load30Slots() {
+    const box = document.getElementById("member-slots");
+    box.innerHTML = "";
+    const existing = {};
+    const snap = await getDocs(collection(db, "visitors"));
+    snap.forEach((d) => {
+      existing[d.id] = d.data();
+    });
+
+    for (let i = 1; i <= 30; i++) {
+      const slot = existing["slot" + i] || { username: "", password: "", banned: false };
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const num = document.createElement("span");
+      num.style.width = "35px";
+      num.textContent = "#" + i;
+
+      const uInput = document.createElement("input");
+      uInput.type = "text";
+      uInput.id = "u" + i;
+      uInput.value = slot.username || "";
+      uInput.placeholder = "Username " + i;
+
+      const pInput = document.createElement("input");
+      pInput.type = "text";
+      pInput.id = "p" + i;
+      pInput.value = slot.password || "";
+      pInput.placeholder = "Password " + i;
+
+      const label = document.createElement("label");
+      label.style.display = "flex";
+      label.style.alignItems = "center";
+      label.style.gap = "0.35rem";
+      label.style.cursor = "pointer";
+
+      const bCheck = document.createElement("input");
+      bCheck.type = "checkbox";
+      bCheck.id = "b" + i;
+      bCheck.checked = Boolean(slot.banned);
+
+      const bText = document.createElement("span");
+      bText.style.color = slot.banned ? "#ef4444" : "#a1a1aa";
+      bText.style.fontSize = "0.85rem";
+      bText.textContent = "Banned";
+
+      label.appendChild(bCheck);
+      label.appendChild(bText);
+
+      row.appendChild(num);
+      row.appendChild(uInput);
+      row.appendChild(pInput);
+      row.appendChild(label);
+      box.appendChild(row);
+    }
+  }
+
+  async function loadContacts() {
+    const tbody = document.getElementById("contacts-table");
+    tbody.innerHTML = "";
+    const snap = await getDocs(collection(db, "permanentContacts"));
+    snap.forEach((d) => {
+      const c = d.data();
+      const tr = document.createElement("tr");
+
+      const tdUser = document.createElement("td");
+      tdUser.textContent = c.username || "";
+      const tdEmail = document.createElement("td");
+      tdEmail.textContent = c.email || "";
+      const tdPhone = document.createElement("td");
+      tdPhone.textContent = c.phone || "";
+      const tdDate = document.createElement("td");
+      tdDate.textContent = c.savedAt || "";
+
+      tr.appendChild(tdUser);
+      tr.appendChild(tdEmail);
+      tr.appendChild(tdPhone);
+      tr.appendChild(tdDate);
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function loadActivity() {
+    const tbody = document.getElementById("activity-table");
+    tbody.innerHTML = "";
+    const snap = await getDocs(collection(db, "memberActivity"));
+    snap.forEach((d) => {
+      const a = d.data();
+      const mins = Math.floor((a.secondsSpent || 0) / 60);
+      const secs = (a.secondsSpent || 0) % 60;
+      const logs = (a.actions || []).slice(-5).join(" | ");
+
+      const tr = document.createElement("tr");
+
+      const tdName = document.createElement("td");
+      const strong = document.createElement("strong");
+      strong.textContent = d.id;
+      tdName.appendChild(strong);
+
+      const tdTime = document.createElement("td");
+      tdTime.textContent = mins + "m " + secs + "s";
+
+      const tdSeen = document.createElement("td");
+      tdSeen.textContent = a.lastSeen || "-";
+
+      const tdLogs = document.createElement("td");
+      tdLogs.textContent = logs;
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdTime);
+      tr.appendChild(tdSeen);
+      tr.appendChild(tdLogs);
+      tbody.appendChild(tr);
+    });
+  }
+</script>
+</body>
+</html>

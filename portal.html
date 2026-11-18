@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Hub | Faizan</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #09090b; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
+    .utility-bar { background: #18181b; border-bottom: 1px solid #27272a; padding: 0.6rem 2rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; color: #a1a1aa; }
+    header { border-bottom: 1px solid #27272a; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand { font-size: 1.25rem; font-weight: 700; color: #fff; text-decoration: none; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: #a1a1aa; text-decoration: none; }
+    nav a:hover, nav a.active { color: #fff; font-weight: 600; }
+    main { max-width: 850px; margin: 0 auto; padding: 3rem 1.5rem; }
+    h1 { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    input, button { padding: 0.75rem; border-radius: 6px; border: 1px solid #27272a; background: #18181b; color: #fff; font-size: 1rem; }
+    button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; }
+    button:hover { background: #1d4ed8; }
+    .box { display: flex; flex-direction: column; gap: 0.9rem; max-width: 420px; }
+    iframe, video { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 0.75rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+<div class="utility-bar">
+  <div id="live-clock">Clock: Loading...</div>
+  <div id="namaz-bar">Karachi Namaz Times: Loading...</div>
+</div>
+
+<header>
+  <a href="index.html" class="brand">FAIZAN</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="portal.html" class="active">Member Portal</a>
+  </nav>
+</header>
+
+<main>
+  <div id="step-login" class="box">
+    <h1>Member Sign In</h1>
+    <p style="color: #a1a1aa;">Enter your assigned credentials to open your personal page.</p>
+    <input type="text" id="in-user" aria-label="Username" placeholder="Username" />
+    <input type="password" id="in-pass" aria-label="Password" placeholder="Password" />
+    <button type="button" id="login-btn">Continue</button>
+    <p id="login-err" style="color: #ef4444; font-size: 0.9rem;"></p>
+  </div>
+
+  <div id="step-contact" class="box hidden">
+    <h1>Member Details</h1>
+    <p style="font-size: 0.95rem; color: #a1a1aa;">Please enter your email and phone number to complete your member record. Note: Your contact info and site activity are recorded by the administrator.</p>
+    <input type="email" id="in-email" aria-label="Email Address" placeholder="Your Email Address" />
+    <input type="tel" id="in-phone" aria-label="Phone Number" placeholder="Your Phone Number (e.g. 0300-1234567)" />
+    <button type="button" id="save-contact-btn">Save &amp; Open My Page</button>
+    <p id="contact-err" style="color: #ef4444; font-size: 0.9rem;"></p>
+  </div>
+
+  <div id="step-dashboard" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h1><span id="member-name"></span>'s Personal Page</h1>
+        <p style="margin:0; font-size:0.95rem; color: #a1a1aa;">Status: Active Member | Session tracked automatically</p>
+      </div>
+      <button type="button" id="signout-btn" style="background:#27272a;">Sign Out</button>
+    </div>
+
+    <h2 style="margin-bottom: 1rem;">Accessible Videos &amp; Briefings</h2>
+    <div id="feed">Loading content...</div>
+  </div>
+</main>
+<script type="module">
+  import { initializeApp } from "https://gstatic.com";
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } from "https://gstatic.com";
+
+  // PASTE YOUR EXACT SAME FIREBASE CONFIG HERE
+  const firebaseConfig = {
+
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "faizan-platform.firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform.firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  let currentUser = null;
+
+  setInterval(() => {
+    document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
+  }, 1000);
+
+  fetch("https://aladhan.com")
+    .then((r) => r.json())
+    .then((data) => {
+      const t = data.data.timings;
+      document.getElementById("namaz-bar").textContent =
+        "Karachi Namaz — Fajr: " + t.Fajr +
+        " | Dhuhr: " + t.Dhuhr +
+        " | Asr: " + t.Asr +
+        " | Maghrib: " + t.Maghrib +
+        " | Isha: " + t.Isha;
+    })
+    .catch(() => {
+      document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
+    });
+
+  document.getElementById("login-btn").addEventListener("click", async () => {
+    const u = document.getElementById("in-user").value.trim();
+    const p = document.getElementById("in-pass").value.trim();
+    const err = document.getElementById("login-err");
+    err.textContent = "Verifying...";
+
+    const snap = await getDocs(collection(db, "visitors"));
+    let matchedUser = null;
+
+    snap.forEach((d) => {
+      const data = d.data();
+      if (data.username === u && data.password === p && u !== "") {
+        matchedUser = data;
+      }
+    });
+
+    if (!matchedUser) {
+      err.textContent = "Invalid username or password.";
+      return;
+    }
+    if (matchedUser.banned) {
+      err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
+      return;
+    }
+
+    currentUser = u;
+    err.textContent = "";
+
+    const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
+    if (contactSnap.exists()) {
+      await openPersonalPage();
+    } else {
+      document.getElementById("step-login").classList.add("hidden");
+      document.getElementById("step-contact").classList.remove("hidden");
+    }
+  });
+
+  document.getElementById("save-contact-btn").addEventListener("click", async () => {
+    const email = document.getElementById("in-email").value.trim();
+    const phone = document.getElementById("in-phone").value.trim();
+    if (!email || !phone) {
+      document.getElementById("contact-err").textContent = "Both email and phone number are required.";
+      return;
+    }
+
+    await setDoc(doc(db, "permanentContacts", currentUser), {
+      username: currentUser,
+      email: email,
+      phone: phone,
+      savedAt: new Date().toLocaleString()
+    });
+
+    await openPersonalPage();
+  });
+
+  document.getElementById("signout-btn").addEventListener("click", () => {
+    location.reload();
+  });
+
+  async function openPersonalPage() {
+    document.getElementById("step-login").classList.add("hidden");
+    document.getElementById("step-contact").classList.add("hidden");
+    document.getElementById("step-dashboard").classList.remove("hidden");
+    document.getElementById("member-name").textContent = currentUser;
+
+    await logAction("Opened Personal Page");
+    await loadFeed();
+
+    setInterval(async () => {
+      await setDoc(doc(db, "memberActivity", currentUser), {
+        secondsSpent: increment(15),
+        lastSeen: new Date().toLocaleString()
+      }, { merge: true });
+    }, 15000);
+  }
+
+  async function logAction(actionText) {
+    await setDoc(doc(db, "memberActivity", currentUser), {
+      lastSeen: new Date().toLocaleString(),
+      actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
+    }, { merge: true });
+  }
+
+  async function loadFeed() {
+    const feed = document.getElementById("feed");
+    feed.innerHTML = "";
+    const snap = await getDocs(collection(db, "videos"));
+
+    snap.forEach((d) => {
+      const v = d.data();
+      if (v.accessible) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = v.title;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.style.marginTop = "0.75rem";
+        btn.textContent = "Open / Watch";
+
+        const area = document.createElement("div");
+
+        btn.addEventListener("click", async () => {
+          await logAction("Watched/Opened: " + v.title);
+          btn.remove();
+
+          if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
+            let vidCode = "";
+            if (v.url.includes("v=")) {
+              vidCode = v.url.split("v=").split("&");
+            } else {
+              vidCode = v.url.split("/").pop();
+            }
+            const iframe = document.createElement("iframe");
+            iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute("allowfullscreen", "true");
+            area.appendChild(iframe);
+          } else {
+            const video = document.createElement("video");
+            video.src = v.url;
+            video.controls = true;
+            video.autoplay = true;
+            area.appendChild(video);
+          }
+        });
+
+        card.appendChild(h3);
+        card.appendChild(btn);
+        card.appendChild(area);
+        feed.appendChild(card);
+      }
+    });
+
+    if (feed.innerHTML === "") {
+      const emptyMsg = document.createElement("p");
+      emptyMsg.style.color = "#a1a1aa";
+      emptyMsg.textContent = "No accessible content available right now.";
+      feed.appendChild(emptyMsg);
+    }
+  }
+</script>
+</body>
+</html>
