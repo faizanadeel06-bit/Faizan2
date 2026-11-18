@@ -70,31 +70,13 @@
     <div id="feed">Loading content...</div>
   </div>
 </main>
-<script type="module">
-  import { initializeApp } from "https://gstatic.com";
-  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } from "https://gstatic.com";
-
-  // PASTE YOUR EXACT SAME FIREBASE CONFIG HERE
-  const firebaseConfig = {
-
-      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-      authDomain: "faizan-platform.firebaseapp.com",
-      projectId: "faizan-platform",
-      storageBucket: "faizan-platform.firebasestorage.app",
-      messagingSenderId: "801904702555",
-      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
-
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  let currentUser = null;
-
+<script>
   setInterval(() => {
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
   }, 1000);
 
-  fetch("https://aladhan.com")
+  const namazApi = "https://aladhan.com" + "timingsByCity?city=Karachi&country=Pakistan&method=1";
+  fetch(namazApi)
     .then((r) => r.json())
     .then((data) => {
       const t = data.data.timings;
@@ -109,149 +91,170 @@
       document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
     });
 
-  document.getElementById("login-btn").addEventListener("click", async () => {
-    const u = document.getElementById("in-user").value.trim();
-    const p = document.getElementById("in-pass").value.trim();
-    const err = document.getElementById("login-err");
-    err.textContent = "Verifying...";
+  async function initPortal() {
+    const base = "https://gstatic.com" + "firebasejs/10.12.0/";
+    const { initializeApp } = await import(base + "firebase-app.js");
+    const { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } = await import(base + "firebase-firestore.js");
 
-    const snap = await getDocs(collection(db, "visitors"));
-    let matchedUser = null;
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "://firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform.firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    };
 
-    snap.forEach((d) => {
-      const data = d.data();
-      if (data.username === u && data.password === p && u !== "") {
-        matchedUser = data;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let currentUser = null;
+
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      const u = document.getElementById("in-user").value.trim();
+      const p = document.getElementById("in-pass").value.trim();
+      const err = document.getElementById("login-err");
+      err.textContent = "Verifying...";
+
+      const snap = await getDocs(collection(db, "visitors"));
+      let matchedUser = null;
+
+      snap.forEach((d) => {
+        const data = d.data();
+        if (data.username === u && data.password === p && u !== "") {
+          matchedUser = data;
+        }
+      });
+
+      if (!matchedUser) {
+        err.textContent = "Invalid username or password.";
+        return;
+      }
+      if (matchedUser.banned) {
+        err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
+        return;
+      }
+
+      currentUser = u;
+      err.textContent = "";
+
+      const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
+      if (contactSnap.exists()) {
+        await openPersonalPage();
+      } else {
+        document.getElementById("step-login").classList.add("hidden");
+        document.getElementById("step-contact").classList.remove("hidden");
       }
     });
 
-    if (!matchedUser) {
-      err.textContent = "Invalid username or password.";
-      return;
-    }
-    if (matchedUser.banned) {
-      err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
-      return;
-    }
+    document.getElementById("save-contact-btn").addEventListener("click", async () => {
+      const email = document.getElementById("in-email").value.trim();
+      const phone = document.getElementById("in-phone").value.trim();
+      if (!email || !phone) {
+        document.getElementById("contact-err").textContent = "Both email and phone number are required.";
+        return;
+      }
 
-    currentUser = u;
-    err.textContent = "";
+      await setDoc(doc(db, "permanentContacts", currentUser), {
+        username: currentUser,
+        email: email,
+        phone: phone,
+        savedAt: new Date().toLocaleString()
+      });
 
-    const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
-    if (contactSnap.exists()) {
       await openPersonalPage();
-    } else {
+    });
+
+    document.getElementById("signout-btn").addEventListener("click", () => {
+      location.reload();
+    });
+
+    async function openPersonalPage() {
       document.getElementById("step-login").classList.add("hidden");
-      document.getElementById("step-contact").classList.remove("hidden");
+      document.getElementById("step-contact").classList.add("hidden");
+      document.getElementById("step-dashboard").classList.remove("hidden");
+      document.getElementById("member-name").textContent = currentUser;
+
+      await logAction("Opened Personal Page");
+      await loadFeed();
+
+      setInterval(async () => {
+        await setDoc(doc(db, "memberActivity", currentUser), {
+          secondsSpent: increment(15),
+          lastSeen: new Date().toLocaleString()
+        }, { merge: true });
+      }, 15000);
     }
-  });
 
-  document.getElementById("save-contact-btn").addEventListener("click", async () => {
-    const email = document.getElementById("in-email").value.trim();
-    const phone = document.getElementById("in-phone").value.trim();
-    if (!email || !phone) {
-      document.getElementById("contact-err").textContent = "Both email and phone number are required.";
-      return;
-    }
-
-    await setDoc(doc(db, "permanentContacts", currentUser), {
-      username: currentUser,
-      email: email,
-      phone: phone,
-      savedAt: new Date().toLocaleString()
-    });
-
-    await openPersonalPage();
-  });
-
-  document.getElementById("signout-btn").addEventListener("click", () => {
-    location.reload();
-  });
-
-  async function openPersonalPage() {
-    document.getElementById("step-login").classList.add("hidden");
-    document.getElementById("step-contact").classList.add("hidden");
-    document.getElementById("step-dashboard").classList.remove("hidden");
-    document.getElementById("member-name").textContent = currentUser;
-
-    await logAction("Opened Personal Page");
-    await loadFeed();
-
-    setInterval(async () => {
+    async function logAction(actionText) {
       await setDoc(doc(db, "memberActivity", currentUser), {
-        secondsSpent: increment(15),
-        lastSeen: new Date().toLocaleString()
+        lastSeen: new Date().toLocaleString(),
+        actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
       }, { merge: true });
-    }, 15000);
-  }
+    }
 
-  async function logAction(actionText) {
-    await setDoc(doc(db, "memberActivity", currentUser), {
-      lastSeen: new Date().toLocaleString(),
-      actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
-    }, { merge: true });
-  }
+    async function loadFeed() {
+      const feed = document.getElementById("feed");
+      feed.innerHTML = "";
+      const snap = await getDocs(collection(db, "videos"));
 
-  async function loadFeed() {
-    const feed = document.getElementById("feed");
-    feed.innerHTML = "";
-    const snap = await getDocs(collection(db, "videos"));
+      snap.forEach((d) => {
+        const v = d.data();
+        if (v.accessible) {
+          const card = document.createElement("div");
+          card.className = "card";
 
-    snap.forEach((d) => {
-      const v = d.data();
-      if (v.accessible) {
-        const card = document.createElement("div");
-        card.className = "card";
+          const h3 = document.createElement("h3");
+          h3.textContent = v.title;
 
-        const h3 = document.createElement("h3");
-        h3.textContent = v.title;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.style.marginTop = "0.75rem";
+          btn.textContent = "Open / Watch";
 
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.style.marginTop = "0.75rem";
-        btn.textContent = "Open / Watch";
+          const area = document.createElement("div");
 
-        const area = document.createElement("div");
+          btn.addEventListener("click", async () => {
+            await logAction("Watched/Opened: " + v.title);
+            btn.remove();
 
-        btn.addEventListener("click", async () => {
-          await logAction("Watched/Opened: " + v.title);
-          btn.remove();
-
-          if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
-            let vidCode = "";
-            if (v.url.includes("v=")) {
-              vidCode = v.url.split("v=").split("&");
+            if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
+              let vidCode = "";
+              if (v.url.includes("v=")) {
+                vidCode = v.url.split("v=").split("&");
+              } else {
+                vidCode = v.url.split("/").pop();
+              }
+              const iframe = document.createElement("iframe");
+              iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
+              iframe.setAttribute("frameborder", "0");
+              iframe.setAttribute("allowfullscreen", "true");
+              area.appendChild(iframe);
             } else {
-              vidCode = v.url.split("/").pop();
+              const video = document.createElement("video");
+              video.src = v.url;
+              video.controls = true;
+              video.autoplay = true;
+              area.appendChild(video);
             }
-            const iframe = document.createElement("iframe");
-            iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
-            iframe.setAttribute("frameborder", "0");
-            iframe.setAttribute("allowfullscreen", "true");
-            area.appendChild(iframe);
-          } else {
-            const video = document.createElement("video");
-            video.src = v.url;
-            video.controls = true;
-            video.autoplay = true;
-            area.appendChild(video);
-          }
-        });
+          });
 
-        card.appendChild(h3);
-        card.appendChild(btn);
-        card.appendChild(area);
-        feed.appendChild(card);
+          card.appendChild(h3);
+          card.appendChild(btn);
+          card.appendChild(area);
+          feed.appendChild(card);
+        }
+      });
+
+      if (feed.innerHTML === "") {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.style.color = "#a1a1aa";
+        emptyMsg.textContent = "No accessible content available right now.";
+        feed.appendChild(emptyMsg);
       }
-    });
-
-    if (feed.innerHTML === "") {
-      const emptyMsg = document.createElement("p");
-      emptyMsg.style.color = "#a1a1aa";
-      emptyMsg.textContent = "No accessible content available right now.";
-      feed.appendChild(emptyMsg);
     }
   }
+
+  initPortal();
 </script>
 </body>
 </html>
