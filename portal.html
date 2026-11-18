@@ -155,13 +155,13 @@
   async function initPortal() {
     const err = document.getElementById("login-err");
     try {
-      const sdkBase = "https://gstatic.com" + "firebasejs/10.12.0/";
+      const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
       const { initializeApp } = await import(sdkBase + "firebase-app.js");
       const { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, increment, arrayUnion, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "://firebaseapp.com",
+        authDomain: "firebaseapp.com",
         projectId: "faizan-platform",
         storageBucket: "faizan-platform.firebasestorage.app",
         messagingSenderId: "801904702555",
