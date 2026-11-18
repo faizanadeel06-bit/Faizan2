@@ -92,13 +92,13 @@
     });
 
   async function initPortal() {
-    const base = "https://gstatic.com" + "firebasejs/10.12.0/";
+    const base = "https://www.gstatic.com" + "firebasejs/10.12.0/";
     const { initializeApp } = await import(base + "firebase-app.js");
     const { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } = await import(base + "firebase-firestore.js");
 
     const firebaseConfig = {
       apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-      authDomain: "://firebaseapp.com",
+      authDomain: "firebaseapp.com",
       projectId: "faizan-platform",
       storageBucket: "faizan-platform.firebasestorage.app",
       messagingSenderId: "801904702555",
