@@ -107,246 +107,208 @@
     </div>
   </div>
 </main>
-<script type="module">
-  import { initializeApp } from "https://gstatic.com";
-  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://gstatic.com";
+<script>
+  // 1. INSTANT UNLOCK (Runs immediately without waiting for external scripts)
+  const ADMIN_PASSWORD = "faizan123";
 
-  // CHANGE THIS TO YOUR SECRET OWNER PASSWORD
-  const ADMIN_PASSWORD = "faizan1234";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-    authDomain: "://firebaseapp.com",
-    projectId: "faizan-platform",
-    storageBucket: "faizan-platform.firebasestorage.app",
-    messagingSenderId: "801904702555",
-    appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  const unlockBtn = document.getElementById("unlock-btn");
-  const publishBtn = document.getElementById("publish-btn");
-  const saveMembersBtn = document.getElementById("save-members-btn");
-
-  unlockBtn.addEventListener("click", async () => {
+  document.getElementById("unlock-btn").addEventListener("click", function() {
     const val = document.getElementById("admin-pass-input").value;
     if (val === ADMIN_PASSWORD) {
       document.getElementById("admin-lock").classList.add("hidden");
       document.getElementById("admin-panel").classList.remove("hidden");
-      await initDashboard();
+      startFirebase();
     } else {
       document.getElementById("lock-err").textContent = "Incorrect owner password.";
     }
   });
 
-  publishBtn.addEventListener("click", async () => {
-    const titleInput = document.getElementById("item-title");
-    const urlInput = document.getElementById("item-url");
-    const title = titleInput.value.trim();
-    const url = urlInput.value.trim();
-    if (!title || !url) {
-      alert("Enter both title and URL.");
-      return;
-    }
-    await addDoc(collection(db, "videos"), { title: title, url: url, accessible: true });
-    titleInput.value = "";
-    urlInput.value = "";
-    await loadItems();
-  });
+  // 2. LOAD FIREBASE SAFELY AFTER UNLOCKING
+  async function startFirebase() {
+    const base = "https://gstatic.com";
+    const { initializeApp } = await import(base + "firebase-app.js");
+    const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } = await import(base + "firebase-firestore.js");
 
-  saveMembersBtn.addEventListener("click", async () => {
-    for (let i = 1; i <= 30; i++) {
-      const username = document.getElementById("u" + i).value.trim();
-      const password = document.getElementById("p" + i).value.trim();
-      const banned = document.getElementById("b" + i).checked;
-      await setDoc(doc(db, "visitors", "slot" + i), {
-        username: username,
-        password: password,
-        banned: banned
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "://firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform.firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("publish-btn").addEventListener("click", async () => {
+      const titleInput = document.getElementById("item-title");
+      const urlInput = document.getElementById("item-url");
+      const title = titleInput.value.trim();
+      const url = urlInput.value.trim();
+      if (!title || !url) return alert("Enter both title and URL.");
+      await addDoc(collection(db, "videos"), { title: title, url: url, accessible: true });
+      titleInput.value = "";
+      urlInput.value = "";
+      await loadItems();
+    });
+
+    document.getElementById("save-members-btn").addEventListener("click", async () => {
+      for (let i = 1; i <= 30; i++) {
+        const username = document.getElementById("u" + i).value.trim();
+        const password = document.getElementById("p" + i).value.trim();
+        const banned = document.getElementById("b" + i).checked;
+        await setDoc(doc(db, "visitors", "slot" + i), {
+          username: username,
+          password: password,
+          banned: banned
+        });
+      }
+      alert("All 30 member accounts updated!");
+      await load30Slots();
+    });
+
+    async function loadItems() {
+      const box = document.getElementById("items-list");
+      box.innerHTML = "";
+      const snap = await getDocs(collection(db, "videos"));
+
+      snap.forEach((docSnap) => {
+        const v = docSnap.data();
+        const row = document.createElement("div");
+        row.className = "row";
+        row.style.justifyContent = "space-between";
+
+        const left = document.createElement("div");
+        const strong = document.createElement("strong");
+        strong.textContent = v.title;
+        const badge = document.createElement("span");
+        badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
+        badge.textContent = v.accessible ? "Accessible" : "Private";
+        left.appendChild(strong);
+        left.appendChild(badge);
+
+        const right = document.createElement("div");
+        right.className = "row";
+        right.style.marginBottom = "0";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
+        toggleBtn.addEventListener("click", async () => {
+          await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
+          await loadItems();
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn-muted";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", async () => {
+          await deleteDoc(doc(db, "videos", docSnap.id));
+          await loadItems();
+        });
+
+        right.appendChild(toggleBtn);
+        right.appendChild(delBtn);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        box.appendChild(row);
+      });
+
+      if (box.innerHTML === "") box.textContent = "No videos or resources published yet.";
+    }
+
+    async function load30Slots() {
+      const box = document.getElementById("member-slots");
+      box.innerHTML = "";
+      const existing = {};
+      const snap = await getDocs(collection(db, "visitors"));
+      snap.forEach((d) => { existing[d.id] = d.data(); });
+
+      for (let i = 1; i <= 30; i++) {
+        const slot = existing["slot" + i] || { username: "", password: "", banned: false };
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const num = document.createElement("span");
+        num.style.width = "35px";
+        num.textContent = "#" + i;
+
+        const uInput = document.createElement("input");
+        uInput.type = "text";
+        uInput.id = "u" + i;
+        uInput.value = slot.username || "";
+        uInput.placeholder = "Username " + i;
+
+        const pInput = document.createElement("input");
+        pInput.type = "text";
+        pInput.id = "p" + i;
+        pInput.value = slot.password || "";
+        pInput.placeholder = "Password " + i;
+
+        const label = document.createElement("label");
+        label.style.display = "flex";
+        label.style.alignItems = "center";
+        label.style.gap = "0.35rem";
+        label.style.cursor = "pointer";
+
+        const bCheck = document.createElement("input");
+        bCheck.type = "checkbox";
+        bCheck.id = "b" + i;
+        bCheck.checked = Boolean(slot.banned);
+
+        const bText = document.createElement("span");
+        bText.style.color = slot.banned ? "#ef4444" : "#a1a1aa";
+        bText.style.fontSize = "0.85rem";
+        bText.textContent = "Banned";
+
+        label.appendChild(bCheck);
+        label.appendChild(bText);
+
+        row.appendChild(num);
+        row.appendChild(uInput);
+        row.appendChild(pInput);
+        row.appendChild(label);
+        box.appendChild(row);
+      }
+    }
+
+    async function loadContacts() {
+      const tbody = document.getElementById("contacts-table");
+      tbody.innerHTML = "";
+      const snap = await getDocs(collection(db, "permanentContacts"));
+      snap.forEach((d) => {
+        const c = d.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + (c.username || "") + "</td><td>" + (c.email || "") + "</td><td>" + (c.phone || "") + "</td><td>" + (c.savedAt || "") + "</td>";
+        tbody.appendChild(tr);
       });
     }
-    alert("All 30 member accounts updated!");
-    await load30Slots();
-  });
 
-  async function initDashboard() {
+    async function loadActivity() {
+      const tbody = document.getElementById("activity-table");
+      tbody.innerHTML = "";
+      const snap = await getDocs(collection(db, "memberActivity"));
+      snap.forEach((d) => {
+        const a = d.data();
+        const mins = Math.floor((a.secondsSpent || 0) / 60);
+        const secs = (a.secondsSpent || 0) % 60;
+        const logs = (a.actions || []).slice(-5).join(" | ");
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td><strong>" + d.id + "</strong></td><td>" + mins + "m " + secs + "s</td><td>" + (a.lastSeen || "-") + "</td><td>" + logs + "</td>";
+        tbody.appendChild(tr);
+      });
+    }
+
     await loadItems();
     await load30Slots();
     await loadContacts();
     await loadActivity();
   }
-
-  async function loadItems() {
-    const box = document.getElementById("items-list");
-    box.innerHTML = "";
-    const snap = await getDocs(collection(db, "videos"));
-
-    snap.forEach((docSnap) => {
-      const v = docSnap.data();
-      const row = document.createElement("div");
-      row.className = "row";
-      row.style.justifyContent = "space-between";
-
-      const left = document.createElement("div");
-      const strong = document.createElement("strong");
-      strong.textContent = v.title;
-      const badge = document.createElement("span");
-      badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
-      badge.textContent = v.accessible ? "Accessible" : "Private";
-      left.appendChild(strong);
-      left.appendChild(badge);
-
-      const right = document.createElement("div");
-      right.className = "row";
-      right.style.marginBottom = "0";
-
-      const toggleBtn = document.createElement("button");
-      toggleBtn.type = "button";
-      toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
-      toggleBtn.addEventListener("click", async () => {
-        await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
-        await loadItems();
-      });
-
-      const delBtn = document.createElement("button");
-      delBtn.type = "button";
-      delBtn.className = "btn-muted";
-      delBtn.textContent = "Delete";
-      delBtn.addEventListener("click", async () => {
-        await deleteDoc(doc(db, "videos", docSnap.id));
-        await loadItems();
-      });
-
-      right.appendChild(toggleBtn);
-      right.appendChild(delBtn);
-
-      row.appendChild(left);
-      row.appendChild(right);
-      box.appendChild(row);
-    });
-
-    if (box.innerHTML === "") {
-      box.textContent = "No videos or resources published yet.";
-    }
-  }
-
-  async function load30Slots() {
-    const box = document.getElementById("member-slots");
-    box.innerHTML = "";
-    const existing = {};
-    const snap = await getDocs(collection(db, "visitors"));
-    snap.forEach((d) => {
-      existing[d.id] = d.data();
-    });
-
-    for (let i = 1; i <= 30; i++) {
-      const slot = existing["slot" + i] || { username: "", password: "", banned: false };
-      const row = document.createElement("div");
-      row.className = "row";
-
-      const num = document.createElement("span");
-      num.style.width = "35px";
-      num.textContent = "#" + i;
-
-      const uInput = document.createElement("input");
-      uInput.type = "text";
-      uInput.id = "u" + i;
-      uInput.value = slot.username || "";
-      uInput.placeholder = "Username " + i;
-
-      const pInput = document.createElement("input");
-      pInput.type = "text";
-      pInput.id = "p" + i;
-      pInput.value = slot.password || "";
-      pInput.placeholder = "Password " + i;
-
-      const label = document.createElement("label");
-      label.style.display = "flex";
-      label.style.alignItems = "center";
-      label.style.gap = "0.35rem";
-      label.style.cursor = "pointer";
-
-      const bCheck = document.createElement("input");
-      bCheck.type = "checkbox";
-      bCheck.id = "b" + i;
-      bCheck.checked = Boolean(slot.banned);
-
-      const bText = document.createElement("span");
-      bText.style.color = slot.banned ? "#ef4444" : "#a1a1aa";
-      bText.style.fontSize = "0.85rem";
-      bText.textContent = "Banned";
-
-      label.appendChild(bCheck);
-      label.appendChild(bText);
-
-      row.appendChild(num);
-      row.appendChild(uInput);
-      row.appendChild(pInput);
-      row.appendChild(label);
-      box.appendChild(row);
-    }
-  }
-
-  async function loadContacts() {
-    const tbody = document.getElementById("contacts-table");
-    tbody.innerHTML = "";
-    const snap = await getDocs(collection(db, "permanentContacts"));
-    snap.forEach((d) => {
-      const c = d.data();
-      const tr = document.createElement("tr");
-
-      const tdUser = document.createElement("td");
-      tdUser.textContent = c.username || "";
-      const tdEmail = document.createElement("td");
-      tdEmail.textContent = c.email || "";
-      const tdPhone = document.createElement("td");
-      tdPhone.textContent = c.phone || "";
-      const tdDate = document.createElement("td");
-      tdDate.textContent = c.savedAt || "";
-
-      tr.appendChild(tdUser);
-      tr.appendChild(tdEmail);
-      tr.appendChild(tdPhone);
-      tr.appendChild(tdDate);
-      tbody.appendChild(tr);
-    });
-  }
-
-  async function loadActivity() {
-    const tbody = document.getElementById("activity-table");
-    tbody.innerHTML = "";
-    const snap = await getDocs(collection(db, "memberActivity"));
-    snap.forEach((d) => {
-      const a = d.data();
-      const mins = Math.floor((a.secondsSpent || 0) / 60);
-      const secs = (a.secondsSpent || 0) % 60;
-      const logs = (a.actions || []).slice(-5).join(" | ");
-
-      const tr = document.createElement("tr");
-
-      const tdName = document.createElement("td");
-      const strong = document.createElement("strong");
-      strong.textContent = d.id;
-      tdName.appendChild(strong);
-
-      const tdTime = document.createElement("td");
-      tdTime.textContent = mins + "m " + secs + "s";
-
-      const tdSeen = document.createElement("td");
-      tdSeen.textContent = a.lastSeen || "-";
-
-      const tdLogs = document.createElement("td");
-      tdLogs.textContent = logs;
-
-      tr.appendChild(tdName);
-      tr.appendChild(tdTime);
-      tr.appendChild(tdSeen);
-      tr.appendChild(tdLogs);
-      tbody.appendChild(tr);
-    });
-  }
 </script>
+</body>
+</html>
+
 </body>
 </html>
