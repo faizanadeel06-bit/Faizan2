@@ -4,25 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Member Hub | Faizan</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #09090b; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
-    .utility-bar { background: #18181b; border-bottom: 1px solid #27272a; padding: 0.6rem 2rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; color: #a1a1aa; }
-    header { border-bottom: 1px solid #27272a; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .brand { font-size: 1.25rem; font-weight: 700; color: #fff; text-decoration: none; }
-    nav { display: flex; gap: 1.5rem; }
-    nav a { color: #a1a1aa; text-decoration: none; }
-    nav a:hover, nav a.active { color: #fff; font-weight: 600; }
-    main { max-width: 850px; margin: 0 auto; padding: 3rem 1.5rem; position: relative; z-index: 10; }
-    h1 { font-size: 2.25rem; margin-bottom: 0.75rem; }
-    .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; }
-    input, button { position: relative; z-index: 50; pointer-events: auto; padding: 0.75rem; border-radius: 6px; border: 1px solid #27272a; background: #18181b; color: #fff; font-size: 1rem; }
-    button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; }
-    button:hover { background: #1d4ed8; }
-    .box { display: flex; flex-direction: column; gap: 0.9rem; max-width: 420px; }
-    iframe, video { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 0.75rem; }
-    .hidden { display: none !important; }
-  </style>
+  <link rel="stylesheet" href="theme.css" />
 </head>
 <body>
 <div class="utility-bar">
@@ -30,48 +12,114 @@
   <div id="namaz-bar">Karachi Namaz Times: Loading...</div>
 </div>
 
-<header>
+<header class="topbar">
   <a href="index.html" class="brand">FAIZAN</a>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="portal.html" class="active">Member Portal</a>
-  </nav>
+  <div class="row" style="margin-bottom: 0;">
+    <button type="button" id="theme-toggle-btn" class="btn btn-muted">Light / Dark Mode</button>
+    <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Home</a>
+    <button type="button" id="signout-btn" class="btn btn-muted hidden">Sign Out</button>
+  </div>
 </header>
 
-<main>
-  <div id="step-login" class="box">
-    <h1>Member Sign In</h1>
-    <p style="color: #a1a1aa;">Enter your assigned credentials to open your personal page.</p>
+<div id="step-login" class="card" style="max-width: 420px; margin: 3rem auto;">
+  <h2>Member Sign In</h2>
+  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Enter your assigned credentials to open your personal page.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.85rem;">
     <input type="text" id="in-user" aria-label="Username" placeholder="Username" />
     <input type="password" id="in-pass" aria-label="Password" placeholder="Password" />
-    <button type="button" id="login-btn">Continue</button>
-    <p id="login-err" style="color: #ef4444; font-size: 0.9rem;"></p>
+    <button type="button" id="login-btn" class="btn">Continue</button>
   </div>
+  <p id="login-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+</div>
 
-  <div id="step-contact" class="box hidden">
-    <h1>Member Details</h1>
-    <p style="font-size: 0.95rem; color: #a1a1aa;">Please enter your email and phone number to complete your member record. Note: Your contact info and site activity are recorded by the administrator.</p>
+<div id="step-contact" class="card hidden" style="max-width: 440px; margin: 3rem auto;">
+  <h2>Member Details</h2>
+  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Please enter your email and phone number to complete your member record. Note: Your contact info and site activity are recorded by the administrator.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.85rem;">
     <input type="email" id="in-email" aria-label="Email Address" placeholder="Your Email Address" />
     <input type="tel" id="in-phone" aria-label="Phone Number" placeholder="Your Phone Number (e.g. 0300-1234567)" />
-    <button type="button" id="save-contact-btn">Save &amp; Open My Page</button>
-    <p id="contact-err" style="color: #ef4444; font-size: 0.9rem;"></p>
+    <button type="button" id="save-contact-btn" class="btn">Save &amp; Open My Page</button>
   </div>
+  <p id="contact-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+</div>
 
+<div id="portal-shell" class="app-shell hidden">
+  <aside class="sidebar">
+    <button type="button" class="side-btn active" data-ptab="ptab-vault">My Page &amp; Vault</button>
+    <button type="button" class="side-btn" data-ptab="ptab-group">Group Chat</button>
+    <button type="button" class="side-btn" data-ptab="ptab-dm">Private Messages</button>
+    <button type="button" class="side-btn" data-ptab="ptab-games">Mini-Games</button>
+  </aside>
 
-  <div id="step-dashboard" class="hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
-      <div>
-        <h1><span id="member-name"></span>'s Personal Page</h1>
-        <p style="margin:0; font-size:0.95rem; color: #a1a1aa;">Status: Active Member | Session tracked automatically</p>
-      </div>
-      <button type="button" id="signout-btn" style="background:#27272a;">Sign Out</button>
+  <main class="content-area">
+    <img id="personal-banner" class="member-banner hidden" alt="Personal Page Banner" />
+
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;"><span id="member-name"></span>'s Personal Page</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Status: Active Member | Session tracked automatically</p>
     </div>
 
-    <h2 style="margin-bottom: 1rem;">Accessible Videos &amp; Briefings</h2>
-    <div id="feed">Loading content...</div>
-  </div>
-</main>
+    <section id="ptab-vault" class="portal-tab">
+      <h2 style="margin-bottom: 1rem;">Accessible Videos, Art, Files &amp; Posts</h2>
+      <div id="feed">Loading content...</div>
+    </section>
+
+    <section id="ptab-group" class="portal-tab hidden">
+      <div class="card">
+        <h2>Community Group Chat</h2>
+        <div id="member-group-chat" class="chat-box"></div>
+        <div class="row">
+          <input type="text" id="member-chat-input" aria-label="Group Message" placeholder="Write a message or share a link..." style="flex: 1;" />
+          <button type="button" id="member-send-chat" class="btn">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="ptab-dm" class="portal-tab hidden">
+      <div class="card">
+        <h2>Direct Message Another Member</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Note: Private conversations and shared links are logged for administrator oversight.</p>
+        <div class="row">
+          <select id="dm-recipient" aria-label="Select Member" style="min-width: 180px;"></select>
+          <input type="text" id="dm-input" aria-label="Direct Message" placeholder="Message or link to share..." style="flex: 1;" />
+          <button type="button" id="send-dm-btn" class="btn">Send DM</button>
+        </div>
+        <div id="dm-history" class="chat-box" style="margin-top: 1rem;"></div>
+      </div>
+    </section>
+
+    <section id="ptab-games" class="portal-tab hidden">
+      <div class="card">
+        <h2>Reflex Speed Challenge</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Click Start, wait for the button to turn GREEN, and tap as fast as you can! Every round is tracked.</p>
+        <button type="button" id="reflex-btn" class="btn" style="padding: 1.25rem 2rem; font-size: 1.1rem;">Start Reflex Test</button>
+        <p id="reflex-result" style="margin-top: 0.75rem; font-weight: 600;"></p>
+      </div>
+
+      <div class="card">
+        <h2>Number Guess (1 to 20)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Guess the secret number between 1 and 20.</p>
+        <div class="row">
+          <input type="number" id="guess-input" min="1" max="20" placeholder="1 - 20" style="width: 120px;" />
+          <button type="button" id="guess-btn" class="btn">Guess</button>
+          <button type="button" id="new-guess-btn" class="btn btn-muted">New Number</button>
+        </div>
+        <p id="guess-result" style="margin-top: 0.5rem; font-weight: 600;"></p>
+      </div>
+    </section>
+  </main>
+</div>
 <script>
+  const themeBtn = document.getElementById("theme-toggle-btn");
+  if (localStorage.getItem("faizan_theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+  themeBtn.onclick = function() {
+    document.body.classList.toggle("light-mode");
+    const mode = document.body.classList.contains("light-mode") ? "light" : "dark";
+    localStorage.setItem("faizan_theme", mode);
+  };
+
   setInterval(function() {
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
   }, 1000);
@@ -92,16 +140,28 @@
       document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
     });
 
+  const sideBtns = document.querySelectorAll(".side-btn");
+  const tabs = document.querySelectorAll(".portal-tab");
+  sideBtns.forEach(function(btn) {
+    btn.onclick = function() {
+      sideBtns.forEach(function(b) { b.classList.remove("active"); });
+      tabs.forEach(function(t) { t.classList.add("hidden"); });
+      btn.classList.add("active");
+      const targetId = btn.getAttribute("data-ptab");
+      document.getElementById(targetId).classList.remove("hidden");
+    };
+  });
+
   async function initPortal() {
     const err = document.getElementById("login-err");
     try {
-      const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
+      const sdkBase = "https://gstatic.com" + "firebasejs/10.12.0/";
       const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } = await import(sdkBase + "firebase-firestore.js");
+      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, increment, arrayUnion, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "firebaseapp.com",
+        authDomain: "://firebaseapp.com",
         projectId: "faizan-platform",
         storageBucket: "faizan-platform.firebasestorage.app",
         messagingSenderId: "801904702555",
@@ -111,6 +171,8 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       let currentUser = null;
+      let userBanner = "";
+      let allMembers = [];
 
       document.getElementById("login-btn").onclick = async function() {
         const u = document.getElementById("in-user").value.trim();
@@ -120,16 +182,18 @@
         try {
           const snap = await getDocs(collection(db, "visitors"));
           let matchedUser = null;
+          allMembers = [];
 
           snap.forEach(function(d) {
             const data = d.data();
+            if (data.username) allMembers.push(data.username);
             if (data.username === u && data.password === p && u !== "") {
               matchedUser = data;
             }
           });
 
           if (!matchedUser) {
-            err.textContent = "Invalid username or password. Make sure you saved it in admin.html.";
+            err.textContent = "Invalid username or password.";
             return;
           }
           if (matchedUser.banned) {
@@ -138,11 +202,12 @@
           }
 
           currentUser = u;
+          userBanner = matchedUser.banner || "";
           err.textContent = "";
 
           const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
           if (contactSnap.exists()) {
-            await openPersonalPage();
+            await openPersonalSpace();
           } else {
             document.getElementById("step-login").classList.add("hidden");
             document.getElementById("step-contact").classList.remove("hidden");
@@ -168,20 +233,31 @@
           savedAt: new Date().toLocaleString()
         });
 
-        await openPersonalPage();
+        await openPersonalSpace();
       };
 
       document.getElementById("signout-btn").onclick = function() {
         location.reload();
       };
-
-      async function openPersonalPage() {
+      async function openPersonalSpace() {
         document.getElementById("step-login").classList.add("hidden");
         document.getElementById("step-contact").classList.add("hidden");
-        document.getElementById("step-dashboard").classList.remove("hidden");
+        document.getElementById("portal-shell").classList.remove("hidden");
+        document.getElementById("signout-btn").classList.remove("hidden");
         document.getElementById("member-name").textContent = currentUser;
 
-        await logAction("Opened Personal Page");
+        if (userBanner) {
+          const bannerImg = document.getElementById("personal-banner");
+          bannerImg.src = userBanner;
+          bannerImg.classList.remove("hidden");
+        }
+
+        populateDmRecipients();
+        startGroupChat();
+        startDmListener();
+        setupGames();
+
+        await logAction("Opened Personal Space");
         await loadFeed();
 
         setInterval(async function() {
@@ -221,50 +297,267 @@
             const card = document.createElement("div");
             card.className = "card";
 
+            const headerRow = document.createElement("div");
+            headerRow.className = "row";
+            headerRow.style.justifyContent = "space-between";
+
             const h3 = document.createElement("h3");
             h3.textContent = v.title;
 
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.style.marginTop = "0.75rem";
-            btn.textContent = "Open / Watch";
+            const badge = document.createElement("span");
+            badge.className = "badge bg-blue";
+            badge.textContent = (v.type || "video").toUpperCase();
 
-            const area = document.createElement("div");
+            headerRow.appendChild(h3);
+            headerRow.appendChild(badge);
+            card.appendChild(headerRow);
 
-            btn.onclick = async function() {
-              await logAction("Watched/Opened: " + v.title);
-              btn.remove();
-
-              if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
-                const vidCode = extractYouTubeId(v.url);
-                const iframe = document.createElement("iframe");
-                iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
-                iframe.setAttribute("frameborder", "0");
-                iframe.setAttribute("allowfullscreen", "true");
-                area.appendChild(iframe);
+            if (v.body) {
+              if (v.type === "code") {
+                const pre = document.createElement("pre");
+                pre.className = "code-block";
+                pre.textContent = v.body;
+                card.appendChild(pre);
               } else {
-                const video = document.createElement("video");
-                video.src = v.url;
-                video.controls = true;
-                video.autoplay = true;
-                area.appendChild(video);
+                const p = document.createElement("p");
+                p.style.marginTop = "0.5rem";
+                p.textContent = v.body;
+                card.appendChild(p);
               }
-            };
+            }
 
-            card.appendChild(h3);
-            card.appendChild(btn);
-            card.appendChild(area);
+            if (v.url) {
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "btn";
+              btn.style.marginTop = "0.75rem";
+              btn.textContent = "Open / View File";
+
+              const area = document.createElement("div");
+
+              btn.onclick = async function() {
+                await logAction("Opened (" + (v.type || "media") + "): " + v.title);
+                btn.remove();
+
+                if (v.type === "image") {
+                  const img = document.createElement("img");
+                  img.src = v.url;
+                  img.style.maxWidth = "100%";
+                  img.style.borderRadius = "8px";
+                  img.style.marginTop = "0.75rem";
+                  area.appendChild(img);
+                } else if (v.type === "doc") {
+                  const link = document.createElement("a");
+                  link.href = v.url;
+                  link.target = "_blank";
+                  link.textContent = "Download / Open Document (" + v.title + ")";
+                  link.style.color = "#60a5fa";
+                  link.style.display = "inline-block";
+                  link.style.marginTop = "0.75rem";
+                  area.appendChild(link);
+                } else if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
+                  const vidCode = extractYouTubeId(v.url);
+                  const iframe = document.createElement("iframe");
+                  iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
+                  iframe.setAttribute("frameborder", "0");
+                  iframe.setAttribute("allowfullscreen", "true");
+                  area.appendChild(iframe);
+                } else {
+                  const video = document.createElement("video");
+                  video.src = v.url;
+                  video.controls = true;
+                  video.autoplay = true;
+                  area.appendChild(video);
+                }
+              };
+
+              card.appendChild(btn);
+              card.appendChild(area);
+            }
+
             feed.appendChild(card);
           }
         });
 
         if (feed.innerHTML === "") {
           const emptyMsg = document.createElement("p");
-          emptyMsg.style.color = "#a1a1aa";
+          emptyMsg.style.color = "var(--text-muted)";
           emptyMsg.textContent = "No accessible content available right now.";
           feed.appendChild(emptyMsg);
         }
       }
+      function startGroupChat() {
+        document.getElementById("member-send-chat").onclick = async function() {
+          const input = document.getElementById("member-chat-input");
+          const text = input.value.trim();
+          if (!text) return;
+          await addDoc(collection(db, "groupChat"), {
+            sender: currentUser,
+            text: text,
+            time: new Date().toLocaleTimeString(),
+            ts: Date.now()
+          });
+          await logAction("Sent Group Message");
+          input.value = "";
+        };
+
+        const q = query(collection(db, "groupChat"), orderBy("ts", "asc"));
+        onSnapshot(q, function(snap) {
+          const box = document.getElementById("member-group-chat");
+          box.innerHTML = "";
+          snap.forEach(function(d) {
+            const m = d.data();
+            const bubble = document.createElement("div");
+            bubble.className = "msg-bubble";
+            const head = document.createElement("div");
+            head.style.fontSize = "0.8rem";
+            head.style.color = "var(--text-muted)";
+            head.textContent = m.sender + " • " + (m.time || "");
+            const body = document.createElement("div");
+            body.textContent = m.text;
+            bubble.appendChild(head);
+            bubble.appendChild(body);
+            box.appendChild(bubble);
+          });
+          box.scrollTop = box.scrollHeight;
+        });
+      }
+
+      function populateDmRecipients() {
+        const sel = document.getElementById("dm-recipient");
+        sel.innerHTML = "";
+        const ownerOpt = document.createElement("option");
+        ownerOpt.value = "Faizan (Owner)";
+        ownerOpt.textContent = "Faizan (Owner)";
+        sel.appendChild(ownerOpt);
+
+        allMembers.forEach(function(m) {
+          if (m !== currentUser) {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m;
+            sel.appendChild(opt);
+          }
+        });
+      }
+
+      function startDmListener() {
+        document.getElementById("send-dm-btn").onclick = async function() {
+          const toUser = document.getElementById("dm-recipient").value;
+          const input = document.getElementById("dm-input");
+          const text = input.value.trim();
+          if (!text || !toUser) return;
+
+          await addDoc(collection(db, "dmLogs"), {
+            from: currentUser,
+            to: toUser,
+            text: text,
+            time: new Date().toLocaleTimeString(),
+            ts: Date.now()
+          });
+          await logAction("Messaged " + toUser);
+          input.value = "";
+        };
+
+        const dmQ = query(collection(db, "dmLogs"), orderBy("ts", "asc"));
+        onSnapshot(dmQ, function(snap) {
+          const box = document.getElementById("dm-history");
+          box.innerHTML = "";
+          snap.forEach(function(d) {
+            const dm = d.data();
+            if (dm.from === currentUser || dm.to === currentUser) {
+              const bubble = document.createElement("div");
+              bubble.className = "msg-bubble";
+              const head = document.createElement("div");
+              head.style.fontSize = "0.8rem";
+              head.style.color = "var(--text-muted)";
+              head.textContent = dm.from + " -> " + dm.to + " • " + (dm.time || "");
+              const body = document.createElement("div");
+              body.textContent = dm.text;
+              bubble.appendChild(head);
+              bubble.appendChild(body);
+              box.appendChild(bubble);
+            }
+          });
+          box.scrollTop = box.scrollHeight;
+        });
+      }
+      function setupGames() {
+        // Game 1: Reflex Speed Challenge
+        let reflexState = "idle";
+        let startTime = 0;
+        let timerId = null;
+        const rBtn = document.getElementById("reflex-btn");
+        const rRes = document.getElementById("reflex-result");
+
+        rBtn.onclick = async function() {
+          if (reflexState === "idle") {
+            reflexState = "waiting";
+            rBtn.style.background = "#dc2626";
+            rBtn.textContent = "Wait for GREEN...";
+            rRes.textContent = "";
+            const delay = 1500 + Math.floor(Math.random() * 2500);
+            timerId = setTimeout(function() {
+              reflexState = "ready";
+              startTime = Date.now();
+              rBtn.style.background = "#16a34a";
+              rBtn.textContent = "TAP NOW!";
+            }, delay);
+          } else if (reflexState === "waiting") {
+            clearTimeout(timerId);
+            reflexState = "idle";
+            rBtn.style.background = "#2563eb";
+            rBtn.textContent = "Too Early! Click to Retry";
+          } else if (reflexState === "ready") {
+            const reactionMs = Date.now() - startTime;
+            reflexState = "idle";
+            rBtn.style.background = "#2563eb";
+            rBtn.textContent = "Play Again";
+            rRes.textContent = "Reaction Speed: " + reactionMs + " ms!";
+            await recordGame("Reflex Speed", reactionMs);
+          }
+        };
+
+        // Game 2: Number Guess (1 - 20)
+        let secretNum = 1 + Math.floor(Math.random() * 20);
+        let attempts = 0;
+        const gRes = document.getElementById("guess-result");
+
+        document.getElementById("new-guess-btn").onclick = function() {
+          secretNum = 1 + Math.floor(Math.random() * 20);
+          attempts = 0;
+          gRes.textContent = "New secret number generated!";
+        };
+
+        document.getElementById("guess-btn").onclick = async function() {
+          const val = Number(document.getElementById("guess-input").value);
+          if (!val) return;
+          attempts += 1;
+          if (val === secretNum) {
+            gRes.textContent = "Correct! You guessed " + secretNum + " in " + attempts + " tries!";
+            await recordGame("Number Guess", attempts);
+            secretNum = 1 + Math.floor(Math.random() * 20);
+            attempts = 0;
+          } else if (val < secretNum) {
+            gRes.textContent = "Too low! Try higher.";
+          } else {
+            gRes.textContent = "Too high! Try lower.";
+          }
+        };
+      }
+
+      async function recordGame(gameName, scoreVal) {
+        const docId = currentUser + "_" + gameName.replace(/\s+/g, "");
+        await setDoc(doc(db, "gameStats", docId), {
+          username: currentUser,
+          game: gameName,
+          rounds: increment(1),
+          bestScore: scoreVal,
+          lastPlayed: new Date().toLocaleString()
+        }, { merge: true });
+        await logAction("Played " + gameName + " (Score: " + scoreVal + ")");
+      }
+
     } catch (sdkError) {
       err.textContent = "System Error: " + sdkError.message;
     }

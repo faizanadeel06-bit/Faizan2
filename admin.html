@@ -5,284 +5,506 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Owner Command Center | Faizan</title>
   <meta name="robots" content="noindex, nofollow" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #09090b; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
-    header { border-bottom: 1px solid #27272a; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    .brand { font-size: 1.25rem; font-weight: 700; color: #fff; text-decoration: none; }
-    nav { display: flex; gap: 1.5rem; }
-    nav a { color: #a1a1aa; text-decoration: none; }
-    main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; position: relative; z-index: 10; }
-    h1 { font-size: 2rem; margin-bottom: 1.5rem; }
-    .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h2 { font-size: 1.2rem; margin-bottom: 0.75rem; color: #fff; }
-    input, button { position: relative; z-index: 50; pointer-events: auto; padding: 0.75rem; border-radius: 6px; border: 1px solid #3f3f46; background: #09090b; color: #fff; font-size: 1rem; }
-    button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; }
-    button:hover { background: #1d4ed8; }
-    .btn-muted { background: #3f3f46; }
-    .row { display: flex; gap: 0.65rem; margin-bottom: 0.65rem; flex-wrap: wrap; align-items: center; }
-    .badge { padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; }
-    .bg-green { background: #16a34a; }
-    .bg-red { background: #dc2626; }
-    table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.9rem; }
-    th, td { text-align: left; padding: 0.65rem; border-bottom: 1px solid #27272a; }
-    .hidden { display: none !important; }
-    .scroll-box { max-height: 400px; overflow-y: auto; border: 1px solid #27272a; padding: 0.75rem; border-radius: 6px; }
-  </style>
+  <link rel="stylesheet" href="theme.css" />
 </head>
 <body>
-<header>
-  <a href="index.html" class="brand">FAIZAN // OWNER COMMAND</a>
-  <nav>
-    <a href="index.html">Public Home</a>
-    <a href="portal.html">Member Portal</a>
-  </nav>
+<header class="topbar">
+  <a href="index.html" class="brand">FAIZAN // COMMAND CENTER</a>
+  <div class="row" style="margin-bottom: 0;">
+    <button type="button" id="theme-toggle-btn" class="btn btn-muted">Light / Dark Mode</button>
+    <a href="portal.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Member Portal</a>
+  </div>
 </header>
 
-<main>
-  <div id="admin-lock" class="card" style="max-width: 420px; margin: 2rem auto;">
-    <h2>Owner Authentication</h2>
-    <p style="font-size: 0.95rem; color: #a1a1aa; margin-bottom: 1rem;">Enter your owner password to unlock controls.</p>
-    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-      <input type="password" id="admin-pass-input" aria-label="Admin Password" placeholder="Enter Admin Password" />
-      <button type="button" id="unlock-btn">Unlock Command Center</button>
-    </div>
-    <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+<!-- Owner Password Lock -->
+<div id="admin-lock" class="card" style="max-width: 420px; margin: 4rem auto;">
+  <h2>Owner Authentication</h2>
+  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Enter your owner password to unlock your command center.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <input type="password" id="admin-pass-input" aria-label="Admin Password" placeholder="Enter Admin Password" />
+    <button type="button" id="unlock-btn" class="btn">Unlock Command Center</button>
   </div>
+  <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+</div>
 
-  <div id="admin-panel" class="hidden">
-    <h1>Owner Command Center</h1>
+<!-- YouTube-Style App Shell -->
+<div id="admin-shell" class="app-shell hidden">
+  <aside class="sidebar">
+    <button type="button" class="side-btn active" data-tab="tab-home">Home Greeting</button>
+    <button type="button" class="side-btn" data-tab="tab-publish">Publish &amp; Vault</button>
+    <button type="button" class="side-btn" data-tab="tab-members">30 Members &amp; Banners</button>
+    <button type="button" class="side-btn" data-tab="tab-chat">Chat &amp; DM Monitor</button>
+    <button type="button" class="side-btn" data-tab="tab-directory">Directory &amp; Activity</button>
+    <button type="button" class="side-btn" data-tab="tab-games">Game Tracker</button>
+  </aside>
 
-    <div class="card">
-      <h2>1. Publish Video or Resource</h2>
-      <div class="row">
-        <input type="text" id="item-title" aria-label="Item Title" placeholder="Title (e.g. Briefing 1)" style="flex: 1;" />
-        <input type="text" id="item-url" aria-label="Item URL" placeholder="YouTube or Direct File URL" style="flex: 2;" />
-        <button type="button" id="publish-btn">Publish</button>
+  <main class="content-area">
+    <!-- TAB 1: GREETING HOME -->
+    <section id="tab-home" class="admin-tab">
+      <div class="card">
+        <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Assalam-o-Alaikum, Faizan</h1>
+        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Welcome back to your personal digital headquarters. Use the sidebar on the left to publish files, manage your 30 members, monitor messages, or check game stats.</p>
+        <div class="row">
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-content">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Published Items</p>
+          </div>
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-members">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Registered Contacts</p>
+          </div>
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-dms">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Private DM Logs</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>2. Content Access Control</h2>
-      <div id="items-list">Loading...</div>
-    </div>
+    <!-- TAB 2: PUBLISH & CONTENT VAULT -->
+    <section id="tab-publish" class="admin-tab hidden">
+      <div class="card">
+        <h2>Publish Media, Files, Code or Posts</h2>
+        <div class="row">
+          <select id="item-type" aria-label="Content Type">
+            <option value="video">Video (YouTube / OBS MP4)</option>
+            <option value="image">Photo / AI Generated Art</option>
+            <option value="doc">Document (PDF / Word / PPT)</option>
+            <option value="code">Code Snippet</option>
+            <option value="post">Written Post / Announcement</option>
+          </select>
+          <input type="text" id="item-title" aria-label="Title" placeholder="Title" style="flex: 1;" />
+        </div>
 
-    <div class="card">
-      <h2>3. 30 Member Slots (Usernames, Passwords &amp; Ban Controls)</h2>
-      <div id="member-slots" class="scroll-box"></div>
-      <button type="button" id="save-members-btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
-    </div>
+        <div class="row">
+          <input type="text" id="item-url" aria-label="File or Video URL" placeholder="Paste URL or click Upload from PC..." style="flex: 2;" />
+          <input type="file" id="cloud-file-input" class="hidden" />
+          <button type="button" id="cloud-upload-btn" class="btn btn-green">Upload from PC (Cloudinary)</button>
+        </div>
+        <p id="upload-status" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;"></p>
 
-    <div class="card">
-      <h2>4. Permanent Member Directory</h2>
-      <table>
-        <thead>
-        <tr><th>Username</th><th>Email</th><th>Phone Number</th><th>First Joined</th></tr>
-        </thead>
-        <tbody id="contacts-table"></tbody>
-      </table>
-    </div>
+        <textarea id="item-body" rows="4" aria-label="Post or Code Content" placeholder="Optional: Write post message or paste your code snippet here..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="publish-btn" class="btn">Publish to Vault</button>
+      </div>
 
-    <div class="card">
-      <h2>5. Member Time &amp; Activity Tracker</h2>
-      <table>
-        <thead>
-        <tr><th>Username</th><th>Total Time Spent</th><th>Last Active</th><th>Recent Actions</th></tr>
-        </thead>
-        <tbody id="activity-table"></tbody>
-      </table>
-    </div>
-  </div>
-</main>
+      <div class="card">
+        <h2>Manage Published Items (Toggle Accessible / Private)</h2>
+        <div id="items-list">Loading...</div>
+      </div>
+    </section>
+
+    <!-- TAB 3: 30 MEMBERS & TOP BANNER PICTURES -->
+    <section id="tab-members" class="admin-tab hidden">
+      <div class="card">
+        <h2>30 Member Slots, Top Banner Pics &amp; Ban Controls</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Assign usernames, passwords, and a custom Top Banner Image URL for each member's personal page.</p>
+        <div id="member-slots" style="max-height: 460px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px;"></div>
+        <button type="button" id="save-members-btn" class="btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
+      </div>
+    </section>
+
+    <!-- TAB 4: GROUP CHAT & WHATSAPP-STYLE DM MONITOR -->
+    <section id="tab-chat" class="admin-tab hidden">
+      <div class="card">
+        <h2>Community Group Chat (Owner View &amp; Share)</h2>
+        <div id="admin-group-chat" class="chat-box"></div>
+        <div class="row">
+          <input type="text" id="admin-chat-input" aria-label="Admin Message" placeholder="Send message or share link as Faizan (Owner)..." style="flex: 1;" />
+          <button type="button" id="admin-send-chat" class="btn">Send</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Private Member-to-Member DM Awareness Log</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Shows every private contact made between members, timestamps, and shared messages/files.</p>
+        <table>
+          <thead>
+          <tr><th>From</th><th>To</th><th>Message / Shared Item</th><th>Time</th></tr>
+          </thead>
+          <tbody id="dm-monitor-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: PERMANENT DIRECTORY & ACTIVITY TRACKER -->
+    <section id="tab-directory" class="admin-tab hidden">
+      <div class="card">
+        <h2>Permanent Member Directory (Saved Even If Removed)</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Email</th><th>Phone Number</th><th>First Joined</th></tr>
+          </thead>
+          <tbody id="contacts-table"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Member Time &amp; Page Access Tracker</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Total Time Spent</th><th>Last Active</th><th>Recent Actions</th></tr>
+          </thead>
+          <tbody id="activity-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 6: MINI-GAMES TRACKER -->
+    <section id="tab-games" class="admin-tab hidden">
+      <div class="card">
+        <h2>Member Game Playtime &amp; Score Tracker</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Game Played</th><th>Rounds Played</th><th>Best Score</th><th>Last Played</th></tr>
+          </thead>
+          <tbody id="games-table"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
 <script>
   const ADMIN_PASSWORD = "faizan123";
+  const CLOUD_NAME = "fh4mrkmm";
+  const UPLOAD_PRESET = "faizan_vault";
+
+  const themeBtn = document.getElementById("theme-toggle-btn");
+  if (localStorage.getItem("faizan_theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+  themeBtn.onclick = function() {
+    document.body.classList.toggle("light-mode");
+    const mode = document.body.classList.contains("light-mode") ? "light" : "dark";
+    localStorage.setItem("faizan_theme", mode);
+  };
+
+  const sideBtns = document.querySelectorAll(".side-btn");
+  const tabs = document.querySelectorAll(".admin-tab");
+  sideBtns.forEach(function(btn) {
+    btn.onclick = function() {
+      sideBtns.forEach(function(b) { b.classList.remove("active"); });
+      tabs.forEach(function(t) { t.classList.add("hidden"); });
+      btn.classList.add("active");
+      const targetId = btn.getAttribute("data-tab");
+      document.getElementById(targetId).classList.remove("hidden");
+    };
+  });
 
   document.getElementById("unlock-btn").onclick = function() {
     const val = document.getElementById("admin-pass-input").value;
     if (val === ADMIN_PASSWORD) {
       document.getElementById("admin-lock").classList.add("hidden");
-      document.getElementById("admin-panel").classList.remove("hidden");
-      startFirebase();
+      document.getElementById("admin-shell").classList.remove("hidden");
+      startAdminSystem();
     } else {
       document.getElementById("lock-err").textContent = "Incorrect owner password.";
     }
   };
 
-  async function startFirebase() {
-    const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
-    const { initializeApp } = await import(sdkBase + "firebase-app.js");
-    const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } = await import(sdkBase + "firebase-firestore.js");
+  function draw30Slots(existing) {
+    const box = document.getElementById("member-slots");
+    box.innerHTML = "";
+    for (let i = 1; i <= 30; i++) {
+      const slot = (existing && existing["slot" + i]) || { username: "", password: "", banner: "", banned: false };
+      const row = document.createElement("div");
+      row.className = "row";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-      authDomain: "firebaseapp.com",
-      projectId: "faizan-platform",
-      storageBucket: "faizan-platform.firebasestorage.app",
-      messagingSenderId: "801904702555",
-      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
-    };
+      const num = document.createElement("span");
+      num.style.width = "35px";
+      num.textContent = "#" + i;
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+      const uInput = document.createElement("input");
+      uInput.type = "text";
+      uInput.id = "u" + i;
+      uInput.value = slot.username || "";
+      uInput.placeholder = "Username " + i;
+      uInput.style.width = "140px";
 
-    document.getElementById("publish-btn").onclick = async function() {
-      const titleInput = document.getElementById("item-title");
-      const urlInput = document.getElementById("item-url");
-      const title = titleInput.value.trim();
-      const url = urlInput.value.trim();
-      if (!title || !url) return alert("Enter both title and URL.");
-      await addDoc(collection(db, "videos"), { title: title, url: url, accessible: true });
-      titleInput.value = "";
-      urlInput.value = "";
+      const pInput = document.createElement("input");
+      pInput.type = "text";
+      pInput.id = "p" + i;
+      pInput.value = slot.password || "";
+      pInput.placeholder = "Password " + i;
+      pInput.style.width = "140px";
+
+      const imgInput = document.createElement("input");
+      imgInput.type = "text";
+      imgInput.id = "img" + i;
+      imgInput.value = slot.banner || "";
+      imgInput.placeholder = "Top Banner Pic URL (optional)";
+      imgInput.style.flex = "1";
+
+      const label = document.createElement("label");
+      label.style.display = "flex";
+      label.style.alignItems = "center";
+      label.style.gap = "0.35rem";
+      label.style.cursor = "pointer";
+
+      const bCheck = document.createElement("input");
+      bCheck.type = "checkbox";
+      bCheck.id = "b" + i;
+      bCheck.checked = Boolean(slot.banned);
+
+      const bText = document.createElement("span");
+      bText.style.color = slot.banned ? "#ef4444" : "var(--text-muted)";
+      bText.style.fontSize = "0.85rem";
+      bText.textContent = "Banned";
+
+      label.appendChild(bCheck);
+      label.appendChild(bText);
+      row.appendChild(num);
+      row.appendChild(uInput);
+      row.appendChild(pInput);
+      row.appendChild(imgInput);
+      row.appendChild(label);
+      box.appendChild(row);
+    }
+  }
+
+  async function startAdminSystem() {
+    draw30Slots({});
+    try {
+      const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
+      const { initializeApp } = await import(sdkBase + "firebase-app.js");
+      const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+        authDomain: "firebaseapp.com",
+        projectId: "faizan-platform",
+        storageBucket: "faizan-platform.firebasestorage.app",
+        messagingSenderId: "801904702555",
+        appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const fileInput = document.getElementById("cloud-file-input");
+      const statusText = document.getElementById("upload-status");
+
+      document.getElementById("cloud-upload-btn").onclick = function() {
+        fileInput.click();
+      };
+
+      fileInput.onchange = async function() {
+        const file = fileInput.files.item(0);
+        if (!file) return;
+        statusText.textContent = "Uploading " + file.name + " to Cloudinary...";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        try {
+          const uploadEndpoint = "https://apicloudinary.com/v1_1/" + CLOUD_NAME + "/auto/upload";
+          const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
+          const data = await res.json();
+          if (data.secure_url) {
+            document.getElementById("item-url").value = data.secure_url;
+            statusText.textContent = "Uploaded successfully! Click Publish to Vault below.";
+          } else {
+            statusText.textContent = "Upload failed: " + (data.error ? data.error.message : "Check preset");
+          }
+        } catch (upErr) {
+          statusText.textContent = "Upload error: " + upErr.message;
+        }
+      };
+      document.getElementById("publish-btn").onclick = async function() {
+        const type = document.getElementById("item-type").value;
+        const title = document.getElementById("item-title").value.trim();
+        const url = document.getElementById("item-url").value.trim();
+        const body = document.getElementById("item-body").value.trim();
+
+        if (!title) return alert("Please enter a title.");
+        await addDoc(collection(db, "videos"), {
+          type: type,
+          title: title,
+          url: url,
+          body: body,
+          accessible: true,
+          createdAt: Date.now()
+        });
+
+        document.getElementById("item-title").value = "";
+        document.getElementById("item-url").value = "";
+        document.getElementById("item-body").value = "";
+        statusText.textContent = "";
+        await loadItems();
+      };
+
+      document.getElementById("save-members-btn").onclick = async function() {
+        for (let i = 1; i <= 30; i++) {
+          const username = document.getElementById("u" + i).value.trim();
+          const password = document.getElementById("p" + i).value.trim();
+          const banner = document.getElementById("img" + i).value.trim();
+          const banned = document.getElementById("b" + i).checked;
+          await setDoc(doc(db, "visitors", "slot" + i), {
+            username: username,
+            password: password,
+            banner: banner,
+            banned: banned
+          });
+        }
+        alert("All 30 member accounts and banners saved!");
+        await load30Slots();
+      };
+
+      document.getElementById("admin-send-chat").onclick = async function() {
+        const input = document.getElementById("admin-chat-input");
+        const text = input.value.trim();
+        if (!text) return;
+        await addDoc(collection(db, "groupChat"), {
+          sender: "Faizan (Owner)",
+          text: text,
+          time: new Date().toLocaleTimeString(),
+          ts: Date.now()
+        });
+        input.value = "";
+      };
+
+      const chatQuery = query(collection(db, "groupChat"), orderBy("ts", "asc"));
+      onSnapshot(chatQuery, function(snap) {
+        const box = document.getElementById("admin-group-chat");
+        box.innerHTML = "";
+        snap.forEach(function(d) {
+          const m = d.data();
+          const bubble = document.createElement("div");
+          bubble.className = "msg-bubble";
+          const head = document.createElement("div");
+          head.style.fontSize = "0.8rem";
+          head.style.color = "var(--text-muted)";
+          head.textContent = m.sender + " • " + (m.time || "");
+          const body = document.createElement("div");
+          body.textContent = m.text;
+          bubble.appendChild(head);
+          bubble.appendChild(body);
+          box.appendChild(bubble);
+        });
+        box.scrollTop = box.scrollHeight;
+      });
+
+      const dmQuery = query(collection(db, "dmLogs"), orderBy("ts", "desc"));
+      onSnapshot(dmQuery, function(snap) {
+        const tbody = document.getElementById("dm-monitor-table");
+        tbody.innerHTML = "";
+        document.getElementById("stat-dms").textContent = String(snap.size);
+        snap.forEach(function(d) {
+          const dm = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + (dm.from || "") + "</strong></td><td><strong>" + (dm.to || "") + "</strong></td><td>" + (dm.text || "") + "</td><td>" + (dm.time || "") + "</td>";
+          tbody.appendChild(tr);
+        });
+      });
+
+      async function loadItems() {
+        const box = document.getElementById("items-list");
+        box.innerHTML = "";
+        const snap = await getDocs(collection(db, "videos"));
+        document.getElementById("stat-content").textContent = String(snap.size);
+
+        snap.forEach(function(docSnap) {
+          const v = docSnap.data();
+          const row = document.createElement("div");
+          row.className = "row";
+          row.style.justifyContent = "space-between";
+
+          const left = document.createElement("div");
+          const strong = document.createElement("strong");
+          strong.textContent = v.title + " (" + (v.type || "video") + ")";
+          const badge = document.createElement("span");
+          badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
+          badge.textContent = v.accessible ? "Accessible" : "Private";
+          left.appendChild(strong);
+          left.appendChild(badge);
+
+          const right = document.createElement("div");
+          right.className = "row";
+          right.style.marginBottom = "0";
+
+          const toggleBtn = document.createElement("button");
+          toggleBtn.type = "button";
+          toggleBtn.className = "btn";
+          toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
+          toggleBtn.onclick = async function() {
+            await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
+            await loadItems();
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-muted";
+          delBtn.textContent = "Delete";
+          delBtn.onclick = async function() {
+            await deleteDoc(doc(db, "videos", docSnap.id));
+            await loadItems();
+          };
+
+          right.appendChild(toggleBtn);
+          right.appendChild(delBtn);
+          row.appendChild(left);
+          row.appendChild(right);
+          box.appendChild(row);
+        });
+        if (box.innerHTML === "") box.textContent = "No items published yet.";
+      }
+
+      async function load30Slots() {
+        const existing = {};
+        const snap = await getDocs(collection(db, "visitors"));
+        snap.forEach(function(d) { existing[d.id] = d.data(); });
+        draw30Slots(existing);
+      }
+
+      async function loadContacts() {
+        const tbody = document.getElementById("contacts-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "permanentContacts"));
+        document.getElementById("stat-members").textContent = String(snap.size);
+        snap.forEach(function(d) {
+          const c = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td>" + (c.username || "") + "</td><td>" + (c.email || "") + "</td><td>" + (c.phone || "") + "</td><td>" + (c.savedAt || "") + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function loadActivity() {
+        const tbody = document.getElementById("activity-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "memberActivity"));
+        snap.forEach(function(d) {
+          const a = d.data();
+          const mins = Math.floor((a.secondsSpent || 0) / 60);
+          const secs = (a.secondsSpent || 0) % 60;
+          const logs = (a.actions || []).slice(-5).join(" | ");
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + d.id + "</strong></td><td>" + mins + "m " + secs + "s</td><td>" + (a.lastSeen || "-") + "</td><td>" + logs + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function loadGames() {
+        const tbody = document.getElementById("games-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "gameStats"));
+        snap.forEach(function(d) {
+          const g = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + (g.username || d.id) + "</strong></td><td>" + (g.game || "") + "</td><td>" + (g.rounds || 0) + "</td><td>" + (g.bestScore || 0) + "</td><td>" + (g.lastPlayed || "-") + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
       await loadItems();
-    };
-
-    document.getElementById("save-members-btn").onclick = async function() {
-      for (let i = 1; i <= 30; i++) {
-        const username = document.getElementById("u" + i).value.trim();
-        const password = document.getElementById("p" + i).value.trim();
-        const banned = document.getElementById("b" + i).checked;
-        await setDoc(doc(db, "visitors", "slot" + i), { username: username, password: password, banned: banned });
-      }
-      alert("All 30 member accounts updated!");
       await load30Slots();
-    };
-
-    async function loadItems() {
-      const box = document.getElementById("items-list");
-      box.innerHTML = "";
-      const snap = await getDocs(collection(db, "videos"));
-      snap.forEach(function(docSnap) {
-        const v = docSnap.data();
-        const row = document.createElement("div");
-        row.className = "row";
-        row.style.justifyContent = "space-between";
-
-        const left = document.createElement("div");
-        const strong = document.createElement("strong");
-        strong.textContent = v.title;
-        const badge = document.createElement("span");
-        badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
-        badge.textContent = v.accessible ? "Accessible" : "Private";
-        left.appendChild(strong);
-        left.appendChild(badge);
-
-        const right = document.createElement("div");
-        right.className = "row";
-        right.style.marginBottom = "0";
-
-        const toggleBtn = document.createElement("button");
-        toggleBtn.type = "button";
-        toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
-        toggleBtn.onclick = async function() {
-          await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
-          await loadItems();
-        };
-
-        const delBtn = document.createElement("button");
-        delBtn.type = "button";
-        delBtn.className = "btn-muted";
-        delBtn.textContent = "Delete";
-        delBtn.onclick = async function() {
-          await deleteDoc(doc(db, "videos", docSnap.id));
-          await loadItems();
-        };
-
-        right.appendChild(toggleBtn);
-        right.appendChild(delBtn);
-        row.appendChild(left);
-        row.appendChild(right);
-        box.appendChild(row);
-      });
-      if (box.innerHTML === "") box.textContent = "No videos published yet.";
+      await loadContacts();
+      await loadActivity();
+      await loadGames();
+    } catch (err) {
+      alert("Admin System Error: " + err.message);
     }
-
-    async function load30Slots() {
-      const box = document.getElementById("member-slots");
-      box.innerHTML = "";
-      const existing = {};
-      const snap = await getDocs(collection(db, "visitors"));
-      snap.forEach(function(d) { existing[d.id] = d.data(); });
-
-      for (let i = 1; i <= 30; i++) {
-        const slot = existing["slot" + i] || { username: "", password: "", banned: false };
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const num = document.createElement("span");
-        num.style.width = "35px";
-        num.textContent = "#" + i;
-
-        const uInput = document.createElement("input");
-        uInput.type = "text";
-        uInput.id = "u" + i;
-        uInput.value = slot.username || "";
-        uInput.placeholder = "Username " + i;
-
-        const pInput = document.createElement("input");
-        pInput.type = "text";
-        pInput.id = "p" + i;
-        pInput.value = slot.password || "";
-        pInput.placeholder = "Password " + i;
-
-        const label = document.createElement("label");
-        label.style.display = "flex";
-        label.style.alignItems = "center";
-        label.style.gap = "0.35rem";
-
-        const bCheck = document.createElement("input");
-        bCheck.type = "checkbox";
-        bCheck.id = "b" + i;
-        bCheck.checked = Boolean(slot.banned);
-
-        const bText = document.createElement("span");
-        bText.style.color = slot.banned ? "#ef4444" : "#a1a1aa";
-        bText.style.fontSize = "0.85rem";
-        bText.textContent = "Banned";
-
-        label.appendChild(bCheck);
-        label.appendChild(bText);
-        row.appendChild(num);
-        row.appendChild(uInput);
-        row.appendChild(pInput);
-        row.appendChild(label);
-        box.appendChild(row);
-      }
-    }
-
-    async function loadContacts() {
-      const tbody = document.getElementById("contacts-table");
-      tbody.innerHTML = "";
-      const snap = await getDocs(collection(db, "permanentContacts"));
-      snap.forEach(function(d) {
-        const c = d.data();
-        const tr = document.createElement("tr");
-        tr.innerHTML = "<td>" + (c.username || "") + "</td><td>" + (c.email || "") + "</td><td>" + (c.phone || "") + "</td><td>" + (c.savedAt || "") + "</td>";
-        tbody.appendChild(tr);
-      });
-    }
-
-    async function loadActivity() {
-      const tbody = document.getElementById("activity-table");
-      tbody.innerHTML = "";
-      const snap = await getDocs(collection(db, "memberActivity"));
-      snap.forEach(function(d) {
-        const a = d.data();
-        const mins = Math.floor((a.secondsSpent || 0) / 60);
-        const secs = (a.secondsSpent || 0) % 60;
-        const logs = (a.actions || []).slice(-5).join(" | ");
-        const tr = document.createElement("tr");
-        tr.innerHTML = "<td><strong>" + d.id + "</strong></td><td>" + mins + "m " + secs + "s</td><td>" + (a.lastSeen || "-") + "</td><td>" + logs + "</td>";
-        tbody.appendChild(tr);
-      });
-    }
-
-    await loadItems();
-    await load30Slots();
-    await loadContacts();
-    await loadActivity();
   }
 </script>
 </body>
 </html>
-
