@@ -13,15 +13,15 @@
     nav { display: flex; gap: 1.5rem; }
     nav a { color: #a1a1aa; text-decoration: none; }
     nav a:hover, nav a.active { color: #fff; font-weight: 600; }
-    main { max-width: 850px; margin: 0 auto; padding: 3rem 1.5rem; }
+    main { max-width: 850px; margin: 0 auto; padding: 3rem 1.5rem; position: relative; z-index: 10; }
     h1 { font-size: 2.25rem; margin-bottom: 0.75rem; }
     .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; }
-    input, button { padding: 0.75rem; border-radius: 6px; border: 1px solid #27272a; background: #18181b; color: #fff; font-size: 1rem; }
+    input, button { position: relative; z-index: 50; pointer-events: auto; padding: 0.75rem; border-radius: 6px; border: 1px solid #27272a; background: #18181b; color: #fff; font-size: 1rem; }
     button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; }
     button:hover { background: #1d4ed8; }
     .box { display: flex; flex-direction: column; gap: 0.9rem; max-width: 420px; }
     iframe, video { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 0.75rem; }
-    .hidden { display: none; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -71,14 +71,14 @@
   </div>
 </main>
 <script>
-  setInterval(() => {
+  setInterval(function() {
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
   }, 1000);
 
-  const namazApi = "https://aladhan.com" + "timingsByCity?city=Karachi&country=Pakistan&method=1";
-  fetch(namazApi)
-    .then((r) => r.json())
-    .then((data) => {
+  const namazUrl = "https://aladhan.com" + "timingsByCity?city=Karachi&country=Pakistan&method=1";
+  fetch(namazUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
       const t = data.data.timings;
       document.getElementById("namaz-bar").textContent =
         "Karachi Namaz — Fajr: " + t.Fajr +
@@ -87,170 +87,185 @@
         " | Maghrib: " + t.Maghrib +
         " | Isha: " + t.Isha;
     })
-    .catch(() => {
+    .catch(function() {
       document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
     });
 
   async function initPortal() {
-    const base = "https://www.gstatic.com" + "firebasejs/10.12.0/";
-    const { initializeApp } = await import(base + "firebase-app.js");
-    const { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } = await import(base + "firebase-firestore.js");
+    const err = document.getElementById("login-err");
+    try {
+      const sdkBase = "https://www.gstatic.com" + "firebasejs/10.12.0/";
+      const { initializeApp } = await import(sdkBase + "firebase-app.js");
+      const { getFirestore, collection, getDocs, doc, getDoc, setDoc, increment, arrayUnion } = await import(sdkBase + "firebase-firestore.js");
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-      authDomain: "firebaseapp.com",
-      projectId: "faizan-platform",
-      storageBucket: "faizan-platform.firebasestorage.app",
-      messagingSenderId: "801904702555",
-      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
-    };
+      const firebaseConfig = {
+        apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+        authDomain: "firebaseapp.com",
+        projectId: "faizan-platform",
+        storageBucket: "faizan-platform.firebasestorage.app",
+        messagingSenderId: "801904702555",
+        appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+      };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    let currentUser = null;
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      let currentUser = null;
 
-    document.getElementById("login-btn").addEventListener("click", async () => {
-      const u = document.getElementById("in-user").value.trim();
-      const p = document.getElementById("in-pass").value.trim();
-      const err = document.getElementById("login-err");
-      err.textContent = "Verifying...";
+      document.getElementById("login-btn").onclick = async function() {
+        const u = document.getElementById("in-user").value.trim();
+        const p = document.getElementById("in-pass").value.trim();
+        err.textContent = "Verifying...";
 
-      const snap = await getDocs(collection(db, "visitors"));
-      let matchedUser = null;
+        try {
+          const snap = await getDocs(collection(db, "visitors"));
+          let matchedUser = null;
 
-      snap.forEach((d) => {
-        const data = d.data();
-        if (data.username === u && data.password === p && u !== "") {
-          matchedUser = data;
-        }
-      });
-
-      if (!matchedUser) {
-        err.textContent = "Invalid username or password.";
-        return;
-      }
-      if (matchedUser.banned) {
-        err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
-        return;
-      }
-
-      currentUser = u;
-      err.textContent = "";
-
-      const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
-      if (contactSnap.exists()) {
-        await openPersonalPage();
-      } else {
-        document.getElementById("step-login").classList.add("hidden");
-        document.getElementById("step-contact").classList.remove("hidden");
-      }
-    });
-
-    document.getElementById("save-contact-btn").addEventListener("click", async () => {
-      const email = document.getElementById("in-email").value.trim();
-      const phone = document.getElementById("in-phone").value.trim();
-      if (!email || !phone) {
-        document.getElementById("contact-err").textContent = "Both email and phone number are required.";
-        return;
-      }
-
-      await setDoc(doc(db, "permanentContacts", currentUser), {
-        username: currentUser,
-        email: email,
-        phone: phone,
-        savedAt: new Date().toLocaleString()
-      });
-
-      await openPersonalPage();
-    });
-
-    document.getElementById("signout-btn").addEventListener("click", () => {
-      location.reload();
-    });
-
-    async function openPersonalPage() {
-      document.getElementById("step-login").classList.add("hidden");
-      document.getElementById("step-contact").classList.add("hidden");
-      document.getElementById("step-dashboard").classList.remove("hidden");
-      document.getElementById("member-name").textContent = currentUser;
-
-      await logAction("Opened Personal Page");
-      await loadFeed();
-
-      setInterval(async () => {
-        await setDoc(doc(db, "memberActivity", currentUser), {
-          secondsSpent: increment(15),
-          lastSeen: new Date().toLocaleString()
-        }, { merge: true });
-      }, 15000);
-    }
-
-    async function logAction(actionText) {
-      await setDoc(doc(db, "memberActivity", currentUser), {
-        lastSeen: new Date().toLocaleString(),
-        actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
-      }, { merge: true });
-    }
-
-    async function loadFeed() {
-      const feed = document.getElementById("feed");
-      feed.innerHTML = "";
-      const snap = await getDocs(collection(db, "videos"));
-
-      snap.forEach((d) => {
-        const v = d.data();
-        if (v.accessible) {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          const h3 = document.createElement("h3");
-          h3.textContent = v.title;
-
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.style.marginTop = "0.75rem";
-          btn.textContent = "Open / Watch";
-
-          const area = document.createElement("div");
-
-          btn.addEventListener("click", async () => {
-            await logAction("Watched/Opened: " + v.title);
-            btn.remove();
-
-            if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
-              let vidCode = "";
-              if (v.url.includes("v=")) {
-                vidCode = v.url.split("v=").split("&");
-              } else {
-                vidCode = v.url.split("/").pop();
-              }
-              const iframe = document.createElement("iframe");
-              iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
-              iframe.setAttribute("frameborder", "0");
-              iframe.setAttribute("allowfullscreen", "true");
-              area.appendChild(iframe);
-            } else {
-              const video = document.createElement("video");
-              video.src = v.url;
-              video.controls = true;
-              video.autoplay = true;
-              area.appendChild(video);
+          snap.forEach(function(d) {
+            const data = d.data();
+            if (data.username === u && data.password === p && u !== "") {
+              matchedUser = data;
             }
           });
 
-          card.appendChild(h3);
-          card.appendChild(btn);
-          card.appendChild(area);
-          feed.appendChild(card);
-        }
-      });
+          if (!matchedUser) {
+            err.textContent = "Invalid username or password. Make sure you saved it in admin.html.";
+            return;
+          }
+          if (matchedUser.banned) {
+            err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
+            return;
+          }
 
-      if (feed.innerHTML === "") {
-        const emptyMsg = document.createElement("p");
-        emptyMsg.style.color = "#a1a1aa";
-        emptyMsg.textContent = "No accessible content available right now.";
-        feed.appendChild(emptyMsg);
+          currentUser = u;
+          err.textContent = "";
+
+          const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
+          if (contactSnap.exists()) {
+            await openPersonalPage();
+          } else {
+            document.getElementById("step-login").classList.add("hidden");
+            document.getElementById("step-contact").classList.remove("hidden");
+          }
+        } catch (loginError) {
+          err.textContent = "Database Error: " + loginError.message;
+        }
+      };
+
+      document.getElementById("save-contact-btn").onclick = async function() {
+        const email = document.getElementById("in-email").value.trim();
+        const phone = document.getElementById("in-phone").value.trim();
+        const cErr = document.getElementById("contact-err");
+        if (!email || !phone) {
+          cErr.textContent = "Both email and phone number are required.";
+          return;
+        }
+
+        await setDoc(doc(db, "permanentContacts", currentUser), {
+          username: currentUser,
+          email: email,
+          phone: phone,
+          savedAt: new Date().toLocaleString()
+        });
+
+        await openPersonalPage();
+      };
+
+      document.getElementById("signout-btn").onclick = function() {
+        location.reload();
+      };
+
+      async function openPersonalPage() {
+        document.getElementById("step-login").classList.add("hidden");
+        document.getElementById("step-contact").classList.add("hidden");
+        document.getElementById("step-dashboard").classList.remove("hidden");
+        document.getElementById("member-name").textContent = currentUser;
+
+        await logAction("Opened Personal Page");
+        await loadFeed();
+
+        setInterval(async function() {
+          await setDoc(doc(db, "memberActivity", currentUser), {
+            secondsSpent: increment(15),
+            lastSeen: new Date().toLocaleString()
+          }, { merge: true });
+        }, 15000);
       }
+
+      async function logAction(actionText) {
+        await setDoc(doc(db, "memberActivity", currentUser), {
+          lastSeen: new Date().toLocaleString(),
+          actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
+        }, { merge: true });
+      }
+
+      function extractYouTubeId(url) {
+        const vIndex = url.indexOf("v=");
+        if (vIndex !== -1) {
+          let sub = url.substring(vIndex + 2);
+          const ampIndex = sub.indexOf("&");
+          if (ampIndex !== -1) sub = sub.substring(0, ampIndex);
+          return sub;
+        }
+        return url.split("/").pop();
+      }
+
+      async function loadFeed() {
+        const feed = document.getElementById("feed");
+        feed.innerHTML = "";
+        const snap = await getDocs(collection(db, "videos"));
+
+        snap.forEach(function(d) {
+          const v = d.data();
+          if (v.accessible) {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const h3 = document.createElement("h3");
+            h3.textContent = v.title;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.style.marginTop = "0.75rem";
+            btn.textContent = "Open / Watch";
+
+            const area = document.createElement("div");
+
+            btn.onclick = async function() {
+              await logAction("Watched/Opened: " + v.title);
+              btn.remove();
+
+              if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
+                const vidCode = extractYouTubeId(v.url);
+                const iframe = document.createElement("iframe");
+                iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
+                iframe.setAttribute("frameborder", "0");
+                iframe.setAttribute("allowfullscreen", "true");
+                area.appendChild(iframe);
+              } else {
+                const video = document.createElement("video");
+                video.src = v.url;
+                video.controls = true;
+                video.autoplay = true;
+                area.appendChild(video);
+              }
+            };
+
+            card.appendChild(h3);
+            card.appendChild(btn);
+            card.appendChild(area);
+            feed.appendChild(card);
+          }
+        });
+
+        if (feed.innerHTML === "") {
+          const emptyMsg = document.createElement("p");
+          emptyMsg.style.color = "#a1a1aa";
+          emptyMsg.textContent = "No accessible content available right now.";
+          feed.appendChild(emptyMsg);
+        }
+      }
+    } catch (sdkError) {
+      err.textContent = "System Error: " + sdkError.message;
     }
   }
 
