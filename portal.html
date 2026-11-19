@@ -15,7 +15,15 @@
 <header class="topbar">
   <a href="index.html" class="brand">FAIZAN</a>
   <div class="row" style="margin-bottom: 0;">
-    <button type="button" id="theme-toggle-btn" class="btn btn-muted">Light / Dark Mode</button>
+    <select id="visual-preset-select" aria-label="Visual Theme Preset">
+      <option value="default">Original Cold Basement</option>
+      <option value="theme-cyber">Cyber Neon Grid</option>
+      <option value="theme-aurora">Midnight Aurora</option>
+      <option value="theme-gold">Royal Obsidian &amp; Gold</option>
+      <option value="theme-light">Daylight Glass</option>
+    </select>
+
+
     <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Home</a>
     <button type="button" id="signout-btn" class="btn btn-muted hidden">Sign Out</button>
   </div>
@@ -181,7 +189,19 @@
   </main>
 </div>
 <script>
-  const themeBtn = document.getElementById("theme-toggle-btn");
+  const presetSelect = document.getElementById("visual-preset-select");
+  const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
+  if (savedPreset !== "default") {
+    document.body.classList.add(savedPreset);
+    presetSelect.value = savedPreset;
+  }
+  presetSelect.onchange = function() {
+    document.body.classList.remove("light-mode", "theme-light", "theme-cyber", "theme-aurora", "theme-gold");
+    const chosen = presetSelect.value;
+    if (chosen !== "default") document.body.classList.add(chosen);
+    localStorage.setItem("faizan_visual_preset", chosen);
+  };
+
   if (localStorage.getItem("faizan_theme") === "light") {
     document.body.classList.add("light-mode");
   }
