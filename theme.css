@@ -258,3 +258,24 @@ th, td {
     width: auto;
   }
 }
+/* Blue Hover on Every Button */
+button:hover,
+.btn:hover,
+.side-btn:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  transition: background 0.15s ease;
+}
+
+/* Live Green / Red Typing Borders */
+input.input-valid {
+  border: 2px solid #16a34a !important;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.45);
+  outline: none;
+}
+
+input.input-invalid {
+  border: 2px solid #dc2626 !important;
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.45);
+  outline: none;
+}

@@ -174,6 +174,45 @@
       let userBanner = "";
       let allMembers = [];
 
+      let validAccounts = [];
+      getDocs(collection(db, "visitors")).then(function(snap) {
+        snap.forEach(function(d) {
+          const data = d.data();
+          if (data.username) validAccounts.push(data);
+        });
+      });
+
+      const userBox = document.getElementById("in-user");
+      const passBox = document.getElementById("in-pass");
+
+      userBox.oninput = function() {
+        const typedU = userBox.value;
+        userBox.classList.remove("input-valid", "input-invalid");
+        if (typedU.length === 0) return;
+
+        const matchesAnyUser = validAccounts.some(function(acc) {
+          return acc.username.startsWith(typedU);
+        });
+        userBox.classList.add(matchesAnyUser ? "input-valid" : "input-invalid");
+      };
+
+      passBox.oninput = function() {
+        const typedU = userBox.value.trim();
+        const typedP = passBox.value;
+        passBox.classList.remove("input-valid", "input-invalid");
+        if (typedP.length === 0) return;
+
+        const matchingAccount = validAccounts.find(function(acc) {
+          return acc.username === typedU;
+        });
+        if (matchingAccount && matchingAccount.password.startsWith(typedP)) {
+          passBox.classList.add("input-valid");
+        } else {
+          passBox.classList.add("input-invalid");
+        }
+      };
+
+
       document.getElementById("login-btn").onclick = async function() {
         const u = document.getElementById("in-user").value.trim();
         const p = document.getElementById("in-pass").value.trim();

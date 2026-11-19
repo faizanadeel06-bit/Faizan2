@@ -165,6 +165,20 @@
 </div>
 <script>
   const ADMIN_PASSWORD = "faizan123";
+  // Live Green/Red Password Typing Feedback
+  const adminPassBox = document.getElementById("admin-pass-input");
+  adminPassBox.oninput = function() {
+    const typed = adminPassBox.value;
+    adminPassBox.classList.remove("input-valid", "input-invalid");
+    if (typed.length === 0) return;
+
+    if (ADMIN_PASSWORD.startsWith(typed)) {
+      adminPassBox.classList.add("input-valid");
+    } else {
+      adminPassBox.classList.add("input-invalid");
+    }
+  };
+
   const CLOUD_NAME = "fh4mrkmm";
   const UPLOAD_PRESET = "faizan_vault";
 
