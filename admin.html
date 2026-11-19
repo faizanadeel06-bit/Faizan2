@@ -160,6 +160,8 @@
             <option value="font-tech">Cold Steel Sans</option>
           </select>
           <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Site Theme</button>
+          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset to Default</button>
+
         </div>
       </div>
 
@@ -556,6 +558,16 @@
         if (font !== "default") document.body.classList.add(font);
         await setDoc(themeDocRef, { bg: bg, color: color, font: font });
         alert("Global website colors and font saved!");
+      };
+      document.getElementById("reset-global-theme-btn").onclick = async function() {
+        document.body.style.background = "";
+        document.body.style.color = "";
+        document.body.classList.remove("font-mono", "font-serif", "font-tech");
+        document.getElementById("admin-bg-color").value = "#06090e";
+        document.getElementById("admin-text-color").value = "#e2e8f0";
+        document.getElementById("admin-font-select").value = "default";
+        await deleteDoc(themeDocRef);
+        alert("Website reset to default Cold Basement theme!");
       };
 
 
