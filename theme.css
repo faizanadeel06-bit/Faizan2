@@ -279,3 +279,20 @@ input.input-invalid {
   box-shadow: 0 0 8px rgba(220, 38, 38, 0.45);
   outline: none;
 }
+/* Cold Basement Default Aesthetic */
+body:not(.light-mode) {
+  --bg-main: #06090e;
+  --bg-panel: #0d131d;
+  --bg-input: #080c14;
+  --border-color: #1e293b;
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  background-image: radial-gradient(circle at 50% 0%, #0f1c2e 0%, #06090e 75%);
+}
+
+/* Custom User & Admin Font Choices */
+body.font-mono { font-family: "Courier New", Consolas, monospace; }
+body.font-serif { font-family: Georgia, "Times New Roman", serif; }
+body.font-tech { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 0.03em; }

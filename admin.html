@@ -147,6 +147,22 @@
           <tbody id="activity-table"></tbody>
         </table>
       </div>
+      <div class="card" style="margin-top: 1.5rem;">
+        <h2>Website Cold Basement Theme &amp; Color Studio</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Choose the global background color, text color, and font style for your platform.</p>
+        <div class="row">
+          <label>Background: <input type="color" id="admin-bg-color" value="#06090e" /></label>
+          <label>Font Color: <input type="color" id="admin-text-color" value="#e2e8f0" /></label>
+          <select id="admin-font-select" aria-label="Global Font">
+            <option value="default">Modern System Font</option>
+            <option value="font-mono">Basement Terminal (Monospace)</option>
+            <option value="font-serif">Editorial Serif</option>
+            <option value="font-tech">Cold Steel Sans</option>
+          </select>
+          <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Site Theme</button>
+        </div>
+      </div>
+
     </section>
 
     <!-- TAB 6: MINI-GAMES TRACKER -->
@@ -280,7 +296,7 @@
     try {
       const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
       const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
+      const { getFirestore, collection, addDoc, getDocs, doc,getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
@@ -344,6 +360,7 @@
         document.getElementById("item-url").value = "";
         document.getElementById("item-body").value = "";
         statusText.textContent = "";
+
         await loadItems();
       };
 
@@ -509,6 +526,38 @@
           tbody.appendChild(tr);
         });
       }
+
+      // Load & Save Admin Global Theme
+      const themeDocRef = doc(db, "siteSettings", "globalTheme");
+      const existingTheme = await getDoc(themeDocRef);
+      if (existingTheme.exists()) {
+        const tData = existingTheme.data();
+        if (tData.bg) {
+          document.body.style.background = tData.bg;
+          document.getElementById("admin-bg-color").value = tData.bg;
+        }
+        if (tData.color) {
+          document.body.style.color = tData.color;
+          document.getElementById("admin-text-color").value = tData.color;
+        }
+        if (tData.font && tData.font !== "default") {
+          document.body.classList.add(tData.font);
+          document.getElementById("admin-font-select").value = tData.font;
+        }
+      }
+
+      document.getElementById("save-global-theme-btn").onclick = async function() {
+        const bg = document.getElementById("admin-bg-color").value;
+        const color = document.getElementById("admin-text-color").value;
+        const font = document.getElementById("admin-font-select").value;
+        document.body.style.background = bg;
+        document.body.style.color = color;
+        document.body.classList.remove("font-mono", "font-serif", "font-tech");
+        if (font !== "default") document.body.classList.add(font);
+        await setDoc(themeDocRef, { bg: bg, color: color, font: font });
+        alert("Global website colors and font saved!");
+      };
+
 
       await loadItems();
       await load30Slots();
