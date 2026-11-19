@@ -46,9 +46,10 @@
 <div id="portal-shell" class="app-shell hidden">
   <aside class="sidebar">
     <button type="button" class="side-btn active" data-ptab="ptab-vault">My Page &amp; Vault</button>
+    <button type="button" class="side-btn" data-ptab="ptab-folder">My Private Folder</button>
     <button type="button" class="side-btn" data-ptab="ptab-group">Group Chat</button>
     <button type="button" class="side-btn" data-ptab="ptab-dm">Private Messages</button>
-    <button type="button" class="side-btn" data-ptab="ptab-games">Mini-Games</button>
+    <button type="button" class="side-btn" data-ptab="ptab-games">Arcade (8 Games)</button>
   </aside>
 
   <main class="content-area">
@@ -58,26 +59,29 @@
       <h1 style="font-size: 2rem;"><span id="member-name"></span>'s Personal Page</h1>
       <p style="color: var(--text-muted); font-size: 0.9rem;">Status: Active Member | Session tracked automatically</p>
     </div>
-
     <section id="ptab-vault" class="portal-tab">
       <div class="card">
         <h2>Customize My Personal Page Look</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.65rem;">Type any color name (e.g. midnightblue, black, darkslategray) or hex code, and pick your font.</p>
         <div class="row">
-          <label>Page Background: <input type="color" id="user-bg-color" value="#06090e" /></label>
-          <label>Font Style:
-            <select id="user-font-select">
-              <option value="default">Modern System</option>
-              <option value="font-mono">Basement Terminal (Mono)</option>
-              <option value="font-serif">Classic Serif</option>
-              <option value="font-tech">Cold Steel Tech</option>
-            </select>
-          </label>
+          <input type="text" id="user-bg-color" placeholder="Background color (e.g. #06090e or navy)" style="min-width: 220px;" />
+          <select id="user-font-select" aria-label="Font Style">
+            <option value="default">Modern System</option>
+            <option value="font-mono">Basement Terminal (Mono)</option>
+            <option value="font-serif">Classic Serif</option>
+            <option value="font-tech">Cold Steel Tech</option>
+          </select>
           <button type="button" id="save-user-style-btn" class="btn">Save My Style</button>
+          <button type="button" id="reset-user-style-btn" class="btn btn-muted">Reset to Default</button>
         </div>
       </div>
 
       <h2 style="margin-bottom: 1rem;">Accessible Videos, Art, Files &amp; Posts</h2>
       <div id="feed">Loading content...</div>
+    </section>
+
+    <section id="ptab-folder" class="portal-tab hidden">
+      <div id="my-personal-folder">Loading your private folder...</div>
     </section>
 
     <section id="ptab-group" class="portal-tab hidden">
@@ -106,15 +110,19 @@
 
     <section id="ptab-games" class="portal-tab hidden">
       <div class="card">
-        <h2>Reflex Speed Challenge</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Click Start, wait for the button to turn GREEN, and tap as fast as you can! Every round is tracked.</p>
+        <h2>1. Cold Tunnel Ball Runner (Jump &amp; Duck)</h2>
+        <div id="ball-runner-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>2. Reflex Speed Challenge</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Click Start, wait for the button to turn GREEN, and tap as fast as you can!</p>
         <button type="button" id="reflex-btn" class="btn" style="padding: 1.25rem 2rem; font-size: 1.1rem;">Start Reflex Test</button>
         <p id="reflex-result" style="margin-top: 0.75rem; font-weight: 600;"></p>
       </div>
 
       <div class="card">
-        <h2>Number Guess (1 to 20)</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Guess the secret number between 1 and 20.</p>
+        <h2>3. Number Guess (1 to 20)</h2>
         <div class="row">
           <input type="number" id="guess-input" min="1" max="20" placeholder="1 - 20" style="width: 120px;" />
           <button type="button" id="guess-btn" class="btn">Guess</button>
@@ -122,9 +130,9 @@
         </div>
         <p id="guess-result" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
-      <!-- Game 3: Quick Math Blitz -->
+
       <div class="card">
-        <h2>3. Quick Math Blitz</h2>
+        <h2>4. Quick Math Blitz</h2>
         <p id="math-q" style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Click New Problem to start</p>
         <div class="row">
           <input type="number" id="math-ans" placeholder="Answer" style="width: 120px;" />
@@ -134,10 +142,8 @@
         <p id="math-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
 
-      <!-- Game 4: Cold Vault Code Cracker (Memory) -->
       <div class="card">
-        <h2>4. Basement PIN Memory</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Memorize the 4-digit PIN before it disappears, then type it in!</p>
+        <h2>5. Basement PIN Memory</h2>
         <p id="pin-display" style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.2em; margin-bottom: 0.5rem;">****</p>
         <div class="row">
           <input type="text" id="pin-input" placeholder="Enter PIN" style="width: 140px;" />
@@ -147,9 +153,8 @@
         <p id="pin-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
 
-      <!-- Game 5: Rock Paper Scissors -->
       <div class="card">
-        <h2>5. Rock, Paper, Scissors</h2>
+        <h2>6. Rock, Paper, Scissors</h2>
         <div class="row">
           <button type="button" class="btn rps-btn" data-move="Rock">Rock</button>
           <button type="button" class="btn rps-btn" data-move="Paper">Paper</button>
@@ -158,23 +163,20 @@
         <p id="rps-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
 
-      <!-- Game 6: 10-Second Clicker -->
       <div class="card">
-        <h2>6. 10-Second Speed Clicker</h2>
+        <h2>7. 10-Second Speed Clicker</h2>
         <button type="button" id="clicker-btn" class="btn" style="padding: 1rem 1.5rem;">Start 10s Clicker</button>
         <p id="clicker-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
 
-      <!-- Game 7: Coin Flip Streak -->
       <div class="card">
-        <h2>7. Coin Flip Streak</h2>
+        <h2>8. Coin Flip Streak</h2>
         <div class="row">
           <button type="button" id="coin-heads" class="btn">Heads</button>
           <button type="button" id="coin-tails" class="btn">Tails</button>
         </div>
         <p id="coin-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
       </div>
-
     </section>
   </main>
 </div>
@@ -193,7 +195,7 @@
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
   }, 1000);
 
-  const namazUrl = "https://aladhan.com" + "timingsByCity?city=Karachi&country=Pakistan&method=1";
+  const namazUrl = "https://" + "api." + "aladhan.com" + "/v1/timingsByCity?city=Karachi&country=Pakistan&method=1";
   fetch(namazUrl)
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -224,15 +226,15 @@
   async function initPortal() {
     const err = document.getElementById("login-err");
     try {
-      const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
+      const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
       const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, increment, arrayUnion, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
+      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, deleteDoc, setDoc, increment, arrayUnion, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "firebaseapp.com",
+        authDomain: "faizan-platform" + ".firebaseapp.com",
         projectId: "faizan-platform",
-        storageBucket: "faizan-platform.firebasestorage.app",
+        storageBucket: "faizan-platform" + ".firebasestorage.app",
         messagingSenderId: "801904702555",
         appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
       };
@@ -242,8 +244,8 @@
       let currentUser = null;
       let userBanner = "";
       let allMembers = [];
-
       let validAccounts = [];
+
       getDocs(collection(db, "visitors")).then(function(snap) {
         snap.forEach(function(d) {
           const data = d.data();
@@ -258,7 +260,6 @@
         const typedU = userBox.value;
         userBox.classList.remove("input-valid", "input-invalid");
         if (typedU.length === 0) return;
-
         const matchesAnyUser = validAccounts.some(function(acc) {
           return acc.username.startsWith(typedU);
         });
@@ -270,7 +271,6 @@
         const typedP = passBox.value;
         passBox.classList.remove("input-valid", "input-invalid");
         if (typedP.length === 0) return;
-
         const matchingAccount = validAccounts.find(function(acc) {
           return acc.username === typedU;
         });
@@ -280,8 +280,6 @@
           passBox.classList.add("input-invalid");
         }
       };
-
-
       document.getElementById("login-btn").onclick = async function() {
         const u = document.getElementById("in-user").value.trim();
         const p = document.getElementById("in-pass").value.trim();
@@ -347,6 +345,7 @@
       document.getElementById("signout-btn").onclick = function() {
         location.reload();
       };
+
       async function openPersonalSpace() {
         document.getElementById("step-login").classList.add("hidden");
         document.getElementById("step-contact").classList.add("hidden");
@@ -358,6 +357,18 @@
           const bannerImg = document.getElementById("personal-banner");
           bannerImg.src = userBanner;
           bannerImg.classList.remove("hidden");
+        }
+
+        if (window.renderMemberFolder) {
+          window.renderMemberFolder({
+            db: db,
+            firestoreFns: { collection, addDoc, getDocs, deleteDoc, doc, query, where },
+            targetUsername: currentUser,
+            uploaderName: currentUser,
+            containerId: "my-personal-folder",
+            cloudName: "fh4mrkmm",
+            uploadPreset: "faizan_vault"
+          });
         }
 
         populateDmRecipients();
@@ -382,7 +393,6 @@
           actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
         }, { merge: true });
       }
-
       function extractYouTubeId(url) {
         const vIndex = url.indexOf("v=");
         if (vIndex !== -1) {
@@ -466,7 +476,7 @@
                 } else if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
                   const vidCode = extractYouTubeId(v.url);
                   const iframe = document.createElement("iframe");
-                  iframe.src = "https://youtube.com" + vidCode + "?autoplay=1";
+                  iframe.src = "https://" + "www." + "youtube.com" + "/embed/" + vidCode + "?autoplay=1";
                   iframe.setAttribute("frameborder", "0");
                   iframe.setAttribute("allowfullscreen", "true");
                   area.appendChild(iframe);
@@ -494,6 +504,7 @@
           feed.appendChild(emptyMsg);
         }
       }
+
       function startGroupChat() {
         document.getElementById("member-send-chat").onclick = async function() {
           const input = document.getElementById("member-chat-input");
@@ -590,37 +601,40 @@
           box.scrollTop = box.scrollHeight;
         });
       }
-
       function setupGames() {
-        // Load Admin Global Theme + User Personal Style
-        getDoc(doc(db, "siteSettings", "globalTheme")).then(function(tSnap) {
-          if (tSnap.exists()) {
-            const g = tSnap.data();
-            if (g.bg) document.body.style.background = g.bg;
-            if (g.color) document.body.style.color = g.color;
-            if (g.font && g.font !== "default") document.body.classList.add(g.font);
-          }
-        });
+        Promise.all([
+          getDoc(doc(db, "siteSettings", "theme_portal")),
+          getDoc(doc(db, "siteSettings", "theme_all")),
+          getDoc(doc(db, "userStyles", currentUser))
+        ]).then(function(snaps) {
+          const portalTheme = snaps.item ? null : (snaps.at(0).exists() ? snaps.at(0).data() : null);
+          const allTheme = snaps.at(1).exists() ? snaps.at(1).data() : null;
+          const userTheme = snaps.at(2).exists() ? snaps.at(2).data() : null;
 
-        getDoc(doc(db, "userStyles", currentUser)).then(function(uSnap) {
-          if (uSnap.exists()) {
-            const u = uSnap.data();
-            if (u.bg) {
-              document.body.style.background = u.bg;
-              document.getElementById("user-bg-color").value = u.bg;
+          const baseTheme = portalTheme || allTheme;
+          if (baseTheme) {
+            if (baseTheme.bg) document.body.style.background = baseTheme.bg;
+            if (baseTheme.color) document.body.style.color = baseTheme.color;
+            if (baseTheme.font && baseTheme.font !== "default") document.body.classList.add(baseTheme.font);
+          }
+
+          if (userTheme) {
+            if (userTheme.bg) {
+              document.body.style.background = userTheme.bg;
+              document.getElementById("user-bg-color").value = userTheme.bg;
             }
-            if (u.font && u.font !== "default") {
+            if (userTheme.font && userTheme.font !== "default") {
               document.body.classList.remove("font-mono", "font-serif", "font-tech");
-              document.body.classList.add(u.font);
-              document.getElementById("user-font-select").value = u.font;
+              document.body.classList.add(userTheme.font);
+              document.getElementById("user-font-select").value = userTheme.font;
             }
           }
         });
 
         document.getElementById("save-user-style-btn").onclick = async function() {
-          const bg = document.getElementById("user-bg-color").value;
+          const bg = document.getElementById("user-bg-color").value.trim();
           const font = document.getElementById("user-font-select").value;
-          document.body.style.background = bg;
+          if (bg) document.body.style.background = bg;
           document.body.classList.remove("font-mono", "font-serif", "font-tech");
           if (font !== "default") document.body.classList.add(font);
           await setDoc(doc(db, "userStyles", currentUser), { bg: bg, font: font });
@@ -628,7 +642,20 @@
           alert("Your personal page style is saved!");
         };
 
-        // Game 1: Reflex Speed Challenge
+        document.getElementById("reset-user-style-btn").onclick = async function() {
+          document.body.style.background = "";
+          document.body.classList.remove("font-mono", "font-serif", "font-tech");
+          document.getElementById("user-bg-color").value = "";
+          document.getElementById("user-font-select").value = "default";
+          await deleteDoc(doc(db, "userStyles", currentUser));
+          await logAction("Reset Page Theme to Default");
+          alert("Page style reset to default Cold Basement!");
+        };
+
+        if (window.launchObstacleRunner) {
+          window.launchObstacleRunner("ball-runner-box", recordGame);
+        }
+
         let reflexState = "idle";
         let startTime = 0;
         let timerId = null;
@@ -663,7 +690,6 @@
           }
         };
 
-        // Game 2: Number Guess (1 - 20)
         let secretNum = 1 + Math.floor(Math.random() * 20);
         let attempts = 0;
         const gRes = document.getElementById("guess-result");
@@ -689,8 +715,6 @@
             gRes.textContent = "Too high! Try lower.";
           }
         };
-
-        // Game 3: Quick Math Blitz
         let mathAns = 0;
         document.getElementById("math-new-btn").onclick = function() {
           const a = 5 + Math.floor(Math.random() * 25);
@@ -711,7 +735,6 @@
           }
         };
 
-        // Game 4: Basement PIN Memory
         let currentPin = "";
         document.getElementById("pin-start-btn").onclick = function() {
           currentPin = String(1000 + Math.floor(Math.random() * 9000));
@@ -731,7 +754,6 @@
           }
         };
 
-        // Game 5: Rock Paper Scissors
         const moves = ["Rock", "Paper", "Scissors"];
         document.querySelectorAll(".rps-btn").forEach(function(b) {
           b.onclick = async function() {
@@ -749,7 +771,6 @@
           };
         });
 
-        // Game 6: 10-Second Speed Clicker
         let clicks = 0;
         let clickingActive = false;
         const cBtn = document.getElementById("clicker-btn");
@@ -770,7 +791,6 @@
           }
         };
 
-        // Game 7: Coin Flip Streak
         let streak = 0;
         async function flipCoin(choice) {
           const side = Math.random() < 0.5 ? "Heads" : "Tails";
@@ -806,5 +826,7 @@
 
   initPortal();
 </script>
+<script src="arcade.js"></script>
+<script src="folders.js"></script>
 </body>
 </html>

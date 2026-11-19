@@ -16,7 +16,6 @@
   </div>
 </header>
 
-<!-- Owner Password Lock -->
 <div id="admin-lock" class="card" style="max-width: 420px; margin: 4rem auto;">
   <h2>Owner Authentication</h2>
   <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Enter your owner password to unlock your command center.</p>
@@ -27,19 +26,17 @@
   <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
 </div>
 
-<!-- YouTube-Style App Shell -->
 <div id="admin-shell" class="app-shell hidden">
   <aside class="sidebar">
     <button type="button" class="side-btn active" data-tab="tab-home">Home Greeting</button>
     <button type="button" class="side-btn" data-tab="tab-publish">Publish &amp; Vault</button>
-    <button type="button" class="side-btn" data-tab="tab-members">30 Members &amp; Banners</button>
+    <button type="button" class="side-btn" data-tab="tab-members">30 Members &amp; Folders</button>
     <button type="button" class="side-btn" data-tab="tab-chat">Chat &amp; DM Monitor</button>
     <button type="button" class="side-btn" data-tab="tab-directory">Directory &amp; Activity</button>
     <button type="button" class="side-btn" data-tab="tab-games">Game Tracker</button>
   </aside>
 
   <main class="content-area">
-    <!-- TAB 1: GREETING HOME -->
     <section id="tab-home" class="admin-tab">
       <div class="card">
         <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Assalam-o-Alaikum, Faizan</h1>
@@ -59,9 +56,32 @@
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- TAB 2: PUBLISH & CONTENT VAULT -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <h2>Website Theme &amp; Font Controller (Per-Page or Collective)</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Type any color name (e.g. midnightblue, black, darkslategray) or hex code, and apply it to one page or every page at once.</p>
+        <div class="row">
+          <select id="theme-target-page" aria-label="Target Page">
+            <option value="all">All Pages (Collectively)</option>
+            <option value="admin">Admin Command Center Only</option>
+            <option value="portal">Member Portal Only</option>
+            <option value="public">Public Pages</option>
+          </select>
+          <input type="text" id="admin-bg-text" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 220px;" />
+          <input type="text" id="admin-font-color-text" placeholder="Font color (e.g. #e2e8f0 or cyan)" style="min-width: 190px;" />
+          <select id="admin-font-select" aria-label="Font Style">
+            <option value="default">Modern System Font</option>
+            <option value="font-mono">Basement Terminal (Mono)</option>
+            <option value="font-serif">Editorial Serif</option>
+            <option value="font-tech">Cold Steel Sans</option>
+          </select>
+        </div>
+        <div class="row">
+          <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Theme</button>
+          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset Selected to Default</button>
+        </div>
+      </div>
+    </section>
     <section id="tab-publish" class="admin-tab hidden">
       <div class="card">
         <h2>Publish Media, Files, Code or Posts</h2>
@@ -93,17 +113,24 @@
       </div>
     </section>
 
-    <!-- TAB 3: 30 MEMBERS & TOP BANNER PICTURES -->
     <section id="tab-members" class="admin-tab hidden">
       <div class="card">
         <h2>30 Member Slots, Top Banner Pics &amp; Ban Controls</h2>
         <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Assign usernames, passwords, and a custom Top Banner Image URL for each member's personal page.</p>
-        <div id="member-slots" style="max-height: 460px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px;"></div>
+        <div id="member-slots" style="max-height: 420px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px;"></div>
         <button type="button" id="save-members-btn" class="btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+          <h3>Inspect or Upload to a Member's Private Folder</h3>
+          <div class="row" style="margin-top: 0.5rem;">
+            <input type="text" id="admin-folder-target" placeholder="Type member username..." />
+            <button type="button" id="open-member-folder-btn" class="btn">Open Folder</button>
+          </div>
+          <div id="admin-folder-view"></div>
+        </div>
       </div>
     </section>
 
-    <!-- TAB 4: GROUP CHAT & WHATSAPP-STYLE DM MONITOR -->
     <section id="tab-chat" class="admin-tab hidden">
       <div class="card">
         <h2>Community Group Chat (Owner View &amp; Share)</h2>
@@ -126,7 +153,6 @@
       </div>
     </section>
 
-    <!-- TAB 5: PERMANENT DIRECTORY & ACTIVITY TRACKER -->
     <section id="tab-directory" class="admin-tab hidden">
       <div class="card">
         <h2>Permanent Member Directory (Saved Even If Removed)</h2>
@@ -147,27 +173,8 @@
           <tbody id="activity-table"></tbody>
         </table>
       </div>
-      <div class="card" style="margin-top: 1.5rem;">
-        <h2>Website Cold Basement Theme &amp; Color Studio</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Choose the global background color, text color, and font style for your platform.</p>
-        <div class="row">
-          <label>Background: <input type="color" id="admin-bg-color" value="#06090e" /></label>
-          <label>Font Color: <input type="color" id="admin-text-color" value="#e2e8f0" /></label>
-          <select id="admin-font-select" aria-label="Global Font">
-            <option value="default">Modern System Font</option>
-            <option value="font-mono">Basement Terminal (Monospace)</option>
-            <option value="font-serif">Editorial Serif</option>
-            <option value="font-tech">Cold Steel Sans</option>
-          </select>
-          <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Site Theme</button>
-          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset to Default</button>
-
-        </div>
-      </div>
-
     </section>
 
-    <!-- TAB 6: MINI-GAMES TRACKER -->
     <section id="tab-games" class="admin-tab hidden">
       <div class="card">
         <h2>Member Game Playtime &amp; Score Tracker</h2>
@@ -183,22 +190,20 @@
 </div>
 <script>
   const ADMIN_PASSWORD = "faizan123";
-  // Live Green/Red Password Typing Feedback
+  const CLOUD_NAME = "fh4mrkmm";
+  const UPLOAD_PRESET = "faizan_vault";
+
   const adminPassBox = document.getElementById("admin-pass-input");
   adminPassBox.oninput = function() {
     const typed = adminPassBox.value;
     adminPassBox.classList.remove("input-valid", "input-invalid");
     if (typed.length === 0) return;
-
     if (ADMIN_PASSWORD.startsWith(typed)) {
       adminPassBox.classList.add("input-valid");
     } else {
       adminPassBox.classList.add("input-invalid");
     }
   };
-
-  const CLOUD_NAME = "fh4mrkmm";
-  const UPLOAD_PRESET = "faizan_vault";
 
   const themeBtn = document.getElementById("theme-toggle-btn");
   if (localStorage.getItem("faizan_theme") === "light") {
@@ -292,13 +297,12 @@
       box.appendChild(row);
     }
   }
-
   async function startAdminSystem() {
     draw30Slots({});
     try {
       const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
       const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, addDoc, getDocs, doc,getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot } = await import(sdkBase + "firebase-firestore.js");
+      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
@@ -329,7 +333,7 @@
         formData.append("upload_preset", UPLOAD_PRESET);
 
         try {
-          const uploadEndpoint = "https://apicloudinary.com/v1_1/" + CLOUD_NAME + "/auto/upload";
+          const uploadEndpoint = "https://api.cloudinary.com/v1_v/" + CLOUD_NAME + "/auto/upload";
           const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
           const data = await res.json();
           if (data.secure_url) {
@@ -342,6 +346,7 @@
           statusText.textContent = "Upload error: " + upErr.message;
         }
       };
+
       document.getElementById("publish-btn").onclick = async function() {
         const type = document.getElementById("item-type").value;
         const title = document.getElementById("item-title").value.trim();
@@ -362,7 +367,6 @@
         document.getElementById("item-url").value = "";
         document.getElementById("item-body").value = "";
         statusText.textContent = "";
-
         await loadItems();
       };
 
@@ -382,7 +386,6 @@
         alert("All 30 member accounts and banners saved!");
         await load30Slots();
       };
-
       document.getElementById("admin-send-chat").onclick = async function() {
         const input = document.getElementById("admin-chat-input");
         const text = input.value.trim();
@@ -481,7 +484,6 @@
         });
         if (box.innerHTML === "") box.textContent = "No items published yet.";
       }
-
       async function load30Slots() {
         const existing = {};
         const snap = await getDocs(collection(db, "visitors"));
@@ -529,47 +531,59 @@
         });
       }
 
-      // Load & Save Admin Global Theme
-      const themeDocRef = doc(db, "siteSettings", "globalTheme");
-      const existingTheme = await getDoc(themeDocRef);
-      if (existingTheme.exists()) {
-        const tData = existingTheme.data();
-        if (tData.bg) {
-          document.body.style.background = tData.bg;
-          document.getElementById("admin-bg-color").value = tData.bg;
-        }
-        if (tData.color) {
-          document.body.style.color = tData.color;
-          document.getElementById("admin-text-color").value = tData.color;
-        }
-        if (tData.font && tData.font !== "default") {
-          document.body.classList.add(tData.font);
-          document.getElementById("admin-font-select").value = tData.font;
-        }
-      }
+      const targetSelect = document.getElementById("theme-target-page");
 
-      document.getElementById("save-global-theme-btn").onclick = async function() {
-        const bg = document.getElementById("admin-bg-color").value;
-        const color = document.getElementById("admin-text-color").value;
-        const font = document.getElementById("admin-font-select").value;
-        document.body.style.background = bg;
-        document.body.style.color = color;
-        document.body.classList.remove("font-mono", "font-serif", "font-tech");
-        if (font !== "default") document.body.classList.add(font);
-        await setDoc(themeDocRef, { bg: bg, color: color, font: font });
-        alert("Global website colors and font saved!");
-      };
-      document.getElementById("reset-global-theme-btn").onclick = async function() {
+      async function applyPageTheme(pageKey) {
+        const specificSnap = await getDoc(doc(db, "siteSettings", "theme_" + pageKey));
+        const allSnap = await getDoc(doc(db, "siteSettings", "theme_all"));
+        const chosen = specificSnap.exists() ? specificSnap.data() : (allSnap.exists() ? allSnap.data() : null);
+
         document.body.style.background = "";
         document.body.style.color = "";
         document.body.classList.remove("font-mono", "font-serif", "font-tech");
-        document.getElementById("admin-bg-color").value = "#06090e";
-        document.getElementById("admin-text-color").value = "#e2e8f0";
-        document.getElementById("admin-font-select").value = "default";
-        await deleteDoc(themeDocRef);
-        alert("Website reset to default Cold Basement theme!");
+
+        if (chosen) {
+          if (chosen.bg) document.body.style.background = chosen.bg;
+          if (chosen.color) document.body.style.color = chosen.color;
+          if (chosen.font && chosen.font !== "default") document.body.classList.add(chosen.font);
+        }
+      }
+
+      await applyPageTheme("admin");
+
+      document.getElementById("save-global-theme-btn").onclick = async function() {
+        const target = targetSelect.value;
+        const bg = document.getElementById("admin-bg-text").value.trim();
+        const color = document.getElementById("admin-font-color-text").value.trim();
+        const font = document.getElementById("admin-font-select").value;
+
+        await setDoc(doc(db, "siteSettings", "theme_" + target), { bg: bg, color: color, font: font });
+        if (target === "all" || target === "admin") await applyPageTheme("admin");
+        alert("Saved theme for: " + target.toUpperCase());
       };
 
+      document.getElementById("reset-global-theme-btn").onclick = async function() {
+        const target = targetSelect.value;
+        await deleteDoc(doc(db, "siteSettings", "theme_" + target));
+        await applyPageTheme("admin");
+        alert("Reset theme to default for: " + target.toUpperCase());
+      };
+
+      document.getElementById("open-member-folder-btn").onclick = function() {
+        const targetUser = document.getElementById("admin-folder-target").value.trim();
+        if (!targetUser) return alert("Type a member username first.");
+        if (window.renderMemberFolder) {
+          window.renderMemberFolder({
+            db: db,
+            firestoreFns: { collection, addDoc, getDocs, deleteDoc, doc, query, where },
+            targetUsername: targetUser,
+            uploaderName: "Faizan (Owner)",
+            containerId: "admin-folder-view",
+            cloudName: CLOUD_NAME,
+            uploadPreset: UPLOAD_PRESET
+          });
+        }
+      };
 
       await loadItems();
       await load30Slots();
@@ -581,5 +595,6 @@
     }
   }
 </script>
+<script src="folders.js"></script>
 </body>
 </html>
