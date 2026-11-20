@@ -205,11 +205,7 @@
   if (localStorage.getItem("faizan_theme") === "light") {
     document.body.classList.add("light-mode");
   }
-  themeBtn.onclick = function() {
-    document.body.classList.toggle("light-mode");
-    const mode = document.body.classList.contains("light-mode") ? "light" : "dark";
-    localStorage.setItem("faizan_theme", mode);
-  };
+
 
   setInterval(function() {
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
