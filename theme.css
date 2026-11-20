@@ -370,8 +370,9 @@ th, td {
 .geo-star {
   position: fixed;
   pointer-events: none;
-  z-index: -1;
-  opacity: 0.14;
+  z-index: 1;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.6));
 }
 
 .geo-star-1 {
