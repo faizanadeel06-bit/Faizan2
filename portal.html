@@ -423,7 +423,6 @@
         }
         return url.split("/").pop();
       }
-
       async function loadFeed() {
         const feed = document.getElementById("feed");
         feed.innerHTML = "";
@@ -484,11 +483,11 @@
                   img.style.borderRadius = "8px";
                   img.style.marginTop = "0.75rem";
                   area.appendChild(img);
-                } else if (v.type === "doc") {
+                } else if (v.type === "doc" || v.type === "word" || v.type === "ppt" || v.type === "course") {
                   const link = document.createElement("a");
                   link.href = v.url;
                   link.target = "_blank";
-                  link.textContent = "Download / Open Document (" + v.title + ")";
+                  link.textContent = "Download / Open (" + v.title + ")";
                   link.style.color = "#60a5fa";
                   link.style.display = "inline-block";
                   link.style.marginTop = "0.75rem";
@@ -524,6 +523,7 @@
           feed.appendChild(emptyMsg);
         }
       }
+
 
       function startGroupChat() {
         document.getElementById("member-send-chat").onclick = async function() {
