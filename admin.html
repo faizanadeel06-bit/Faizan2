@@ -312,32 +312,19 @@
       box.appendChild(row);
     }
   }
-  async function startAdminSystem() {
+
+  async function startAdminSystem(db, fns) {
+    const { collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = fns;
     draw30Slots({});
     try {
-      const sdkBase = "https://www.gstatic.com/" + "firebasejs/10.12.0/";
-      const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "firebaseapp.com",
-        projectId: "faizan-platform",
-        storageBucket: "faizan-platform.firebasestorage.app",
-        messagingSenderId: "801904702555",
-        appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
 
       const fileInput = document.getElementById("cloud-file-input");
       const statusText = document.getElementById("upload-status");
 
       document.getElementById("cloud-upload-btn").onclick = function() {
         fileInput.click();
-      };
-
+      }
       fileInput.onchange = async function() {
         const file = fileInput.files.item(0);
         if (!file) return;
@@ -348,7 +335,7 @@
         formData.append("upload_preset", UPLOAD_PRESET);
 
         try {
-          const uploadEndpoint = "https://api.cloudinary.com/v1_v/" + CLOUD_NAME + "/auto/upload";
+          const uploadEndpoint = "https://api.cloudinary.com/v1_v1" + CLOUD_NAME + "/auto/upload";
           const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
           const data = await res.json();
           if (data.secure_url) {
@@ -609,6 +596,7 @@
       alert("Admin System Error: " + err.message);
     }
   }
+  initAdminAuth();
 </script>
 <script src="folders.js"></script>
 </body>
