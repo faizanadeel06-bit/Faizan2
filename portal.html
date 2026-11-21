@@ -86,7 +86,11 @@
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Type any background color, set a background image, or pick any of the 10 halal animations and adjust its size.</p>
         <div class="row">
           <input type="text" id="user-bg-color" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 220px;" />
-          <input type="text" id="user-bg-image" placeholder="Background Image URL (or draw below)" style="flex: 1;" />
+
+          <input type="text" id="user-bg-image" placeholder="Background Image URL (or upload/draw)" style="flex: 1;" />
+          <input type="file" id="user-bg-file" accept="image/*" class="hidden" />
+          <button type="button" id="user-bg-upload-btn" class="btn btn-green">Upload Image</button>
+
           <select id="user-font-select" aria-label="Font Style">
             <option value="default">Modern System</option>
             <option value="font-mono">Basement Terminal (Mono)</option>
@@ -441,6 +445,35 @@
         }, { merge: true });
       }
       function setupLookAndGames() {
+
+        const userBgFile = document.getElementById("user-bg-file");
+        const userBgUploadBtn = document.getElementById("user-bg-upload-btn");
+        if (userBgUploadBtn && userBgFile) {
+          userBgUploadBtn.onclick = function() { userBgFile.click(); };
+          userBgFile.onchange = async function() {
+            const file = userBgFile.files.item(0);
+            if (!file) return;
+            userBgUploadBtn.textContent = "Uploading...";
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("upload_preset", "faizan_vault");
+            const upUrl = "https://" + "api." + "cloudinary.com" + "/v1_1/fh4mrkmm/image/upload";
+            try {
+              const res = await fetch(upUrl, { method: "POST", body: fd });
+              const data = await res.json();
+              if (data.secure_url) {
+                document.getElementById("user-bg-image").value = data.secure_url;
+                document.getElementById("save-user-style-btn").click();
+              } else {
+                alert("Image upload failed.");
+              }
+            } catch (e) {
+              alert("Upload error: " + e.message);
+            }
+            userBgUploadBtn.textContent = "Upload Image";
+          };
+        }
+
         function applyUserLook(styleObj) {
           document.body.style.background = "";
           document.body.style.backgroundImage = "";
@@ -448,11 +481,10 @@
           document.body.classList.remove("font-mono", "font-serif", "font-tech");
 
           if (styleObj) {
-            if (styleObj.bg) document.body.style.background = styleObj.bg;
             if (styleObj.bgImage) {
-              document.body.style.backgroundImage = "url('" + styleObj.bgImage + "')";
-              document.body.style.backgroundSize = "cover";
-              document.body.style.backgroundAttachment = "fixed";
+              document.body.style.background = "url('" + styleObj.bgImage + "') center / cover no-repeat fixed";
+            } else if (styleObj.bg) {
+              document.body.style.background = styleObj.bg;
             }
             if (styleObj.color) document.body.style.color = styleObj.color;
             if (styleObj.font && styleObj.font !== "default") document.body.classList.add(styleObj.font);
@@ -460,6 +492,14 @@
               window.startHalalAnimation("portal-geo-canvas", styleObj.anim || "geo_stars", styleObj.animSize || 100);
             }
           } else if (window.startHalalAnimation) {
+            window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
+          }
+
+
+
+
+
+           else if (window.startHalalAnimation) {
             window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
           }
         }
