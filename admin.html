@@ -204,17 +204,8 @@
   const CLOUD_NAME = "fh4mrkmm";
   const UPLOAD_PRESET = "faizan_vault";
 
-  const adminPassBox = document.getElementById("admin-pass-input");
-  adminPassBox.oninput = function() {
-    const typed = adminPassBox.value;
-    adminPassBox.classList.remove("input-valid", "input-invalid");
-    if (typed.length === 0) return;
-    if (ADMIN_PASSWORD.startsWith(typed)) {
-      adminPassBox.classList.add("input-valid");
-    } else {
-      adminPassBox.classList.add("input-invalid");
-    }
-  };
+
+
   const presetSelect = document.getElementById("visual-preset-select");
   const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
   if (savedPreset !== "default") {
@@ -241,16 +232,6 @@
     };
   });
 
-  document.getElementById("unlock-btn").onclick = function() {
-    const val = document.getElementById("admin-pass-input").value;
-    if (val === ADMIN_PASSWORD) {
-      document.getElementById("admin-lock").classList.add("hidden");
-      document.getElementById("admin-shell").classList.remove("hidden");
-      startAdminSystem();
-    } else {
-      document.getElementById("lock-err").textContent = "Incorrect owner password.";
-    }
-  };
 
   function draw30Slots(existing) {
     const box = document.getElementById("member-slots");
