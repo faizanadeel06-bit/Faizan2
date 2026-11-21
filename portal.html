@@ -7,29 +7,29 @@
   <link rel="stylesheet" href="theme.css" />
 </head>
 <body>
-<div class="utility-bar">
+<canvas id="portal-geo-canvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+<div class="utility-bar" style="position: relative; z-index: 20;">
   <div id="live-clock">Clock: Loading...</div>
   <div id="namaz-bar">Karachi Namaz Times: Loading...</div>
 </div>
 
-<header class="topbar">
-  <a href="index.html" class="brand">FAIZAN</a>
+<header class="topbar" style="z-index: 30;">
+  <a href="index.html" class="brand">FAIZAN // MEMBER HUB</a>
   <div class="row" style="margin-bottom: 0;">
     <select id="visual-preset-select" aria-label="Visual Theme Preset">
       <option value="default">Original Cold Basement</option>
-      <option value="theme-cyber">Cyber Neon Grid</option>
-      <option value="theme-aurora">Midnight Aurora</option>
+      <option value="theme-aurora">Midnight Aurora (Emerald)</option>
       <option value="theme-gold">Royal Obsidian &amp; Gold</option>
+      <option value="theme-cyber">Cyber Neon Grid</option>
       <option value="theme-light">Daylight Glass</option>
     </select>
-
-
-    <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Home</a>
+    <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Gallery</a>
     <button type="button" id="signout-btn" class="btn btn-muted hidden">Sign Out</button>
   </div>
 </header>
 
-<div id="step-login" class="card" style="max-width: 420px; margin: 3rem auto;">
+<div id="step-login" class="card" style="max-width: 420px; margin: 3rem auto; position: relative; z-index: 20;">
   <h2>Member Sign In</h2>
   <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Enter your assigned credentials to open your personal page.</p>
   <div style="display: flex; flex-direction: column; gap: 0.85rem;">
@@ -40,7 +40,7 @@
   <p id="login-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
 </div>
 
-<div id="step-contact" class="card hidden" style="max-width: 440px; margin: 3rem auto;">
+<div id="step-contact" class="card hidden" style="max-width: 440px; margin: 3rem auto; position: relative; z-index: 20;">
   <h2>Member Details</h2>
   <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Please enter your email and phone number to complete your member record. Note: Your contact info and site activity are recorded by the administrator.</p>
   <div style="display: flex; flex-direction: column; gap: 0.85rem;">
@@ -51,9 +51,10 @@
   <p id="contact-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
 </div>
 
-<div id="portal-shell" class="app-shell hidden">
+<div id="portal-shell" class="app-shell hidden" style="position: relative; z-index: 10;">
   <aside class="sidebar">
-    <button type="button" class="side-btn active" data-ptab="ptab-vault">My Page &amp; Vault</button>
+    <button type="button" class="side-btn active" data-ptab="ptab-vault">Bundles &amp; Content</button>
+    <button type="button" class="side-btn" data-ptab="ptab-look">Look &amp; Draw Studio</button>
     <button type="button" class="side-btn" data-ptab="ptab-folder">My Private Folder</button>
     <button type="button" class="side-btn" data-ptab="ptab-group">Group Chat</button>
     <button type="button" class="side-btn" data-ptab="ptab-dm">Private Messages</button>
@@ -69,23 +70,52 @@
     </div>
     <section id="ptab-vault" class="portal-tab">
       <div class="card">
-        <h2>Customize My Personal Page Look</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.65rem;">Type any color name (e.g. midnightblue, black, darkslategray) or hex code, and pick your font.</p>
+        <h2>Search Course Bundles, Videos, Word &amp; PPT</h2>
+        <div class="row" style="margin-bottom: 0;">
+          <input type="text" id="vault-search-input" placeholder="Search by bundle title, topic, video, Word, or PPT..." style="flex: 1;" />
+          <button type="button" id="vault-search-clear" class="btn btn-muted">Clear</button>
+        </div>
+      </div>
+
+      <div id="feed">Loading content...</div>
+    </section>
+
+    <section id="ptab-look" class="portal-tab hidden">
+      <div class="card">
+        <h2>Customize My Personal Page Look &amp; Animation</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Type any background color, set a background image, or pick any of the 10 halal animations and adjust its size.</p>
         <div class="row">
-          <input type="text" id="user-bg-color" placeholder="Background color (e.g. #06090e or navy)" style="min-width: 220px;" />
+          <input type="text" id="user-bg-color" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 220px;" />
+          <input type="text" id="user-bg-image" placeholder="Background Image URL (or draw below)" style="flex: 1;" />
           <select id="user-font-select" aria-label="Font Style">
             <option value="default">Modern System</option>
             <option value="font-mono">Basement Terminal (Mono)</option>
             <option value="font-serif">Classic Serif</option>
             <option value="font-tech">Cold Steel Tech</option>
           </select>
+        </div>
+        <div class="row">
+          <select id="user-anim-select" aria-label="Halal Animation">
+            <option value="geo_stars">2. Rotating 8-Pointed Islamic Stars</option>
+            <option value="flower_fireworks">1. Blooming Flower + Colorful Fireworks</option>
+            <option value="crescent_nebula">3. Starlight &amp; Crescent Orbit</option>
+            <option value="arabesque_mandala">4. Sacred Geometric Mandala</option>
+            <option value="golden_petals">5. Falling Emerald &amp; Gold Petals</option>
+            <option value="kaleidoscope">6. Geometric Kaleidoscope</option>
+            <option value="aurora_ribbons">7. Midnight Aurora Waves</option>
+            <option value="noor_lanterns">8. Floating Geometric Noor Lights</option>
+            <option value="crystal_lattice">9. Expanding Star Lattice</option>
+            <option value="golden_spiral">10. Golden Ratio Star Spiral</option>
+          </select>
+          <label style="font-size: 0.85rem;">Animation Size: <input type="range" id="user-anim-size" min="40" max="200" value="100" /></label>
+        </div>
+        <div class="row">
           <button type="button" id="save-user-style-btn" class="btn">Save My Style</button>
           <button type="button" id="reset-user-style-btn" class="btn btn-muted">Reset to Default</button>
         </div>
       </div>
 
-      <h2 style="margin-bottom: 1rem;">Accessible Videos, Art, Files &amp; Posts</h2>
-      <div id="feed">Loading content...</div>
+      <div id="user-draw-studio"></div>
     </section>
 
     <section id="ptab-folder" class="portal-tab hidden">
@@ -190,22 +220,19 @@
 </div>
 <script>
   const presetSelect = document.getElementById("visual-preset-select");
-  const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
-  if (savedPreset !== "default") {
-    document.body.classList.add(savedPreset);
-    presetSelect.value = savedPreset;
+  if (presetSelect) {
+    const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
+    if (savedPreset !== "default") {
+      document.body.classList.add(savedPreset);
+      presetSelect.value = savedPreset;
+    }
+    presetSelect.onchange = function() {
+      document.body.classList.remove("light-mode", "theme-light", "theme-cyber", "theme-aurora", "theme-gold");
+      const chosen = presetSelect.value;
+      if (chosen !== "default") document.body.classList.add(chosen);
+      localStorage.setItem("faizan_visual_preset", chosen);
+    };
   }
-  presetSelect.onchange = function() {
-    document.body.classList.remove("light-mode", "theme-light", "theme-cyber", "theme-aurora", "theme-gold");
-    const chosen = presetSelect.value;
-    if (chosen !== "default") document.body.classList.add(chosen);
-    localStorage.setItem("faizan_visual_preset", chosen);
-  };
-
-  if (localStorage.getItem("faizan_theme") === "light") {
-    document.body.classList.add("light-mode");
-  }
-
 
   setInterval(function() {
     document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
@@ -258,14 +285,16 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       let currentUser = null;
+      let currentSlotId = null;
       let userBanner = "";
       let allMembers = [];
       let validAccounts = [];
+      let cachedVaultItems = [];
 
       getDocs(collection(db, "visitors")).then(function(snap) {
         snap.forEach(function(d) {
           const data = d.data();
-          if (data.username) validAccounts.push(data);
+          if (data.username) validAccounts.push({ slotId: d.id, data: data });
         });
       });
 
@@ -277,7 +306,7 @@
         userBox.classList.remove("input-valid", "input-invalid");
         if (typedU.length === 0) return;
         const matchesAnyUser = validAccounts.some(function(acc) {
-          return acc.username.startsWith(typedU);
+          return acc.data.username.startsWith(typedU);
         });
         userBox.classList.add(matchesAnyUser ? "input-valid" : "input-invalid");
       };
@@ -288,14 +317,15 @@
         passBox.classList.remove("input-valid", "input-invalid");
         if (typedP.length === 0) return;
         const matchingAccount = validAccounts.find(function(acc) {
-          return acc.username === typedU;
+          return acc.data.username === typedU;
         });
-        if (matchingAccount && matchingAccount.password.startsWith(typedP)) {
+        if (matchingAccount && matchingAccount.data.password.startsWith(typedP)) {
           passBox.classList.add("input-valid");
         } else {
           passBox.classList.add("input-invalid");
         }
       };
+
       document.getElementById("login-btn").onclick = async function() {
         const u = document.getElementById("in-user").value.trim();
         const p = document.getElementById("in-pass").value.trim();
@@ -311,6 +341,7 @@
             if (data.username) allMembers.push(data.username);
             if (data.username === u && data.password === p && u !== "") {
               matchedUser = data;
+              currentSlotId = d.id;
             }
           });
 
@@ -390,7 +421,7 @@
         populateDmRecipients();
         startGroupChat();
         startDmListener();
-        setupGames();
+        setupLookAndGames();
 
         await logAction("Opened Personal Space");
         await loadFeed();
@@ -409,263 +440,97 @@
           actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
         }, { merge: true });
       }
-      function extractYouTubeId(url) {
-        const vIndex = url.indexOf("v=");
-        if (vIndex !== -1) {
-          let sub = url.substring(vIndex + 2);
-          const ampIndex = sub.indexOf("&");
-          if (ampIndex !== -1) sub = sub.substring(0, ampIndex);
-          return sub;
-        }
-        return url.split("/").pop();
-      }
-      async function loadFeed() {
-        const feed = document.getElementById("feed");
-        feed.innerHTML = "";
-        const snap = await getDocs(collection(db, "videos"));
+      function setupLookAndGames() {
+        function applyUserLook(styleObj) {
+          document.body.style.background = "";
+          document.body.style.backgroundImage = "";
+          document.body.style.color = "";
+          document.body.classList.remove("font-mono", "font-serif", "font-tech");
 
-        snap.forEach(function(d) {
-          const v = d.data();
-          if (v.accessible) {
-            const card = document.createElement("div");
-            card.className = "card";
-
-            const headerRow = document.createElement("div");
-            headerRow.className = "row";
-            headerRow.style.justifyContent = "space-between";
-
-            const h3 = document.createElement("h3");
-            h3.textContent = v.title;
-
-            const badge = document.createElement("span");
-            badge.className = "badge bg-blue";
-            badge.textContent = (v.type || "video").toUpperCase();
-
-            headerRow.appendChild(h3);
-            headerRow.appendChild(badge);
-            card.appendChild(headerRow);
-
-            if (v.body) {
-              if (v.type === "code") {
-                const pre = document.createElement("pre");
-                pre.className = "code-block";
-                pre.textContent = v.body;
-                card.appendChild(pre);
-              } else {
-                const p = document.createElement("p");
-                p.style.marginTop = "0.5rem";
-                p.textContent = v.body;
-                card.appendChild(p);
-              }
+          if (styleObj) {
+            if (styleObj.bg) document.body.style.background = styleObj.bg;
+            if (styleObj.bgImage) {
+              document.body.style.backgroundImage = "url('" + styleObj.bgImage + "')";
+              document.body.style.backgroundSize = "cover";
+              document.body.style.backgroundAttachment = "fixed";
             }
-
-            if (v.url) {
-              const btn = document.createElement("button");
-              btn.type = "button";
-              btn.className = "btn";
-              btn.style.marginTop = "0.75rem";
-              btn.textContent = "Open / View File";
-
-              const area = document.createElement("div");
-
-              btn.onclick = async function() {
-                await logAction("Opened (" + (v.type || "media") + "): " + v.title);
-                btn.remove();
-
-                if (v.type === "image") {
-                  const img = document.createElement("img");
-                  img.src = v.url;
-                  img.style.maxWidth = "100%";
-                  img.style.borderRadius = "8px";
-                  img.style.marginTop = "0.75rem";
-                  area.appendChild(img);
-                } else if (v.type === "doc" || v.type === "word" || v.type === "ppt" || v.type === "course") {
-                  const link = document.createElement("a");
-                  link.href = v.url;
-                  link.target = "_blank";
-                  link.textContent = "Download / Open (" + v.title + ")";
-                  link.style.color = "#60a5fa";
-                  link.style.display = "inline-block";
-                  link.style.marginTop = "0.75rem";
-                  area.appendChild(link);
-                } else if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
-                  const vidCode = extractYouTubeId(v.url);
-                  const iframe = document.createElement("iframe");
-                  iframe.src = "https://" + "www." + "youtube.com" + "/embed/" + vidCode + "?autoplay=1";
-                  iframe.setAttribute("frameborder", "0");
-                  iframe.setAttribute("allowfullscreen", "true");
-                  area.appendChild(iframe);
-                } else {
-                  const video = document.createElement("video");
-                  video.src = v.url;
-                  video.controls = true;
-                  video.autoplay = true;
-                  area.appendChild(video);
-                }
-              };
-
-              card.appendChild(btn);
-              card.appendChild(area);
+            if (styleObj.color) document.body.style.color = styleObj.color;
+            if (styleObj.font && styleObj.font !== "default") document.body.classList.add(styleObj.font);
+            if (window.startHalalAnimation) {
+              window.startHalalAnimation("portal-geo-canvas", styleObj.anim || "geo_stars", styleObj.animSize || 100);
             }
-
-            feed.appendChild(card);
+          } else if (window.startHalalAnimation) {
+            window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
           }
-        });
-
-        if (feed.innerHTML === "") {
-          const emptyMsg = document.createElement("p");
-          emptyMsg.style.color = "var(--text-muted)";
-          emptyMsg.textContent = "No accessible content available right now.";
-          feed.appendChild(emptyMsg);
         }
-      }
 
-
-      function startGroupChat() {
-        document.getElementById("member-send-chat").onclick = async function() {
-          const input = document.getElementById("member-chat-input");
-          const text = input.value.trim();
-          if (!text) return;
-          await addDoc(collection(db, "groupChat"), {
-            sender: currentUser,
-            text: text,
-            time: new Date().toLocaleTimeString(),
-            ts: Date.now()
-          });
-          await logAction("Sent Group Message");
-          input.value = "";
-        };
-
-        const q = query(collection(db, "groupChat"), orderBy("ts", "asc"));
-        onSnapshot(q, function(snap) {
-          const box = document.getElementById("member-group-chat");
-          box.innerHTML = "";
-          snap.forEach(function(d) {
-            const m = d.data();
-            const bubble = document.createElement("div");
-            bubble.className = "msg-bubble";
-            const head = document.createElement("div");
-            head.style.fontSize = "0.8rem";
-            head.style.color = "var(--text-muted)";
-            head.textContent = m.sender + " • " + (m.time || "");
-            const body = document.createElement("div");
-            body.textContent = m.text;
-            bubble.appendChild(head);
-            bubble.appendChild(body);
-            box.appendChild(bubble);
-          });
-          box.scrollTop = box.scrollHeight;
-        });
-      }
-
-      function populateDmRecipients() {
-        const sel = document.getElementById("dm-recipient");
-        sel.innerHTML = "";
-        const ownerOpt = document.createElement("option");
-        ownerOpt.value = "Faizan (Owner)";
-        ownerOpt.textContent = "Faizan (Owner)";
-        sel.appendChild(ownerOpt);
-
-        allMembers.forEach(function(m) {
-          if (m !== currentUser) {
-            const opt = document.createElement("option");
-            opt.value = m;
-            opt.textContent = m;
-            sel.appendChild(opt);
-          }
-        });
-      }
-
-      function startDmListener() {
-        document.getElementById("send-dm-btn").onclick = async function() {
-          const toUser = document.getElementById("dm-recipient").value;
-          const input = document.getElementById("dm-input");
-          const text = input.value.trim();
-          if (!text || !toUser) return;
-
-          await addDoc(collection(db, "dmLogs"), {
-            from: currentUser,
-            to: toUser,
-            text: text,
-            time: new Date().toLocaleTimeString(),
-            ts: Date.now()
-          });
-          await logAction("Messaged " + toUser);
-          input.value = "";
-        };
-
-        const dmQ = query(collection(db, "dmLogs"), orderBy("ts", "asc"));
-        onSnapshot(dmQ, function(snap) {
-          const box = document.getElementById("dm-history");
-          box.innerHTML = "";
-          snap.forEach(function(d) {
-            const dm = d.data();
-            if (dm.from === currentUser || dm.to === currentUser) {
-              const bubble = document.createElement("div");
-              bubble.className = "msg-bubble";
-              const head = document.createElement("div");
-              head.style.fontSize = "0.8rem";
-              head.style.color = "var(--text-muted)";
-              head.textContent = dm.from + " -> " + dm.to + " • " + (dm.time || "");
-              const body = document.createElement("div");
-              body.textContent = dm.text;
-              bubble.appendChild(head);
-              bubble.appendChild(body);
-              box.appendChild(bubble);
-            }
-          });
-          box.scrollTop = box.scrollHeight;
-        });
-      }
-      function setupGames() {
         Promise.all([
           getDoc(doc(db, "siteSettings", "theme_portal")),
           getDoc(doc(db, "siteSettings", "theme_all")),
           getDoc(doc(db, "userStyles", currentUser))
         ]).then(function(snaps) {
-          const portalTheme = snaps.item ? null : (snaps.at(0).exists() ? snaps.at(0).data() : null);
-          const allTheme = snaps.at(1).exists() ? snaps.at(1).data() : null;
-          const userTheme = snaps.at(2).exists() ? snaps.at(2).data() : null;
+          const portalTheme = snaps[0].exists() ? snaps[0].data() : null;
+          const allTheme = snaps[1].exists() ? snaps[1].data() : null;
+          const userTheme = snaps[2].exists() ? snaps[2].data() : null;
 
-          const baseTheme = portalTheme || allTheme;
-          if (baseTheme) {
-            if (baseTheme.bg) document.body.style.background = baseTheme.bg;
-            if (baseTheme.color) document.body.style.color = baseTheme.color;
-            if (baseTheme.font && baseTheme.font !== "default") document.body.classList.add(baseTheme.font);
-          }
+          const chosen = userTheme || portalTheme || allTheme;
+          applyUserLook(chosen);
 
           if (userTheme) {
-            if (userTheme.bg) {
-              document.body.style.background = userTheme.bg;
-              document.getElementById("user-bg-color").value = userTheme.bg;
-            }
-            if (userTheme.font && userTheme.font !== "default") {
-              document.body.classList.remove("font-mono", "font-serif", "font-tech");
-              document.body.classList.add(userTheme.font);
-              document.getElementById("user-font-select").value = userTheme.font;
-            }
+            if (userTheme.bg) document.getElementById("user-bg-color").value = userTheme.bg;
+            if (userTheme.bgImage) document.getElementById("user-bg-image").value = userTheme.bgImage;
+            if (userTheme.font) document.getElementById("user-font-select").value = userTheme.font;
+            if (userTheme.anim) document.getElementById("user-anim-select").value = userTheme.anim;
+            if (userTheme.animSize) document.getElementById("user-anim-size").value = userTheme.animSize;
           }
         });
 
+        if (window.openDrawingStudio) {
+          window.openDrawingStudio({
+            containerId: "user-draw-studio",
+            cloudName: "fh4mrkmm",
+            uploadPreset: "faizan_vault",
+            onApplyBanner: async function(url) {
+              const bannerImg = document.getElementById("personal-banner");
+              bannerImg.src = url;
+              bannerImg.classList.remove("hidden");
+              if (currentSlotId) {
+                await setDoc(doc(db, "visitors", currentSlotId), { banner: url }, { merge: true });
+              }
+              await logAction("Drew & Updated Personal Banner");
+              alert("Your custom drawing is now your Top Banner!");
+            },
+            onApplyBackground: async function(url) {
+              document.getElementById("user-bg-image").value = url;
+              document.getElementById("save-user-style-btn").click();
+            }
+          });
+        }
+
         document.getElementById("save-user-style-btn").onclick = async function() {
           const bg = document.getElementById("user-bg-color").value.trim();
+          const bgImage = document.getElementById("user-bg-image").value.trim();
           const font = document.getElementById("user-font-select").value;
-          if (bg) document.body.style.background = bg;
-          document.body.classList.remove("font-mono", "font-serif", "font-tech");
-          if (font !== "default") document.body.classList.add(font);
-          await setDoc(doc(db, "userStyles", currentUser), { bg: bg, font: font });
-          await logAction("Customized Page Theme");
-          alert("Your personal page style is saved!");
+          const anim = document.getElementById("user-anim-select").value;
+          const animSize = Number(document.getElementById("user-anim-size").value) || 100;
+
+          const styleObj = { bg: bg, bgImage: bgImage, font: font, anim: anim, animSize: animSize };
+          applyUserLook(styleObj);
+          await setDoc(doc(db, "userStyles", currentUser), styleObj);
+          await logAction("Customized Page Look & Animation");
+          alert("Your personal page look & animation are saved!");
         };
 
         document.getElementById("reset-user-style-btn").onclick = async function() {
-          document.body.style.background = "";
-          document.body.classList.remove("font-mono", "font-serif", "font-tech");
           document.getElementById("user-bg-color").value = "";
+          document.getElementById("user-bg-image").value = "";
           document.getElementById("user-font-select").value = "default";
+          document.getElementById("user-anim-select").value = "geo_stars";
+          document.getElementById("user-anim-size").value = 100;
           await deleteDoc(doc(db, "userStyles", currentUser));
-          await logAction("Reset Page Theme to Default");
-          alert("Page style reset to default Cold Basement!");
+          applyUserLook(null);
+          await logAction("Reset Page Look to Default");
+          alert("Page look reset to default Cold Basement!");
         };
 
         if (window.launchObstacleRunner) {
@@ -842,6 +707,8 @@
 
   initPortal();
 </script>
+<script src="animations.js"></script>
+<script src="drawer.js"></script>
 <script src="arcade.js"></script>
 <script src="folders.js"></script>
 </body>

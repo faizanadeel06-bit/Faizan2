@@ -3,20 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Faizan | Courses, YouTube Videos, Word &amp; PPT Hub</title>
-  <meta name="description" content="Official knowledge and media hub of Faizan." />
+  <title>Owner Command Center | Faizan</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="stylesheet" href="theme.css" />
 </head>
 <body>
-<canvas id="halal-geo-canvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
-
-<div class="utility-bar" style="position: relative; z-index: 20;">
-  <div id="live-clock">Clock: Loading...</div>
-  <div id="namaz-bar">Karachi Namaz Times: Loading...</div>
-</div>
+<canvas id="admin-geo-canvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
 
 <header class="topbar" style="z-index: 30;">
-  <a href="index.html" class="brand">FAIZAN // STUDIO</a>
+  <a href="index.html" class="brand">FAIZAN // COMMAND CENTER</a>
   <div class="row" style="margin-bottom: 0;">
     <select id="visual-preset-select" aria-label="Visual Theme Preset">
       <option value="default">Original Cold Basement</option>
@@ -25,125 +20,228 @@
       <option value="theme-cyber">Cyber Neon Grid</option>
       <option value="theme-light">Daylight Glass</option>
     </select>
-    <a href="about.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">About</a>
-    <a href="vision.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Vision</a>
-    <a href="projects.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Initiatives</a>
-    <a href="contact.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Contact</a>
-    <a href="portal.html" class="btn" style="text-decoration: none;">Member Portal</a>
-    <a href="admin.html" class="btn btn-muted" style="text-decoration: none;">Admin</a>
+    <a href="portal.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Member Portal</a>
   </div>
 </header>
 
-<main class="content-area" style="position: relative; z-index: 10;">
-  <section class="card animate-in" style="text-align: center; padding: 3rem 1.75rem;">
-    <span class="badge bg-green" style="margin-bottom: 1rem; display: inline-block;">BISMILLAH // KNOWLEDGE &amp; MEDIA STUDIO</span>
-    <h1 style="font-size: 2.5rem; margin-bottom: 0.85rem; line-height: 1.2;">Courses, YouTube Videos, Word &amp; PowerPoint Hub</h1>
-    <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto 1.75rem auto; font-size: 1.05rem;">
-      Assalam-o-Alaikum. Jump straight to my structured courses, video lectures, Word notes, and PowerPoint presentations—or enter the private Member Hub.
-    </p>
+<div id="admin-lock" class="card" style="max-width: 420px; margin: 4rem auto; position: relative; z-index: 20;">
+  <h2>Owner Authentication</h2>
+  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Enter your owner password to unlock your command center.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <input type="password" id="admin-pass-input" aria-label="Admin Password" placeholder="Enter Admin Password" />
+    <button type="button" id="unlock-btn" class="btn">Unlock Command Center</button>
+  </div>
+  <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+</div>
 
-    <div class="row" style="justify-content: center; gap: 0.85rem;">
-      <a href="#sec-courses" class="btn" style="text-decoration: none;">Courses</a>
-      <a href="#sec-videos" class="btn" style="text-decoration: none;">YouTube Videos</a>
-      <a href="#sec-word" class="btn" style="text-decoration: none;">Word Documents</a>
-      <a href="#sec-ppt" class="btn" style="text-decoration: none;">PowerPoint (PPT)</a>
-      <a href="portal.html" class="btn btn-green" style="text-decoration: none;">Member Hub</a>
-    </div>
-  </section>
-  <section id="sec-courses" class="card animate-in">
-    <h2>1. Structured Courses &amp; Lessons</h2>
-    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Step-by-step courses, study tracks, and written modules.</p>
-    <div id="grid-courses">Loading courses...</div>
-  </section>
+<div id="admin-shell" class="app-shell hidden" style="position: relative; z-index: 10;">
+  <aside class="sidebar">
+    <button type="button" class="side-btn active" data-tab="tab-home">Home &amp; Look Studio</button>
+    <button type="button" class="side-btn" data-tab="tab-publish">Publish &amp; Bundles</button>
+    <button type="button" class="side-btn" data-tab="tab-members">30 Members &amp; Folders</button>
+    <button type="button" class="side-btn" data-tab="tab-chat">Chat &amp; DM Monitor</button>
+    <button type="button" class="side-btn" data-tab="tab-directory">Directory &amp; Activity</button>
+    <button type="button" class="side-btn" data-tab="tab-games">Game Tracker</button>
+  </aside>
 
-  <section id="sec-videos" class="card animate-in">
-    <h2>2. YouTube Videos &amp; Studio Recordings</h2>
-    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Educational tutorials, screen recordings, and briefings.</p>
-    <div id="grid-videos">Loading videos...</div>
-  </section>
+  <main class="content-area">
+    <section id="tab-home" class="admin-tab">
+      <div class="card">
+        <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Assalam-o-Alaikum, Faizan</h1>
+        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Welcome back to your personal digital headquarters.</p>
+        <div class="row">
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-content">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Published Items</p>
+          </div>
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-members">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Registered Contacts</p>
+          </div>
+          <div class="card" style="flex: 1; margin-bottom: 0;">
+            <h3 id="stat-dms">0</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Private DM Logs</p>
+          </div>
+        </div>
+      </div>
 
-  <section id="sec-word" class="card animate-in">
-    <h2>3. Word Documents &amp; Study Notes</h2>
-    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Downloadable Word documents, PDFs, and written guides.</p>
-    <div id="grid-word">Loading Word documents...</div>
-  </section>
+      <div class="card">
+        <h2>Theme, Background Image &amp; 10 Halal Animations Controller</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Control colors, background images, custom drawings, and halal animations for your Admin page, Home gallery, or Member Portal.</p>
+        <div class="row">
+          <select id="theme-target-page" aria-label="Target Page">
+            <option value="all">All Pages (Collectively)</option>
+            <option value="admin">Admin Command Center Only</option>
+            <option value="public">Front Home Gallery Only</option>
+            <option value="portal">Member Portal Only</option>
+          </select>
+          <input type="text" id="admin-bg-text" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 210px;" />
+          <input type="text" id="admin-font-color-text" placeholder="Font color (e.g. #e2e8f0 or cyan)" style="min-width: 180px;" />
+          <select id="admin-font-select" aria-label="Font Style">
+            <option value="default">Modern System Font</option>
+            <option value="font-mono">Basement Terminal (Mono)</option>
+            <option value="font-serif">Editorial Serif</option>
+            <option value="font-tech">Cold Steel Sans</option>
+          </select>
+        </div>
+        <div class="row">
+          <input type="text" id="admin-bg-image" placeholder="Background Image URL (or draw below)" style="flex: 1;" />
+          <select id="admin-anim-select" aria-label="Halal Animation">
+            <option value="geo_stars">2. Rotating 8-Pointed Islamic Stars</option>
+            <option value="flower_fireworks">1. Blooming Flower + Colorful Fireworks</option>
+            <option value="crescent_nebula">3. Starlight &amp; Crescent Orbit</option>
+            <option value="arabesque_mandala">4. Sacred Geometric Mandala</option>
+            <option value="golden_petals">5. Falling Emerald &amp; Gold Petals</option>
+            <option value="kaleidoscope">6. Geometric Kaleidoscope</option>
+            <option value="aurora_ribbons">7. Midnight Aurora Waves</option>
+            <option value="noor_lanterns">8. Floating Geometric Noor Lights</option>
+            <option value="crystal_lattice">9. Expanding Star Lattice</option>
+            <option value="golden_spiral">10. Golden Ratio Star Spiral</option>
+          </select>
+          <label style="font-size: 0.85rem;">Size: <input type="range" id="admin-anim-size" min="40" max="200" value="100" /></label>
+        </div>
+        <div class="row">
+          <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Look</button>
+          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset Selected to Default</button>
+        </div>
+        <div id="admin-draw-studio" style="margin-top: 1rem;"></div>
+      </div>
 
-  <section id="sec-ppt" class="card animate-in">
-    <h2>4. PowerPoint Presentations (PPT)</h2>
-    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Visual slide decks and lecture presentations.</p>
-    <div id="grid-ppt">Loading presentations...</div>
-  </section>
-</main>
+      <div class="card">
+        <h2>Change Admin Owner Password</h2>
+        <div class="row">
+          <input type="password" id="new-admin-pass" placeholder="Enter New Owner Password" style="flex: 1;" />
+          <button type="button" id="change-admin-pass-btn" class="btn btn-green">Update Owner Password</button>
+        </div>
+      </div>
+    </section>
+    <section id="tab-publish" class="admin-tab hidden">
+      <div class="card">
+        <h2>Create Course / Media Bundle (Video + Word + PowerPoint Together)</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Group a Video, Word Document, and PowerPoint slide deck under one searchable Bundle Title for your members.</p>
+        <div class="row">
+          <input type="text" id="bnd-title" placeholder="Bundle Title (e.g. Module 1: Complete Lesson)" style="flex: 1;" />
+        </div>
+        <div class="row">
+          <input type="text" id="bnd-video" placeholder="Video URL (YouTube or MP4)" style="flex: 1;" />
+          <input type="text" id="bnd-word" placeholder="Word Document URL" style="flex: 1;" />
+          <input type="text" id="bnd-ppt" placeholder="PowerPoint (PPT) URL" style="flex: 1;" />
+        </div>
+        <textarea id="bnd-desc" rows="2" placeholder="Optional bundle notes or instructions..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="publish-bundle-btn" class="btn btn-green">Publish Bundle to Member Hub</button>
+      </div>
 
-<footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10;">
-  &copy; 2026 Faizan. All rights reserved.
-</footer>
+      <div class="card">
+        <h2>Publish Individual Image, Video, Word, PPT, Code or Post</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Note: Only items set to "Photo / Geometric Art" appear on the public Home Gallery. Videos, Word, PPT, and Bundles appear inside Member Personal Pages.</p>
+        <div class="row">
+          <select id="item-type" aria-label="Content Type">
+            <option value="image">Photo / Geometric Art (Shows on Home Gallery)</option>
+            <option value="video">YouTube Video / OBS MP4</option>
+            <option value="word">Word Document (.docx / .pdf)</option>
+            <option value="ppt">PowerPoint Presentation (.pptx)</option>
+            <option value="course">Course / Lesson Module</option>
+            <option value="code">Code Snippet</option>
+            <option value="post">Written Post / Announcement</option>
+          </select>
+          <input type="text" id="item-title" aria-label="Title" placeholder="Title" style="flex: 1;" />
+        </div>
 
+        <div class="row">
+          <input type="text" id="item-url" aria-label="File or Video URL" placeholder="Paste URL or click Upload from PC..." style="flex: 2;" />
+          <input type="file" id="cloud-file-input" class="hidden" />
+          <button type="button" id="cloud-upload-btn" class="btn btn-green">Upload from PC (Cloudinary)</button>
+        </div>
+        <p id="upload-status" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;"></p>
+
+        <textarea id="item-body" rows="3" aria-label="Post or Code Content" placeholder="Optional: Write post message or paste your code snippet here..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="publish-btn" class="btn">Publish Item</button>
+      </div>
+
+      <div class="card">
+        <h2>Manage Published Items &amp; Bundles</h2>
+        <div id="items-list">Loading...</div>
+      </div>
+    </section>
+
+    <section id="tab-members" class="admin-tab hidden">
+      <div class="card">
+        <h2>30 Member Slots, Top Banner Pics &amp; Ban Controls</h2>
+        <div id="member-slots" style="max-height: 420px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px;"></div>
+        <button type="button" id="save-members-btn" class="btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+          <h3>Inspect or Upload to a Member's Private Folder</h3>
+          <div class="row" style="margin-top: 0.5rem;">
+            <input type="text" id="admin-folder-target" placeholder="Type member username..." />
+            <button type="button" id="open-member-folder-btn" class="btn">Open Folder</button>
+          </div>
+          <div id="admin-folder-view"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-chat" class="admin-tab hidden">
+      <div class="card">
+        <h2>Community Group Chat (Owner View &amp; Share)</h2>
+        <div id="admin-group-chat" class="chat-box"></div>
+        <div class="row">
+          <input type="text" id="admin-chat-input" aria-label="Admin Message" placeholder="Send message or share link as Faizan (Owner)..." style="flex: 1;" />
+          <button type="button" id="admin-send-chat" class="btn">Send</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Private Member-to-Member DM Awareness Log</h2>
+        <table>
+          <thead>
+          <tr><th>From</th><th>To</th><th>Message / Shared Item</th><th>Time</th></tr>
+          </thead>
+          <tbody id="dm-monitor-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-directory" class="admin-tab hidden">
+      <div class="card">
+        <h2>Member Directory (Edit or Delete Name, Email &amp; Phone)</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Email</th><th>Phone Number</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="contacts-table"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Member Time &amp; Page Access Tracker</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Total Time Spent</th><th>Last Active</th><th>Recent Actions</th></tr>
+          </thead>
+          <tbody id="activity-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-games" class="admin-tab hidden">
+      <div class="card">
+        <h2>Member Game Playtime &amp; Score Tracker</h2>
+        <table>
+          <thead>
+          <tr><th>Username</th><th>Game Played</th><th>Rounds Played</th><th>Best Score</th><th>Last Played</th></tr>
+          </thead>
+          <tbody id="games-table"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
 <script>
-  // Halal Islamic Geometric Starfield & Rotating 8-Pointed Stars
-  (function() {
-    const c = document.getElementById("halal-geo-canvas");
-    if (!c) return;
-    const ctx = c.getContext("2d");
-    let w, h, angle = 0;
-    const stars = [];
+  let currentAdminPass = "faizan123";
+  const CLOUD_NAME = "fh4mrkmm";
+  const UPLOAD_PRESET = "faizan_vault";
 
-    function resize() {
-      w = c.width = window.innerWidth;
-      h = c.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resize);
-    resize();
-
-    for (let i = 0; i < 45; i++) {
-      stars.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: 1 + Math.random() * 2.2,
-        speed: 0.2 + Math.random() * 0.5
-      });
-    }
-
-    function draw8PointStar(cx, cy, size, rot, color) {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(rot);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.6;
-      ctx.shadowBlur = 14;
-      ctx.shadowColor = color;
-      ctx.strokeRect(-size / 2, -size / 2, size, size);
-      ctx.rotate(Math.PI / 4);
-      ctx.strokeRect(-size / 2, -size / 2, size, size);
-      ctx.beginPath();
-      ctx.arc(0, 0, size * 0.68, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, w, h);
-      angle += 0.004;
-
-      ctx.fillStyle = "rgba(56, 189, 248, 0.65)";
-      stars.forEach(function(s) {
-        s.y -= s.speed;
-        if (s.y < 0) s.y = h;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      draw8PointStar(w * 0.85, h * 0.22, 190, angle, "rgba(56, 189, 248, 0.45)");
-      draw8PointStar(w * 0.14, h * 0.78, 170, -angle * 0.8, "rgba(16, 185, 129, 0.45)");
-      draw8PointStar(w * 0.50, h * 0.35, 240, angle * 0.5, "rgba(234, 179, 8, 0.28)");
-
-      requestAnimationFrame(animate);
-    }
-    animate();
-  })();
-</script>
-<script>
   const presetSelect = document.getElementById("visual-preset-select");
   const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
   if (savedPreset !== "default") {
@@ -157,169 +255,537 @@
     localStorage.setItem("faizan_visual_preset", chosen);
   };
 
-  setInterval(function() {
-    document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
-  }, 1000);
+  const sideBtns = document.querySelectorAll(".side-btn");
+  const tabs = document.querySelectorAll(".admin-tab");
+  sideBtns.forEach(function(btn) {
+    btn.onclick = function() {
+      sideBtns.forEach(function(b) { b.classList.remove("active"); });
+      tabs.forEach(function(t) { t.classList.add("hidden"); });
+      btn.classList.add("active");
+      const targetId = btn.getAttribute("data-tab");
+      document.getElementById(targetId).classList.remove("hidden");
+    };
+  });
 
-  const namazUrl = "https://" + "api." + "aladhan.com" + "/v1/timingsByCity?city=Karachi&country=Pakistan&method=1";
-  fetch(namazUrl)
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      const t = data.data.timings;
-      document.getElementById("namaz-bar").textContent =
-        "Karachi Namaz — Fajr: " + t.Fajr +
-        " | Dhuhr: " + t.Dhuhr +
-        " | Asr: " + t.Asr +
-        " | Maghrib: " + t.Maghrib +
-        " | Isha: " + t.Isha;
-    })
-    .catch(function() {
-      document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
-    });
+  function draw30Slots(existing) {
+    const box = document.getElementById("member-slots");
+    box.innerHTML = "";
+    for (let i = 1; i <= 30; i++) {
+      const slot = (existing && existing["slot" + i]) || { username: "", password: "", banner: "", banned: false };
+      const row = document.createElement("div");
+      row.className = "row";
 
-  function extractYouTubeId(url) {
-    if (!url) return "";
-    if (url.includes("youtu.be/")) {
-      return url.split("youtu.be/").pop().split("?").shift().split("&").shift();
+      const num = document.createElement("span");
+      num.style.width = "35px";
+      num.textContent = "#" + i;
+
+      const uInput = document.createElement("input");
+      uInput.type = "text";
+      uInput.id = "u" + i;
+      uInput.value = slot.username || "";
+      uInput.placeholder = "Username " + i;
+      uInput.style.width = "140px";
+
+      const pInput = document.createElement("input");
+      pInput.type = "text";
+      pInput.id = "p" + i;
+      pInput.value = slot.password || "";
+      pInput.placeholder = "Password " + i;
+      pInput.style.width = "140px";
+
+      const imgInput = document.createElement("input");
+      imgInput.type = "text";
+      imgInput.id = "img" + i;
+      imgInput.value = slot.banner || "";
+      imgInput.placeholder = "Top Banner Pic URL (optional)";
+      imgInput.style.flex = "1";
+
+      const label = document.createElement("label");
+      label.style.display = "flex";
+      label.style.alignItems = "center";
+      label.style.gap = "0.35rem";
+      label.style.cursor = "pointer";
+
+      const bCheck = document.createElement("input");
+      bCheck.type = "checkbox";
+      bCheck.id = "b" + i;
+      bCheck.checked = Boolean(slot.banned);
+
+      const bText = document.createElement("span");
+      bText.style.color = slot.banned ? "#ef4444" : "var(--text-muted)";
+      bText.style.fontSize = "0.85rem";
+      bText.textContent = "Banned";
+
+      label.appendChild(bCheck);
+      label.appendChild(bText);
+      row.appendChild(num);
+      row.appendChild(uInput);
+      row.appendChild(pInput);
+      row.appendChild(imgInput);
+      row.appendChild(label);
+      box.appendChild(row);
     }
-    if (url.includes("/shorts/")) {
-      return url.split("/shorts/").pop().split("?").shift().split("&").shift();
-    }
-    const vIndex = url.indexOf("v=");
-    if (vIndex !== -1) {
-      let sub = url.substring(vIndex + 2);
-      const ampIndex = sub.indexOf("&");
-      if (ampIndex !== -1) sub = sub.substring(0, ampIndex);
-      return sub;
-    }
-    return url.split("/").pop().split("?").shift();
   }
 
-  async function loadPublicShelves() {
-    try {
-      const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
-      const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, getDocs, doc, getDoc } = await import(sdkBase + "firebase-firestore.js");
+  async function initAdminAuth() {
+    const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
+    const { initializeApp } = await import(sdkBase + "firebase-app.js");
+    const { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "faizan-platform" + ".firebaseapp.com",
-        projectId: "faizan-platform",
-        storageBucket: "faizan-platform" + ".firebasestorage.app",
-        messagingSenderId: "801904702555",
-        appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "faizan-platform" + ".firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform" + ".firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    try {
+      const passSnap = await getDoc(doc(db, "siteSettings", "adminAuth"));
+      if (passSnap.exists() && passSnap.data().password) {
+        currentAdminPass = passSnap.data().password;
+      }
+    } catch (e) {}
+
+    const adminPassBox = document.getElementById("admin-pass-input");
+    adminPassBox.oninput = function() {
+      const typed = adminPassBox.value;
+      adminPassBox.classList.remove("input-valid", "input-invalid");
+      if (typed.length === 0) return;
+      adminPassBox.classList.add(currentAdminPass.startsWith(typed) ? "input-valid" : "input-invalid");
+    };
+
+    document.getElementById("unlock-btn").onclick = function() {
+      const val = adminPassBox.value;
+      if (val === currentAdminPass) {
+        document.getElementById("admin-lock").classList.add("hidden");
+        document.getElementById("admin-shell").classList.remove("hidden");
+        startAdminSystem(db, { collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where });
+      } else {
+        document.getElementById("lock-err").textContent = "Incorrect owner password.";
+      }
+    };
+  }
+
+  async function startAdminSystem(db, fns) {
+    const { collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = fns;
+    draw30Slots({});
+
+    try {
+      document.getElementById("change-admin-pass-btn").onclick = async function() {
+        const nextPass = document.getElementById("new-admin-pass").value.trim();
+        if (!nextPass || nextPass.length < 4) return alert("Enter a new password (at least 4 characters).");
+        await setDoc(doc(db, "siteSettings", "adminAuth"), { password: nextPass });
+        currentAdminPass = nextPass;
+        document.getElementById("new-admin-pass").value = "";
+        alert("Owner password updated! Use your new password next time you unlock.");
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+      document.getElementById("publish-bundle-btn").onclick = async function() {
+        const title = document.getElementById("bnd-title").value.trim();
+        const videoUrl = document.getElementById("bnd-video").value.trim();
+        const wordUrl = document.getElementById("bnd-word").value.trim();
+        const pptUrl = document.getElementById("bnd-ppt").value.trim();
+        const body = document.getElementById("bnd-desc").value.trim();
 
-      const pubSnap = await getDoc(doc(db, "siteSettings", "theme_public"));
-      const allSnap = await getDoc(doc(db, "siteSettings", "theme_all"));
-      const chosenTheme = pubSnap.exists() ? pubSnap.data() : (allSnap.exists() ? allSnap.data() : null);
-      if (chosenTheme) {
-        if (chosenTheme.bg) document.body.style.background = chosenTheme.bg;
-        if (chosenTheme.color) document.body.style.color = chosenTheme.color;
-        if (chosenTheme.font && chosenTheme.font !== "default") document.body.classList.add(chosenTheme.font);
+        if (!title) return alert("Please enter a Bundle Title.");
+        await addDoc(collection(db, "videos"), {
+          type: "bundle",
+          title: title,
+          videoUrl: videoUrl,
+          wordUrl: wordUrl,
+          pptUrl: pptUrl,
+          body: body,
+          accessible: true,
+          createdAt: Date.now()
+        });
+
+        document.getElementById("bnd-title").value = "";
+        document.getElementById("bnd-video").value = "";
+        document.getElementById("bnd-word").value = "";
+        document.getElementById("bnd-ppt").value = "";
+        document.getElementById("bnd-desc").value = "";
+        alert("Course / Media Bundle published to Member Hub!");
+        await loadItems();
+      };
+
+      const fileInput = document.getElementById("cloud-file-input");
+      const statusText = document.getElementById("upload-status");
+      document.getElementById("cloud-upload-btn").onclick = function() { fileInput.click(); };
+
+      fileInput.onchange = async function() {
+        const file = fileInput.files.item(0);
+        if (!file) return;
+        statusText.textContent = "Uploading " + file.name + " to Cloudinary...";
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+        try {
+          const uploadEndpoint = "https://" + "api." + "cloudinary.com" + "/v1_1/" + CLOUD_NAME + "/auto/upload";
+          const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
+          const data = await res.json();
+          if (data.secure_url) {
+            document.getElementById("item-url").value = data.secure_url;
+            statusText.textContent = "Uploaded! Click Publish Item below.";
+          } else {
+            statusText.textContent = "Upload failed.";
+          }
+        } catch (upErr) {
+          statusText.textContent = "Upload error: " + upErr.message;
+        }
+      };
+
+      document.getElementById("publish-btn").onclick = async function() {
+        const type = document.getElementById("item-type").value;
+        const title = document.getElementById("item-title").value.trim();
+        const url = document.getElementById("item-url").value.trim();
+        const body = document.getElementById("item-body").value.trim();
+        if (!title) return alert("Please enter a title.");
+        await addDoc(collection(db, "videos"), {
+          type: type,
+          title: title,
+          url: url,
+          body: body,
+          accessible: true,
+          createdAt: Date.now()
+        });
+        document.getElementById("item-title").value = "";
+        document.getElementById("item-url").value = "";
+        document.getElementById("item-body").value = "";
+        statusText.textContent = "";
+        await loadItems();
+      };
+      document.getElementById("save-members-btn").onclick = async function() {
+        for (let i = 1; i <= 30; i++) {
+          const username = document.getElementById("u" + i).value.trim();
+          const password = document.getElementById("p" + i).value.trim();
+          const banner = document.getElementById("img" + i).value.trim();
+          const banned = document.getElementById("b" + i).checked;
+          await setDoc(doc(db, "visitors", "slot" + i), {
+            username: username,
+            password: password,
+            banner: banner,
+            banned: banned
+          });
+        }
+        alert("All 30 member accounts and banners saved!");
+        await load30Slots();
+      };
+
+      document.getElementById("admin-send-chat").onclick = async function() {
+        const input = document.getElementById("admin-chat-input");
+        const text = input.value.trim();
+        if (!text) return;
+        await addDoc(collection(db, "groupChat"), {
+          sender: "Faizan (Owner)",
+          text: text,
+          time: new Date().toLocaleTimeString(),
+          ts: Date.now()
+        });
+        input.value = "";
+      };
+
+      const chatQuery = query(collection(db, "groupChat"), orderBy("ts", "asc"));
+      onSnapshot(chatQuery, function(snap) {
+        const box = document.getElementById("admin-group-chat");
+        box.innerHTML = "";
+        snap.forEach(function(d) {
+          const m = d.data();
+          const bubble = document.createElement("div");
+          bubble.className = "msg-bubble";
+          const head = document.createElement("div");
+          head.style.fontSize = "0.8rem";
+          head.style.color = "var(--text-muted)";
+          head.textContent = m.sender + " • " + (m.time || "");
+          const body = document.createElement("div");
+          body.textContent = m.text;
+          bubble.appendChild(head);
+          bubble.appendChild(body);
+          box.appendChild(bubble);
+        });
+        box.scrollTop = box.scrollHeight;
+      });
+
+      const dmQuery = query(collection(db, "dmLogs"), orderBy("ts", "desc"));
+      onSnapshot(dmQuery, function(snap) {
+        const tbody = document.getElementById("dm-monitor-table");
+        tbody.innerHTML = "";
+        document.getElementById("stat-dms").textContent = String(snap.size);
+        snap.forEach(function(d) {
+          const dm = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + (dm.from || "") + "</strong></td><td><strong>" + (dm.to || "") + "</strong></td><td>" + (dm.text || "") + "</td><td>" + (dm.time || "") + "</td>";
+          tbody.appendChild(tr);
+        });
+      });
+
+      async function loadItems() {
+        const box = document.getElementById("items-list");
+        box.innerHTML = "";
+        const snap = await getDocs(collection(db, "videos"));
+        document.getElementById("stat-content").textContent = String(snap.size);
+
+        snap.forEach(function(docSnap) {
+          const v = docSnap.data();
+          const row = document.createElement("div");
+          row.className = "row";
+          row.style.justifyContent = "space-between";
+
+          const left = document.createElement("div");
+          const strong = document.createElement("strong");
+          strong.textContent = v.title + " (" + (v.type || "video").toUpperCase() + ")";
+          const badge = document.createElement("span");
+          badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
+          badge.textContent = v.accessible ? "Accessible" : "Private";
+          left.appendChild(strong);
+          left.appendChild(badge);
+
+          const right = document.createElement("div");
+          right.className = "row";
+          right.style.marginBottom = "0";
+
+          const toggleBtn = document.createElement("button");
+          toggleBtn.type = "button";
+          toggleBtn.className = "btn";
+          toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
+          toggleBtn.onclick = async function() {
+            await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
+            await loadItems();
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-muted";
+          delBtn.textContent = "Delete";
+          delBtn.onclick = async function() {
+            await deleteDoc(doc(db, "videos", docSnap.id));
+            await loadItems();
+          };
+
+          right.appendChild(toggleBtn);
+          right.appendChild(delBtn);
+          row.appendChild(left);
+          row.appendChild(right);
+          box.appendChild(row);
+        });
+        if (box.innerHTML === "") box.textContent = "No items published yet.";
+      }
+      async function load30Slots() {
+        const existing = {};
+        const snap = await getDocs(collection(db, "visitors"));
+        snap.forEach(function(d) { existing[d.id] = d.data(); });
+        draw30Slots(existing);
       }
 
-      const grids = {
-        course: document.getElementById("grid-courses"),
-        video: document.getElementById("grid-videos"),
-        word: document.getElementById("grid-word"),
-        ppt: document.getElementById("grid-ppt")
+      async function loadContacts() {
+        const tbody = document.getElementById("contacts-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "permanentContacts"));
+        document.getElementById("stat-members").textContent = String(snap.size);
+
+        snap.forEach(function(d) {
+          const c = d.data();
+          const tr = document.createElement("tr");
+
+          const tdUser = document.createElement("td");
+          const inUser = document.createElement("input");
+          inUser.type = "text";
+          inUser.value = c.username || d.id;
+          inUser.style.width = "130px";
+          tdUser.appendChild(inUser);
+
+          const tdEmail = document.createElement("td");
+          const inEmail = document.createElement("input");
+          inEmail.type = "text";
+          inEmail.value = c.email || "";
+          inEmail.style.width = "175px";
+          tdEmail.appendChild(inEmail);
+
+          const tdPhone = document.createElement("td");
+          const inPhone = document.createElement("input");
+          inPhone.type = "text";
+          inPhone.value = c.phone || "";
+          inPhone.style.width = "140px";
+          tdPhone.appendChild(inPhone);
+
+          const tdAct = document.createElement("td");
+          const saveBtn = document.createElement("button");
+          saveBtn.type = "button";
+          saveBtn.className = "btn btn-green";
+          saveBtn.style.marginRight = "0.4rem";
+          saveBtn.textContent = "Save";
+          saveBtn.onclick = async function() {
+            const newName = inUser.value.trim();
+            if (!newName) return alert("Name cannot be empty.");
+            if (newName !== d.id) {
+              await deleteDoc(doc(db, "permanentContacts", d.id));
+            }
+            await setDoc(doc(db, "permanentContacts", newName), {
+              username: newName,
+              email: inEmail.value.trim(),
+              phone: inPhone.value.trim(),
+              savedAt: c.savedAt || new Date().toLocaleString()
+            });
+            alert("Member info updated!");
+            await loadContacts();
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-muted";
+          delBtn.textContent = "Delete";
+          delBtn.onclick = async function() {
+            await deleteDoc(doc(db, "permanentContacts", d.id));
+            await loadContacts();
+          };
+
+          tdAct.appendChild(saveBtn);
+          tdAct.appendChild(delBtn);
+
+          tr.appendChild(tdUser);
+          tr.appendChild(tdEmail);
+          tr.appendChild(tdPhone);
+          tr.appendChild(tdAct);
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function loadActivity() {
+        const tbody = document.getElementById("activity-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "memberActivity"));
+        snap.forEach(function(d) {
+          const a = d.data();
+          const mins = Math.floor((a.secondsSpent || 0) / 60);
+          const secs = (a.secondsSpent || 0) % 60;
+          const logs = (a.actions || []).slice(-5).join(" | ");
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + d.id + "</strong></td><td>" + mins + "m " + secs + "s</td><td>" + (a.lastSeen || "-") + "</td><td>" + logs + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function loadGames() {
+        const tbody = document.getElementById("games-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "gameStats"));
+        snap.forEach(function(d) {
+          const g = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = "<td><strong>" + (g.username || d.id) + "</strong></td><td>" + (g.game || "") + "</td><td>" + (g.rounds || 0) + "</td><td>" + (g.bestScore || 0) + "</td><td>" + (g.lastPlayed || "-") + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
+      const targetSelect = document.getElementById("theme-target-page");
+
+      async function applyPageTheme(pageKey) {
+        const specificSnap = await getDoc(doc(db, "siteSettings", "theme_" + pageKey));
+        const allSnap = await getDoc(doc(db, "siteSettings", "theme_all"));
+        const chosen = specificSnap.exists() ? specificSnap.data() : (allSnap.exists() ? allSnap.data() : null);
+
+        document.body.style.background = "";
+        document.body.style.backgroundImage = "";
+        document.body.style.color = "";
+        document.body.classList.remove("font-mono", "font-serif", "font-tech");
+
+        if (chosen) {
+          if (chosen.bg) document.body.style.background = chosen.bg;
+          if (chosen.bgImage) {
+            document.body.style.backgroundImage = "url('" + chosen.bgImage + "')";
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundAttachment = "fixed";
+          }
+          if (chosen.color) document.body.style.color = chosen.color;
+          if (chosen.font && chosen.font !== "default") document.body.classList.add(chosen.font);
+          if (window.startHalalAnimation) {
+            window.startHalalAnimation("admin-geo-canvas", chosen.anim || "geo_stars", chosen.animSize || 100);
+          }
+        } else if (window.startHalalAnimation) {
+          window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
+        }
+      }
+
+      await applyPageTheme("admin");
+
+      if (window.openDrawingStudio) {
+        window.openDrawingStudio({
+          containerId: "admin-draw-studio",
+          cloudName: CLOUD_NAME,
+          uploadPreset: UPLOAD_PRESET,
+          onApplyBanner: async function(url) {
+            document.getElementById("admin-bg-image").value = url;
+            alert("Artwork ready! Click 'Apply & Save Look' to set it on your selected target page.");
+          },
+          onApplyBackground: async function(url) {
+            document.getElementById("admin-bg-image").value = url;
+            document.getElementById("save-global-theme-btn").click();
+          }
+        });
+      }
+
+      document.getElementById("save-global-theme-btn").onclick = async function() {
+        const target = targetSelect.value;
+        const bg = document.getElementById("admin-bg-text").value.trim();
+        const color = document.getElementById("admin-font-color-text").value.trim();
+        const font = document.getElementById("admin-font-select").value;
+        const bgImage = document.getElementById("admin-bg-image").value.trim();
+        const anim = document.getElementById("admin-anim-select").value;
+        const animSize = Number(document.getElementById("admin-anim-size").value) || 100;
+
+        await setDoc(doc(db, "siteSettings", "theme_" + target), {
+          bg: bg,
+          color: color,
+          font: font,
+          bgImage: bgImage,
+          anim: anim,
+          animSize: animSize
+        });
+        if (target === "all" || target === "admin") await applyPageTheme("admin");
+        alert("Saved look & animation for: " + target.toUpperCase());
       };
 
-      Object.values(grids).forEach(function(g) { if (g) g.innerHTML = ""; });
+      document.getElementById("reset-global-theme-btn").onclick = async function() {
+        const target = targetSelect.value;
+        await deleteDoc(doc(db, "siteSettings", "theme_" + target));
+        await applyPageTheme("admin");
+        alert("Reset look to default for: " + target.toUpperCase());
+      };
 
-      const snap = await getDocs(collection(db, "videos"));
-      snap.forEach(function(d) {
-        const item = d.data();
-        if (!item.accessible) return;
-
-        const type = item.type === "doc" ? "word" : (item.type || "video");
-        const targetGrid = grids[type];
-        if (!targetGrid) return;
-
-        const box = document.createElement("div");
-        box.className = "card";
-        box.style.marginBottom = "1rem";
-
-        const title = document.createElement("h3");
-        title.textContent = item.title;
-        box.appendChild(title);
-
-        if (item.body) {
-          const p = document.createElement("p");
-          p.style.color = "var(--text-muted)";
-          p.style.marginTop = "0.4rem";
-          p.textContent = item.body;
-          box.appendChild(p);
+      document.getElementById("open-member-folder-btn").onclick = function() {
+        const targetUser = document.getElementById("admin-folder-target").value.trim();
+        if (!targetUser) return alert("Type a member username first.");
+        if (window.renderMemberFolder) {
+          window.renderMemberFolder({
+            db: db,
+            firestoreFns: { collection, addDoc, getDocs, deleteDoc, doc, query, where },
+            targetUsername: targetUser,
+            uploaderName: "Faizan (Owner)",
+            containerId: "admin-folder-view",
+            cloudName: CLOUD_NAME,
+            uploadPreset: UPLOAD_PRESET
+          });
         }
+      };
 
-        if (item.url) {
-          if (type === "video") {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "btn";
-            btn.style.marginTop = "0.65rem";
-            btn.textContent = "Watch Video";
-            const holder = document.createElement("div");
-
-            btn.onclick = function() {
-              btn.remove();
-              if (item.url.includes("youtube.com") || item.url.includes("youtu.be")) {
-                const vidId = extractYouTubeId(item.url);
-                const iframe = document.createElement("iframe");
-                iframe.src = "https://" + "www." + "youtube.com" + "/embed/" + vidId + "?autoplay=1";
-                iframe.style.width = "100%";
-                iframe.style.height = "360px";
-                iframe.style.borderRadius = "8px";
-                iframe.style.marginTop = "0.75rem";
-                iframe.setAttribute("frameborder", "0");
-                iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
-                iframe.setAttribute("allowfullscreen", "true");
-                holder.appendChild(iframe);
-              } else {
-                const vid = document.createElement("video");
-                vid.src = item.url;
-                vid.controls = true;
-                vid.autoplay = true;
-                vid.playsInline = true;
-                vid.style.width = "100%";
-                vid.style.borderRadius = "8px";
-                vid.style.marginTop = "0.75rem";
-                holder.appendChild(vid);
-              }
-            };
-            box.appendChild(btn);
-            box.appendChild(holder);
-          } else {
-            const link = document.createElement("a");
-            link.href = item.url;
-            link.target = "_blank";
-            link.className = "btn";
-            link.style.display = "inline-block";
-            link.style.marginTop = "0.65rem";
-            link.style.textDecoration = "none";
-            link.textContent = type === "ppt" ? "Open / Download PowerPoint" : (type === "word" ? "Open / Download Word Doc" : "Open Course Resource");
-            box.appendChild(link);
-          }
-        }
-
-        targetGrid.appendChild(box);
-      });
-
-      Object.keys(grids).forEach(function(k) {
-        if (grids[k] && grids[k].innerHTML === "") {
-          grids[k].innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No items published in this section yet.</p>';
-        }
-      });
-    } catch (e) {
-      console.error("Shelf Error:", e);
+      await loadItems();
+      await load30Slots();
+      await loadContacts();
+      await loadActivity();
+      await loadGames();
+    } catch (err) {
+      alert("Admin System Error: " + err.message);
     }
   }
 
-  loadPublicShelves();
+  initAdminAuth();
 </script>
+<script src="animations.js"></script>
+<script src="drawer.js"></script>
+<script src="folders.js"></script>
 </body>
 </html>
