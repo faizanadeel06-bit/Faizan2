@@ -509,9 +509,9 @@
           getDoc(doc(db, "siteSettings", "theme_all")),
           getDoc(doc(db, "userStyles", currentUser))
         ]).then(function(snaps) {
-          const portalTheme = snaps[0].exists() ? snaps[0].data() : null;
-          const allTheme = snaps[1].exists() ? snaps[1].data() : null;
-          const userTheme = snaps[2].exists() ? snaps[2].data() : null;
+          const portalTheme = snaps.at(0).exists() ? snaps.at(0).data() : null;
+          const allTheme = snaps.at(1).exists() ? snaps.at(1).data() : null;
+          const userTheme = snaps.at(2).exists() ? snaps.at(2).data() : null;
 
           const chosen = userTheme || portalTheme || allTheme;
           applyUserLook(chosen);
@@ -743,6 +743,9 @@
     } catch (sdkError) {
       err.textContent = "System Error: " + sdkError.message;
     }
+  }
+  if (window.startHalalAnimation) {
+    window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
   }
 
   initPortal();
