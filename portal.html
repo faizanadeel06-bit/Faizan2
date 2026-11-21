@@ -151,75 +151,10 @@
     </section>
 
     <section id="ptab-games" class="portal-tab hidden">
-      <div class="card">
-        <h2>1. Cold Tunnel Ball Runner (Jump &amp; Duck)</h2>
-        <div id="ball-runner-box"></div>
-      </div>
-
-      <div class="card">
-        <h2>2. Reflex Speed Challenge</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Click Start, wait for the button to turn GREEN, and tap as fast as you can!</p>
-        <button type="button" id="reflex-btn" class="btn" style="padding: 1.25rem 2rem; font-size: 1.1rem;">Start Reflex Test</button>
-        <p id="reflex-result" style="margin-top: 0.75rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>3. Number Guess (1 to 20)</h2>
-        <div class="row">
-          <input type="number" id="guess-input" min="1" max="20" placeholder="1 - 20" style="width: 120px;" />
-          <button type="button" id="guess-btn" class="btn">Guess</button>
-          <button type="button" id="new-guess-btn" class="btn btn-muted">New Number</button>
-        </div>
-        <p id="guess-result" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>4. Quick Math Blitz</h2>
-        <p id="math-q" style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Click New Problem to start</p>
-        <div class="row">
-          <input type="number" id="math-ans" placeholder="Answer" style="width: 120px;" />
-          <button type="button" id="math-check-btn" class="btn">Submit</button>
-          <button type="button" id="math-new-btn" class="btn btn-muted">New Problem</button>
-        </div>
-        <p id="math-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>5. Basement PIN Memory</h2>
-        <p id="pin-display" style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.2em; margin-bottom: 0.5rem;">****</p>
-        <div class="row">
-          <input type="text" id="pin-input" placeholder="Enter PIN" style="width: 140px;" />
-          <button type="button" id="pin-start-btn" class="btn btn-muted">Show PIN</button>
-          <button type="button" id="pin-check-btn" class="btn">Unlock</button>
-        </div>
-        <p id="pin-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>6. Rock, Paper, Scissors</h2>
-        <div class="row">
-          <button type="button" class="btn rps-btn" data-move="Rock">Rock</button>
-          <button type="button" class="btn rps-btn" data-move="Paper">Paper</button>
-          <button type="button" class="btn rps-btn" data-move="Scissors">Scissors</button>
-        </div>
-        <p id="rps-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>7. 10-Second Speed Clicker</h2>
-        <button type="button" id="clicker-btn" class="btn" style="padding: 1rem 1.5rem;">Start 10s Clicker</button>
-        <p id="clicker-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
-
-      <div class="card">
-        <h2>8. Coin Flip Streak</h2>
-        <div class="row">
-          <button type="button" id="coin-heads" class="btn">Heads</button>
-          <button type="button" id="coin-tails" class="btn">Tails</button>
-        </div>
-        <p id="coin-res" style="margin-top: 0.5rem; font-weight: 600;"></p>
-      </div>
+      <div id="arcade-30-hub"></div>
     </section>
+
+
   </main>
 </div>
 <script>
@@ -572,10 +507,11 @@
           await logAction("Reset Page Look to Default");
           alert("Page look reset to default Cold Basement!");
         };
-
-        if (window.launchObstacleRunner) {
-          window.launchObstacleRunner("ball-runner-box", recordGame);
+        if (window.launchArcade30) {
+          window.launchArcade30("arcade-30-hub", recordGame);
         }
+
+
 
         let reflexState = "idle";
         let startTime = 0;
@@ -748,6 +684,8 @@
   <script src="animations.js"></script>
 <script src="drawer.js"></script>
 <script src="arcade.js"></script>
+
+<script src="arcade30.js"></script>
 <script src="folders.js"></script>
 </script>
 if (window.startHalalAnimation) {
