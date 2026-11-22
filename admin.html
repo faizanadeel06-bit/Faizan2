@@ -617,21 +617,44 @@
           });
         }
       };
-      document.getElementById("save-global-theme-btn").onclick = async function() {
+
+      const animSelect = document.getElementById("admin-anim-select");
+      const animSizeInput = document.getElementById("admin-anim-size");
+
+      animSelect.onchange = function() {
+        if (window.startHalalAnimation) {
+          window.startHalalAnimation("admin-geo-canvas", animSelect.value, Number(animSizeInput.value) || 100);
+        }
+      };
+
+      document.getElementById("save-global-theme-btn").onclick = function() {
         const target = document.getElementById("theme-target-page").value;
-        const anim = document.getElementById("admin-anim-select").value;
-        const animSize = Number(document.getElementById("admin-anim-size").value) || 100;
+        const anim = animSelect.value;
+        const animSize = Number(animSizeInput.value) || 100;
         const bg = document.getElementById("admin-bg-text").value.trim();
         const bgImage = document.getElementById("admin-bg-image").value.trim();
 
-        await setDoc(doc(db, "siteSettings", "theme_" + target), {
+        if ((target === "all" || target === "admin") && window.startHalalAnimation) {
+          window.startHalalAnimation("admin-geo-canvas", anim, animSize);
+        }
+        if (bgImage) {
+          document.body.style.background = "url('" + bgImage + "') center / cover no-repeat fixed";
+        } else if (bg) {
+          document.body.style.background = bg;
+        }
+
+        setDoc(doc(db, "siteSettings", "theme_" + target), {
           anim: anim,
           animSize: animSize,
           bg: bg,
           bgImage: bgImage
+        }).then(function() {
+          alert("Saved & synced look for: " + target.toUpperCase());
         });
+      };
 
-        if ((target === "all" || target === "admin") && window.startHalalAnimation) {
+
+      if ((target === "all" || target === "admin") && window.startHalalAnimation) {
           window.startHalalAnimation("admin-geo-canvas", anim, animSize);
         }
         alert("Saved animation & look for: " + target.toUpperCase());
