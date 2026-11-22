@@ -216,7 +216,7 @@
     </section>
   </main>
 </div>
-<script src="animations.js"></script>
+<script src="animations.js?v=5"></script>
 <script src="folders.js"></script>
 <script>
   const CLOUD_NAME = "fh4mrkmm";
@@ -224,6 +224,15 @@
 
   if (window.startHalalAnimation) {
     window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
+  }
+  const liveAnimSel = document.getElementById("admin-anim-select");
+  const liveSizeInp = document.getElementById("admin-anim-size");
+  if (liveAnimSel) {
+    liveAnimSel.addEventListener("change", function() {
+      if (window.startHalalAnimation) {
+        window.startHalalAnimation("admin-geo-canvas", liveAnimSel.value, Number(liveSizeInp ? liveSizeInp.value : 100));
+      }
+    });
   }
 
   setInterval(function() {
