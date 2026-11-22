@@ -83,7 +83,7 @@
         <h2>Publish Single File (Image, Video, Document, or Code)</h2>
         <div class="row">
           <input type="text" id="item-title" placeholder="Title" style="flex: 1;" />
-          <select id="item-type">
+          <select id="item-type" aria-label="Item Type">
             <option value="image">Image (Public Gallery &amp; Portal)</option>
             <option value="video">Video</option>
             <option value="doc">Word / PDF / PPT</option>
@@ -114,7 +114,7 @@
         <h2>Edit Text &amp; Messages on Any Page</h2>
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">Change the main heading and message shown on your Gallery, Vision, About, or Contact pages without editing code.</p>
         <div class="row">
-          <select id="txt-page-sel" style="min-width: 200px;">
+          <select id="txt-page-sel" aria-label="Select Page" style="min-width: 200px;">
             <option value="index">Gallery (index.html)</option>
             <option value="vision">Vision (vision.html)</option>
             <option value="about">About (about.html)</option>
@@ -159,20 +159,20 @@
       <div class="card">
         <h2>Global Animations &amp; Page Look</h2>
         <div class="row">
-          <select id="theme-target-page">
+          <select id="theme-target-page" aria-label="Target Page">
             <option value="all">All Pages</option>
             <option value="index">Gallery (index.html)</option>
             <option value="portal">Member Hub (portal.html)</option>
             <option value="admin">Admin Panel (admin.html)</option>
           </select>
-          <select id="admin-anim-select">
+          <select id="admin-anim-select" aria-label="Animation Shape">
             <option value="geo_stars">Rotating 8-Pointed Islamic Stars</option>
             <option value="flower_fireworks">Blooming Flower + Fireworks</option>
             <option value="crescent_nebula">Starlight &amp; Crescent Orbit</option>
             <option value="arabesque_mandala">Sacred Geometric Mandala</option>
             <option value="golden_petals">Falling Emerald &amp; Gold Petals</option>
           </select>
-          <label style="font-size: 0.85rem;">Size: <input type="range" id="admin-anim-size" min="40" max="200" value="100" /></label>
+          <label for="admin-anim-size" style="font-size: 0.85rem;">Size: <input type="range" id="admin-anim-size" min="40" max="200" value="100" /></label>
         </div>
         <div class="row">
           <input type="text" id="admin-bg-text" placeholder="Background color (e.g. #06090e)" style="flex: 1;" />
@@ -216,8 +216,8 @@
     </section>
   </main>
 </div>
-<script src="animations.js?v=5"></script>
-<script src="folders.js"></script>
+<script src="animations.js?v=6"></script>
+<script src="folders.js?v=6"></script>
 <script>
   const CLOUD_NAME = "fh4mrkmm";
   const UPLOAD_PRESET = "faizan_vault";
@@ -225,12 +225,20 @@
   if (window.startHalalAnimation) {
     window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
   }
+
   const liveAnimSel = document.getElementById("admin-anim-select");
   const liveSizeInp = document.getElementById("admin-anim-size");
   if (liveAnimSel) {
     liveAnimSel.addEventListener("change", function() {
       if (window.startHalalAnimation) {
         window.startHalalAnimation("admin-geo-canvas", liveAnimSel.value, Number(liveSizeInp ? liveSizeInp.value : 100));
+      }
+    });
+  }
+  if (liveSizeInp) {
+    liveSizeInp.addEventListener("input", function() {
+      if (window.startHalalAnimation && liveAnimSel) {
+        window.startHalalAnimation("admin-geo-canvas", liveAnimSel.value, Number(liveSizeInp.value) || 100);
       }
     });
   }
@@ -357,7 +365,6 @@
     draw30Slots({});
 
     try {
-      // 1. Change Owner Admin Password
       document.getElementById("change-admin-pass-btn").onclick = async function() {
         const newPass = document.getElementById("new-admin-pass").value.trim();
         if (!newPass) return alert("Enter a new owner password first.");
@@ -366,7 +373,6 @@
         alert("Owner password updated! Use your new password next time you sign in.");
       };
 
-      // 2. Cloudinary File Uploader
       const fileInput = document.getElementById("cloud-file-input");
       const statusText = document.getElementById("upload-status");
       document.getElementById("cloud-upload-btn").onclick = function() { fileInput.click(); };
@@ -393,7 +399,6 @@
         }
       };
 
-      // 3. Topic Bundle Publisher (Video + Word + PPT + Cover Pic)
       document.getElementById("publish-bundle-btn").onclick = async function() {
         const title = document.getElementById("bnd-title").value.trim();
         const picUrl = document.getElementById("bnd-pic").value.trim();
@@ -425,7 +430,6 @@
         alert("Topic Bundle published to Member Portal!");
       };
 
-      // 4. Single Item Publisher
       document.getElementById("publish-item-btn").onclick = async function() {
         const title = document.getElementById("item-title").value.trim();
         const type = document.getElementById("item-type").value;
@@ -450,7 +454,6 @@
         alert("Published successfully!");
       };
 
-      // 5. Page Text & Message Editor (Gallery, Vision, About, Contact)
       const pageSel = document.getElementById("txt-page-sel");
       async function loadSelectedPageText() {
         const p = pageSel.value;
@@ -626,20 +629,10 @@
           });
         }
       };
-
-      const animSelect = document.getElementById("admin-anim-select");
-      const animSizeInput = document.getElementById("admin-anim-size");
-
-      animSelect.onchange = function() {
-        if (window.startHalalAnimation) {
-          window.startHalalAnimation("admin-geo-canvas", animSelect.value, Number(animSizeInput.value) || 100);
-        }
-      };
-
       document.getElementById("save-global-theme-btn").onclick = function() {
         const target = document.getElementById("theme-target-page").value;
-        const anim = animSelect.value;
-        const animSize = Number(animSizeInput.value) || 100;
+        const anim = document.getElementById("admin-anim-select").value;
+        const animSize = Number(document.getElementById("admin-anim-size").value) || 100;
         const bg = document.getElementById("admin-bg-text").value.trim();
         const bgImage = document.getElementById("admin-bg-image").value.trim();
 
@@ -658,20 +651,14 @@
           bg: bg,
           bgImage: bgImage
         }).then(function() {
-          alert("Saved & synced look for: " + target.toUpperCase());
+          alert("Saved animation & look for: " + target.toUpperCase());
         });
-      };
-
-
-      if ((target === "all" || target === "admin") && window.startHalalAnimation) {
-          window.startHalalAnimation("admin-geo-canvas", anim, animSize);
-        }
-        alert("Saved animation & look for: " + target.toUpperCase());
       };
 
       document.getElementById("reset-global-theme-btn").onclick = async function() {
         const target = document.getElementById("theme-target-page").value;
         await deleteDoc(doc(db, "siteSettings", "theme_" + target));
+        document.body.style.background = "";
         if (window.startHalalAnimation) {
           window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
         }
