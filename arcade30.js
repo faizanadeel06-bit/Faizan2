@@ -2,7 +2,6 @@ window.launchArcade30 = function(containerId, onScoreSave) {
   const host = document.getElementById(containerId);
   if (!host) return;
 
-  // Saved Player Progress & Settings
   let state = JSON.parse(localStorage.getItem("faizan_arcade_state") || "null") || {
     sfx: true,
     difficulty: "normal",
@@ -16,7 +15,6 @@ window.launchArcade30 = function(containerId, onScoreSave) {
     localStorage.setItem("faizan_arcade_state", JSON.stringify(state));
   }
 
-  // Halal Synthesized Sound Effects Engine (Pure Beeps/Clicks/Explosions - Zero Music)
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   let audioCtx = null;
 
@@ -34,69 +32,69 @@ window.launchArcade30 = function(containerId, onScoreSave) {
     if (type === "shoot") {
       osc.type = "square";
       osc.frequency.setValueAtTime(680, now);
-      osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.11);
+      gain.gain.setValueAtTime(0.11, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
       osc.start(now);
-      osc.stop(now + 0.12);
+      osc.stop(now + 0.11);
     } else if (type === "boom") {
       osc.type = "sawtooth";
       osc.frequency.setValueAtTime(160, now);
-      osc.frequency.exponentialRampToValueAtTime(35, now + 0.25);
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      osc.frequency.exponentialRampToValueAtTime(35, now + 0.22);
+      gain.gain.setValueAtTime(0.16, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
       osc.start(now);
-      osc.stop(now + 0.25);
+      osc.stop(now + 0.22);
     } else if (type === "win") {
       osc.type = "triangle";
       osc.frequency.setValueAtTime(440, now);
       osc.frequency.setValueAtTime(554, now + 0.08);
       osc.frequency.setValueAtTime(659, now + 0.16);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
       osc.start(now);
-      osc.stop(now + 0.32);
+      osc.stop(now + 0.3);
     } else {
       osc.type = "sine";
       osc.frequency.setValueAtTime(520, now);
-      gain.gain.setValueAtTime(0.09, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
       osc.start(now);
-      osc.stop(now + 0.07);
+      osc.stop(now + 0.06);
     }
   }
 
   const GAMES_CATALOG = [
-    { id: 1, title: "Star Defender Shooter", genre: "Shooter", reqLevel: 1, engine: "shooter" },
-    { id: 2, title: "Meteor Storm Blaster", genre: "Shooter", reqLevel: 1, engine: "meteor" },
-    { id: 3, title: "Tunnel Ball Runner (Jump & Duck)", genre: "Action", reqLevel: 1, engine: "runner" },
-    { id: 4, title: "Brick Breaker Neon", genre: "Arcade", reqLevel: 1, engine: "brick" },
-    { id: 5, title: "Target Sniper Range", genre: "Shooter", reqLevel: 2, engine: "sniper" },
-    { id: 6, title: "Gravity Flip Dash", genre: "Action", reqLevel: 2, engine: "gravity" },
-    { id: 7, title: "Star Catcher Basket", genre: "Action", reqLevel: 1, engine: "catcher" },
-    { id: 8, title: "Laser Shield Parrier", genre: "Shooter", reqLevel: 3, engine: "shooter" },
-    { id: 9, title: "Lights-Out Logic Grid", genre: "Puzzle", reqLevel: 1, engine: "lights" },
-    { id: 10, title: "Simon Sequence Memory", genre: "Puzzle", reqLevel: 1, engine: "simon" },
-    { id: 11, title: "Safecracker PIN Vault", genre: "Puzzle", reqLevel: 1, engine: "pin" },
-    { id: 12, title: "Quick Math Blitz", genre: "Puzzle", reqLevel: 1, engine: "math" },
-    { id: 13, title: "Secret Number (1-50)", genre: "Puzzle", reqLevel: 1, engine: "guess" },
-    { id: 14, title: "Sliding Tile 3x3 Puzzle", genre: "Puzzle", reqLevel: 2, engine: "slide" },
-    { id: 15, title: "Color Odd-One-Out", genre: "Puzzle", reqLevel: 2, engine: "oddone" },
-    { id: 16, title: "Minesweeper Mini 5x5", genre: "Puzzle", reqLevel: 3, engine: "mines" },
-    { id: 17, title: "Green Light Reflex", genre: "Reflex", reqLevel: 1, engine: "reflex" },
-    { id: 18, title: "10-Second Speed Clicker", genre: "Reflex", reqLevel: 1, engine: "clicker" },
-    { id: 19, title: "Precision Ring Stopper", genre: "Reflex", reqLevel: 2, engine: "ring" },
-    { id: 20, title: "Aim Trainer Circles", genre: "Reflex", reqLevel: 2, engine: "sniper" },
-    { id: 21, title: "Cyber Maze Navigator", genre: "Puzzle", reqLevel: 2, engine: "maze" },
-    { id: 22, title: "Tic-Tac-Toe vs AI", genre: "Strategy", reqLevel: 1, engine: "ttt" },
-    { id: 23, title: "Rock Paper Scissors", genre: "Classic", reqLevel: 1, engine: "rps" },
-    { id: 24, title: "Coin Flip Streak", genre: "Classic", reqLevel: 1, engine: "coin" },
-    { id: 25, title: "High-Low Number Predictor", genre: "Strategy", reqLevel: 2, engine: "highlow" },
-    { id: 26, title: "Asteroid Dodge Pilot", genre: "Action", reqLevel: 3, engine: "meteor" },
-    { id: 27, title: "Hyper Brick Blitz", genre: "Arcade", reqLevel: 4, engine: "brick" },
-    { id: 28, title: "Master PIN Hacker", genre: "Puzzle", reqLevel: 4, engine: "pin" },
-    { id: 29, title: "Elite Reflex Pro", genre: "Reflex", reqLevel: 5, engine: "reflex" },
-    { id: 30, title: "Grand Champion Shooter", genre: "Shooter", reqLevel: 5, engine: "shooter" }
+    { id: 1, title: "Star Defender Shooter", screen: "full", reqLevel: 1, engine: "shooter" },
+    { id: 2, title: "Meteor Storm Blaster", screen: "full", reqLevel: 1, engine: "meteor" },
+    { id: 3, title: "Tunnel Ball Runner", screen: "full", reqLevel: 1, engine: "brick" },
+    { id: 4, title: "Brick Breaker Neon", screen: "full", reqLevel: 1, engine: "brick" },
+    { id: 5, title: "Target Sniper Range", screen: "full", reqLevel: 2, engine: "sniper" },
+    { id: 6, title: "Gravity Flip Dash", screen: "full", reqLevel: 2, engine: "brick" },
+    { id: 7, title: "Star Catcher Basket", screen: "full", reqLevel: 1, engine: "brick" },
+    { id: 8, title: "Laser Shield Parrier", screen: "full", reqLevel: 3, engine: "shooter" },
+    { id: 9, title: "Lights-Out Logic Grid", screen: "medium", reqLevel: 1, engine: "lights" },
+    { id: 10, title: "Simon Memory Grid", screen: "medium", reqLevel: 1, engine: "lights" },
+    { id: 11, title: "Safecracker PIN Vault", screen: "small", reqLevel: 1, engine: "guess" },
+    { id: 12, title: "Quick Math Blitz", screen: "small", reqLevel: 1, engine: "guess" },
+    { id: 13, title: "Secret Number (1-20)", screen: "small", reqLevel: 1, engine: "guess" },
+    { id: 14, title: "Sliding Tile 3x3", screen: "medium", reqLevel: 2, engine: "lights" },
+    { id: 15, title: "Color Odd-One-Out", screen: "medium", reqLevel: 2, engine: "lights" },
+    { id: 16, title: "Minesweeper Mini 3x3", screen: "medium", reqLevel: 3, engine: "lights" },
+    { id: 17, title: "Green Light Reflex", screen: "small", reqLevel: 1, engine: "reflex" },
+    { id: 18, title: "10-Second Clicker", screen: "small", reqLevel: 1, engine: "clicker" },
+    { id: 19, title: "Precision Aim Circles", screen: "full", reqLevel: 2, engine: "sniper" },
+    { id: 20, title: "Rapid Reaction Pro", screen: "small", reqLevel: 2, engine: "reflex" },
+    { id: 21, title: "Cyber Logic Grid", screen: "medium", reqLevel: 2, engine: "lights" },
+    { id: 22, title: "Tic-Tac-Toe vs AI", screen: "medium", reqLevel: 1, engine: "ttt" },
+    { id: 23, title: "Rock Paper Scissors", screen: "small", reqLevel: 1, engine: "guess" },
+    { id: 24, title: "High-Low Number", screen: "small", reqLevel: 1, engine: "guess" },
+    { id: 25, title: "Binary Code Guesser", screen: "small", reqLevel: 2, engine: "guess" },
+    { id: 26, title: "Asteroid Dodge Pilot", screen: "full", reqLevel: 3, engine: "meteor" },
+    { id: 27, title: "Hyper Brick Blitz", screen: "full", reqLevel: 4, engine: "brick" },
+    { id: 28, title: "Master Code Hacker", screen: "small", reqLevel: 4, engine: "guess" },
+    { id: 29, title: "Elite Reflex Master", screen: "small", reqLevel: 5, engine: "reflex" },
+    { id: 30, title: "Grand Champion Shooter", screen: "full", reqLevel: 5, engine: "shooter" }
   ];
 
   let activeInterval = null;
@@ -118,26 +116,42 @@ window.launchArcade30 = function(containerId, onScoreSave) {
     if (score > prevBest) state.highScores[gameTitle] = score;
     saveState();
     updateHeaderStats();
+    renderSidebarList();
     if (typeof onScoreSave === "function") onScoreSave(gameTitle, score);
   }
 
   host.innerHTML =
-    '<div class="card">' +
-    '<div class="row" style="justify-content:space-between;">' +
-    '<div><h2>30-Game Visual &amp; Sound Arcade</h2><p id="arc-progress" style="color:var(--text-muted); font-size:0.9rem;"></p></div>' +
+    '<div class="card" style="margin-bottom:1rem;">' +
+    '<div class="row" style="justify-content:space-between; margin-bottom:0;">' +
+    '<div><h2>30-Game Arcade</h2><p id="arc-progress" style="color:var(--text-muted); font-size:0.85rem;"></p></div>' +
     '<div class="row" style="margin-bottom:0;">' +
     '<button type="button" id="arc-sfx-btn" class="btn btn-green">Sound: ON</button>' +
     '<select id="arc-diff-sel" aria-label="Difficulty"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select>' +
-    '<input type="color" id="arc-color-pick" value="' + state.color + '" title="Player Theme Color" />' +
+    '<input type="color" id="arc-color-pick" value="' + state.color + '" title="Player Color" />' +
+    '</div></div></div>' +
+    '<div style="display:flex; gap:1rem; align-items:flex-start; flex-wrap:wrap;">' +
+    '<div id="arc-left-list" class="card" style="width:270px; max-height:70vh; overflow-y:auto; padding:0.75rem; margin-bottom:0;"></div>' +
+    '<div id="arc-inline-stage" class="card" style="flex:1; min-width:300px; min-height:360px; display:flex; flex-direction:column; justify-content:center; align-items:center;">' +
+    '<p style="color:var(--text-muted); text-align:center;">Click any game on the left.<br/>Shooters open in <strong>Full Screen</strong>; Puzzles &amp; Guess games open right here.</p>' +
     '</div></div>' +
-    '<div id="arc-stage" style="margin-top:1rem; padding:1rem; border:1px solid var(--border-color); border-radius:12px; background:rgba(4,7,12,0.85);">' +
-    '<p style="color:var(--text-muted); text-align:center;">Select any unlocked game below to play with full sound effects &amp; level progression!</p>' +
-    '</div></div>' +
-    '<div id="arc-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:0.85rem;"></div>';
+    '<div id="arc-fullscreen-overlay" style="position:fixed; inset:0; z-index:9999; background:#03060c; display:none; flex-direction:column; padding:1rem;">' +
+    '<div class="row" style="justify-content:space-between; border-bottom:1px solid #1e293b; padding-bottom:0.6rem;">' +
+    '<strong id="arc-fs-title" style="font-size:1.15rem; color:#38bdf8;">Game</strong>' +
+    '<button type="button" id="arc-fs-exit" class="btn btn-red">Exit Full Screen</button>' +
+    '</div>' +
+    '<div id="arc-fs-body" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;"></div>' +
+    '</div>';
+
+  const fsOverlay = document.getElementById("arc-fullscreen-overlay");
+
+  document.getElementById("arc-fs-exit").onclick = function() {
+    stopRunningLoops();
+    fsOverlay.style.display = "none";
+  };
 
   function updateHeaderStats() {
     document.getElementById("arc-progress").textContent =
-      "Unlocked Level: " + state.unlockedLevel + " / 10  |  Total XP: " + state.totalPoints + " (Earn 150 XP per level)";
+      "Unlocked Level: " + state.unlockedLevel + " / 10  |  Total XP: " + state.totalPoints;
     const sfxBtn = document.getElementById("arc-sfx-btn");
     sfxBtn.textContent = state.sfx ? "Sound: ON" : "Sound: OFF";
     sfxBtn.className = state.sfx ? "btn btn-green" : "btn btn-muted";
@@ -154,423 +168,246 @@ window.launchArcade30 = function(containerId, onScoreSave) {
   document.getElementById("arc-diff-sel").onchange = function(e) {
     state.difficulty = e.target.value;
     saveState();
-    playSfx("click");
   };
 
   document.getElementById("arc-color-pick").onchange = function(e) {
     state.color = e.target.value;
     saveState();
-    playSfx("click");
   };
   function launchGame(game) {
     stopRunningLoops();
     playSfx("click");
-    const stage = document.getElementById("arc-stage");
+    const isFull = game.screen === "full";
+    const stage = isFull ? document.getElementById("arc-fs-body") : document.getElementById("arc-inline-stage");
+
+    if (isFull) {
+      document.getElementById("arc-fs-title").textContent = game.id + ". " + game.title;
+      fsOverlay.style.display = "flex";
+    } else {
+      fsOverlay.style.display = "none";
+    }
+
     const speedMult = state.difficulty === "hard" ? 1.5 : (state.difficulty === "easy" ? 0.75 : 1);
 
     if (game.engine === "shooter" || game.engine === "meteor") {
       stage.innerHTML =
-        '<div class="row" style="justify-content:space-between;"><strong>' + game.title + '</strong><span>Move: Mouse / Left &amp; Right Arrows | Shoot: Space / Click</span></div>' +
-        '<canvas id="g-canvas" width="640" height="300" style="width:100%; max-width:640px; background:#03060c; border-radius:8px; display:block; margin:0.5rem auto; cursor:crosshair;"></canvas>';
+        '<p style="color:#94a3b8; margin-bottom:0.5rem;">Move Mouse Left/Right &amp; Click to Shoot!</p>' +
+        '<canvas id="g-canvas" width="900" height="480" style="width:100%; max-width:960px; max-height:75vh; background:#050a14; border:1px solid #1e293b; border-radius:10px; cursor:crosshair;"></canvas>';
       const c = document.getElementById("g-canvas");
       const ctx = c.getContext("2d");
-      let shipX = 320, score = 0, alive = true;
-      let bullets = [], enemies = [], sparks = [];
+      let shipX = 450, score = 0, alive = true, bullets = [], enemies = [];
 
       c.onmousemove = function(e) {
         const r = c.getBoundingClientRect();
-        shipX = (e.clientX - r.left) * (640 / r.width);
+        shipX = (e.clientX - r.left) * (900 / r.width);
       };
       c.onclick = function() {
         if (!alive) return;
-        bullets.push({ x: shipX, y: 260 });
+        bullets.push({ x: shipX, y: 430 });
         playSfx("shoot");
       };
 
       activeInterval = setInterval(function() {
-        if (alive) enemies.push({ x: 30 + Math.random() * 580, y: -15, r: 14 + Math.random() * 10 });
-      }, Math.max(350, 950 / speedMult));
+        if (alive) enemies.push({ x: 40 + Math.random() * 820, y: -20, r: 18 + Math.random() * 12 });
+      }, Math.max(350, 900 / speedMult));
 
       function loop() {
-        ctx.fillStyle = "rgba(3, 6, 12, 0.35)";
-        ctx.fillRect(0, 0, 640, 300);
+        ctx.fillStyle = "rgba(5, 10, 20, 0.35)";
+        ctx.fillRect(0, 0, 900, 480);
 
-        // Player Ship
         ctx.fillStyle = state.color;
         ctx.beginPath();
-        ctx.moveTo(shipX, 255);
-        ctx.lineTo(shipX - 16, 285);
-        ctx.lineTo(shipX + 16, 285);
+        ctx.moveTo(shipX, 420);
+        ctx.lineTo(shipX - 22, 460);
+        ctx.lineTo(shipX + 22, 460);
         ctx.closePath();
         ctx.fill();
 
-        // Bullets
         ctx.fillStyle = "#fde047";
         for (let i = bullets.length - 1; i >= 0; i--) {
-          bullets.at(i).y -= 8;
-          ctx.fillRect(bullets.at(i).x - 2, bullets.at(i).y, 4, 12);
-          if (bullets.at(i).y < 0) bullets.splice(i, 1);
+          bullets[i].y -= 10;
+          ctx.fillRect(bullets[i].x - 3, bullets[i].y, 6, 16);
+          if (bullets[i].y < 0) bullets.splice(i, 1);
         }
 
-        // Enemies & Collisions
         for (let i = enemies.length - 1; i >= 0; i--) {
-          const en = enemies.at(i);
-          en.y += 2.2 * speedMult;
+          const en = enemies[i];
+          en.y += 2.6 * speedMult;
           ctx.fillStyle = game.engine === "meteor" ? "#f97316" : "#ec4899";
           ctx.beginPath();
           ctx.arc(en.x, en.y, en.r, 0, Math.PI * 2);
           ctx.fill();
 
           for (let j = bullets.length - 1; j >= 0; j--) {
-            const b = bullets.at(j);
-            if (Math.hypot(b.x - en.x, b.y - en.y) < en.r + 6) {
+            if (Math.hypot(bullets[j].x - en.x, bullets[j].y - en.y) < en.r + 8) {
               playSfx("boom");
               score += 15;
-              for (let s = 0; s < 10; s++) {
-                sparks.push({ x: en.x, y: en.y, vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, life: 20 });
-              }
               enemies.splice(i, 1);
               bullets.splice(j, 1);
               break;
             }
           }
-          if (en && en.y > 285) {
+          if (en && en.y > 460) {
             alive = false;
             playSfx("boom");
             stopRunningLoops();
             awardPoints(game.title, score);
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 22px sans-serif";
-            ctx.fillText("Game Over! Final Score: " + score, 180, 150);
+            ctx.font = "bold 28px sans-serif";
+            ctx.fillText("Game Over! Final Score: " + score, 270, 240);
             return;
           }
         }
-
-        // Particle Explosions
-        for (let i = sparks.length - 1; i >= 0; i--) {
-          const sp = sparks.at(i);
-          sp.x += sp.vx;
-          sp.y += sp.vy;
-          sp.life -= 1;
-          ctx.fillStyle = "#38bdf8";
-          ctx.fillRect(sp.x, sp.y, 3, 3);
-          if (sp.life <= 0) sparks.splice(i, 1);
-        }
-
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText("Score: " + score, 14, 24);
+        ctx.font = "bold 18px sans-serif";
+        ctx.fillText("Score: " + score, 20, 32);
         if (alive) activeAnim = requestAnimationFrame(loop);
       }
       loop();
-    } else if (game.engine === "brick" || game.engine === "catcher") {
+    } else if (game.engine === "brick") {
       stage.innerHTML =
-        '<div class="row" style="justify-content:space-between;"><strong>' + game.title + '</strong><span>Move Mouse Left &amp; Right</span></div>' +
-        '<canvas id="g-canvas" width="640" height="280" style="width:100%; max-width:640px; background:#03060c; border-radius:8px; display:block; margin:0.5rem auto;"></canvas>';
+        '<p style="color:#94a3b8; margin-bottom:0.5rem;">Move Mouse Left &amp; Right to Bounce!</p>' +
+        '<canvas id="g-canvas" width="840" height="440" style="width:100%; max-width:900px; max-height:72vh; background:#050a14; border:1px solid #1e293b; border-radius:10px;"></canvas>';
       const c = document.getElementById("g-canvas");
       const ctx = c.getContext("2d");
-      let padX = 270, ballX = 320, ballY = 200, vx = 3.5 * speedMult, vy = -3.5 * speedMult, score = 0;
+      let padX = 360, ballX = 420, ballY = 300, vx = 4 * speedMult, vy = -4 * speedMult, score = 0;
       let bricks = [];
-      for (let r = 0; r < 3; r++) {
-        for (let col = 0; col < 8; col++) {
-          bricks.push({ x: 20 + col * 76, y: 25 + r * 26, alive: true });
-        }
+      for (let r = 0; r < 4; r++) {
+        for (let col = 0; col < 10; col++) bricks.push({ x: 24 + col * 80, y: 35 + r * 30, alive: true });
       }
       c.onmousemove = function(e) {
         const r = c.getBoundingClientRect();
-        padX = (e.clientX - r.left) * (640 / r.width) - 50;
+        padX = (e.clientX - r.left) * (840 / r.width) - 65;
       };
       function loop() {
-        ctx.clearRect(0, 0, 640, 280);
+        ctx.clearRect(0, 0, 840, 440);
         ctx.fillStyle = state.color;
-        ctx.fillRect(padX, 255, 100, 12);
-
-        ballX += vx;
-        ballY += vy;
-        if (ballX < 8 || ballX > 632) { vx = -vx; playSfx("click"); }
-        if (ballY < 8) { vy = -vy; playSfx("click"); }
-        if (ballY > 245 && ballX > padX && ballX < padX + 100) { vy = -Math.abs(vy); playSfx("shoot"); }
-
+        ctx.fillRect(padX, 405, 130, 14);
+        ballX += vx; ballY += vy;
+        if (ballX < 10 || ballX > 830) { vx = -vx; playSfx("click"); }
+        if (ballY < 10) { vy = -vy; playSfx("click"); }
+        if (ballY > 395 && ballX > padX && ballX < padX + 130) { vy = -Math.abs(vy); playSfx("shoot"); }
         bricks.forEach(function(b) {
           if (!b.alive) return;
           ctx.fillStyle = "#10b981";
-          ctx.fillRect(b.x, b.y, 68, 18);
-          if (ballX > b.x && ballX < b.x + 68 && ballY > b.y && ballY < b.y + 18) {
-            b.alive = false;
-            vy = -vy;
-            score += 20;
-            playSfx("boom");
+          ctx.fillRect(b.x, b.y, 72, 22);
+          if (ballX > b.x && ballX < b.x + 72 && ballY > b.y && ballY < b.y + 22) {
+            b.alive = false; vy = -vy; score += 20; playSfx("boom");
           }
         });
-
         ctx.fillStyle = "#fde047";
-        ctx.beginPath();
-        ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#fff";
-        ctx.fillText("Score: " + score, 14, 18);
-
-        if (ballY > 280) {
-          stopRunningLoops();
-          awardPoints(game.title, score);
-          ctx.fillText("Round Complete! Score: " + score, 220, 150);
-          return;
-        }
+        ctx.beginPath(); ctx.arc(ballX, ballY, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.font = "bold 16px sans-serif"; ctx.fillText("Score: " + score, 18, 24);
+        if (ballY > 440) { stopRunningLoops(); awardPoints(game.title, score); ctx.fillText("Finished! Score: " + score, 330, 220); return; }
         activeAnim = requestAnimationFrame(loop);
       }
       loop();
     } else if (game.engine === "sniper") {
       stage.innerHTML =
-        '<div class="row" style="justify-content:space-between;"><strong>' + game.title + '</strong><span>Click the glowing targets fast!</span></div>' +
-        '<canvas id="g-canvas" width="640" height="260" style="width:100%; max-width:640px; background:#03060c; border-radius:8px; display:block; margin:0.5rem auto; cursor:crosshair;"></canvas>';
+        '<p style="color:#94a3b8; margin-bottom:0.5rem;">Click 15 Glowing Targets as Fast as Possible!</p>' +
+        '<canvas id="g-canvas" width="840" height="440" style="width:100%; max-width:900px; max-height:72vh; background:#050a14; border:1px solid #1e293b; border-radius:10px; cursor:crosshair;"></canvas>';
       const c = document.getElementById("g-canvas");
       const ctx = c.getContext("2d");
-      let tx = 300, ty = 130, score = 0, shots = 0;
+      let tx = 400, ty = 220, score = 0, shots = 0;
       function drawTarget() {
-        ctx.clearRect(0, 0, 640, 260);
-        ctx.fillStyle = state.color;
-        ctx.beginPath();
-        ctx.arc(tx, ty, 24, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#fff";
-        ctx.beginPath();
-        ctx.arc(tx, ty, 9, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillText("Hits: " + score + " / 15", 16, 24);
+        ctx.clearRect(0, 0, 840, 440);
+        ctx.fillStyle = state.color; ctx.beginPath(); ctx.arc(tx, ty, 30, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(tx, ty, 11, 0, Math.PI * 2); ctx.fill();
+        ctx.font = "bold 18px sans-serif"; ctx.fillText("Hits: " + score + " / 15", 20, 30);
       }
       c.onclick = function(e) {
         const r = c.getBoundingClientRect();
-        const mx = (e.clientX - r.left) * (640 / r.width);
-        const my = (e.clientY - r.top) * (260 / r.height);
+        const mx = (e.clientX - r.left) * (840 / r.width);
+        const my = (e.clientY - r.top) * (440 / r.height);
         shots += 1;
-        if (Math.hypot(mx - tx, my - ty) <= 26) {
-          score += 1;
-          playSfx("shoot");
-          tx = 40 + Math.random() * 560;
-          ty = 40 + Math.random() * 180;
-        } else {
-          playSfx("boom");
-        }
+        if (Math.hypot(mx - tx, my - ty) <= 32) { score += 1; playSfx("shoot"); tx = 60 + Math.random() * 720; ty = 60 + Math.random() * 320; }
+        else playSfx("boom");
         drawTarget();
-        if (shots >= 15) {
-          awardPoints(game.title, score * 10);
-          stage.innerHTML = '<h3>' + game.title + ' Complete! Accuracy Hits: ' + score + ' / 15 (+' + (score * 10) + ' XP)</h3>';
-        }
+        if (shots >= 15) { awardPoints(game.title, score * 10); stage.innerHTML = '<h2>Complete! Hits: ' + score + ' / 15</h2>'; }
       };
       drawTarget();
-    } else if (game.engine === "runner" || game.engine === "gravity") {
-      if (window.launchObstacleRunner) {
-        window.launchObstacleRunner("arc-stage", function(name, pts) { awardPoints(game.title, pts); });
-      }
-    } else {
-      launchPuzzleOrClassic(game, stage);
-    }
-  }
-  function launchPuzzleOrClassic(game, stage) {
-    if (game.engine === "lights" || game.engine === "mines") {
-      let cells = Array.from({ length: 9 }, function() { return Math.random() < 0.5; });
-      function renderGrid() {
-        stage.innerHTML = '<h3>' + game.title + ' — Turn all tiles Emerald!</h3><div id="puz-g" style="display:grid; grid-template-columns:repeat(3, 64px); gap:8px; margin-top:0.75rem;"></div>';
-        const g = document.getElementById("puz-g");
-        cells.forEach(function(on, idx) {
+    } else if (game.engine === "lights" || game.engine === "ttt") {
+      let cells = Array.from({ length: 9 }, function() { return game.engine === "lights" ? Math.random() < 0.5 : ""; });
+      function drawBoard() {
+        stage.innerHTML = '<h3>' + game.title + '</h3><div id="m-grid" style="display:grid; grid-template-columns:repeat(3, 74px); gap:10px; margin-top:1rem;"></div>';
+        const g = document.getElementById("m-grid");
+        cells.forEach(function(val, i) {
           const b = document.createElement("button");
           b.type = "button";
-          b.className = on ? "btn btn-green" : "btn btn-muted";
-          b.style.height = "64px";
-          b.textContent = on ? "ON" : "OFF";
+          b.className = game.engine === "lights" ? (val ? "btn btn-green" : "btn btn-muted") : "btn btn-muted";
+          b.style.height = "74px"; b.style.fontSize = "1.25rem";
+          b.textContent = game.engine === "lights" ? (val ? "ON" : "OFF") : val;
           b.onclick = function() {
             playSfx("click");
-            [idx, idx - 1, idx + 1, idx - 3, idx + 3].forEach(function(n) {
-              if (n >= 0 && n < 9) cells[n] = !cells[n];
-            });
-            renderGrid();
-            if (cells.every(Boolean)) {
-              playSfx("win");
-              awardPoints(game.title, 50);
-              stage.innerHTML = '<h3>Puzzle Solved! +50 XP Earned!</h3>';
+            if (game.engine === "lights") {
+              [i, i - 1, i + 1, i - 3, i + 3].forEach(function(n) { if (n >= 0 && n < 9) cells[n] = !cells[n]; });
+              drawBoard();
+              if (cells.every(Boolean)) { playSfx("win"); awardPoints(game.title, 50); stage.innerHTML = '<h3>Puzzle Solved! +50 XP</h3>'; }
+            } else if (!cells[i]) {
+              cells[i] = "X";
+              const open = cells.map(function(v, idx) { return v === "" ? idx : -1; }).filter(function(idx) { return idx !== -1; });
+              if (open.length) cells[open[Math.floor(Math.random() * open.length)]] = "O";
+              drawBoard();
+              if (open.length <= 1) { playSfx("win"); awardPoints(game.title, 30); }
             }
           };
           g.appendChild(b);
         });
       }
-      renderGrid();
-    } else if (game.engine === "ttt") {
-      let board = Array(9).fill("");
-      function drawTTT() {
-        stage.innerHTML = '<h3>' + game.title + ' (You are X)</h3><div id="ttt-g" style="display:grid; grid-template-columns:repeat(3, 64px); gap:8px; margin-top:0.75rem;"></div>';
-        const g = document.getElementById("ttt-g");
-        board.forEach(function(val, i) {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.className = "btn btn-muted";
-          b.style.height = "64px";
-          b.style.fontSize = "1.3rem";
-          b.textContent = val;
-          b.onclick = function() {
-            if (board[i]) return;
-            board[i] = "X";
-            playSfx("click");
-            const empty = board.map(function(v, idx) { return v === "" ? idx : -1; }).filter(function(idx) { return idx !== -1; });
-            if (empty.length > 0) {
-              const aiMove = empty[Math.floor(Math.random() * empty.length)];
-              board[aiMove] = "O";
-            }
-            drawTTT();
-            if (empty.length <= 1) {
-              playSfx("win");
-              awardPoints(game.title, 30);
-            }
-          };
-          g.appendChild(b);
-        });
-      }
-      drawTTT();
-    } else if (game.engine === "reflex") {
-      stage.innerHTML = '<h3>' + game.title + '</h3><button type="button" id="rfx-b" class="btn" style="margin-top:0.75rem; padding:1rem 2rem;">Click to Start</button><p id="rfx-out" style="margin-top:0.5rem;"></p>';
-      let st = "idle", t0 = 0;
-      const btn = document.getElementById("rfx-b");
-      btn.onclick = function() {
-        if (st === "idle") {
-          st = "wait";
-          btn.style.background = "#dc2626";
-          btn.textContent = "Wait for GREEN...";
-          setTimeout(function() {
-            st = "go";
-            t0 = Date.now();
-            btn.style.background = "#16a34a";
-            btn.textContent = "TAP NOW!";
-            playSfx("shoot");
-          }, 1200 + Math.random() * 2000);
-        } else if (st === "go") {
-          const ms = Date.now() - t0;
-          st = "idle";
-          btn.style.background = "#2563eb";
-          btn.textContent = "Play Again";
-          playSfx("win");
-          document.getElementById("rfx-out").textContent = "Speed: " + ms + " ms!";
-          awardPoints(game.title, Math.max(10, 500 - ms));
-        }
-      };
-    } else if (game.engine === "clicker") {
-      stage.innerHTML = '<h3>' + game.title + '</h3><button type="button" id="clk-b" class="btn" style="margin-top:0.75rem; padding:1rem 2rem;">Start 10s Clicker</button>';
-      let cnt = 0, run = false;
-      const btn = document.getElementById("clk-b");
-      btn.onclick = function() {
-        playSfx("click");
-        if (!run) {
-          run = true;
-          cnt = 1;
-          btn.textContent = "TAP FAST! (1)";
-          setTimeout(function() {
-            run = false;
-            playSfx("win");
-            btn.textContent = "Done! Score: " + cnt + " taps (Click to retry)";
-            awardPoints(game.title, cnt);
-          }, 10000);
-        } else {
-          cnt += 1;
-          btn.textContent = "TAP FAST! (" + cnt + ")";
-        }
-      };
-    } else if (game.engine === "math") {
-      const a = 12 + Math.floor(Math.random() * 35);
-      const b = 11 + Math.floor(Math.random() * 35);
-      stage.innerHTML = '<h3>' + game.title + ': What is ' + a + ' + ' + b + '?</h3><div class="row" style="margin-top:0.75rem;"><input type="number" id="m-in" placeholder="Answer" /><button type="button" id="m-ok" class="btn btn-green">Submit</button></div>';
-      document.getElementById("m-ok").onclick = function() {
-        if (Number(document.getElementById("m-in").value) === a + b) {
-          playSfx("win");
-          awardPoints(game.title, 25);
-          launchPuzzleOrClassic(game, stage);
-        } else {
-          playSfx("boom");
-          alert("Try again!");
-        }
-      };
-    } else if (game.engine === "pin") {
-      const code = String(1000 + Math.floor(Math.random() * 9000));
-      stage.innerHTML = '<h3>' + game.title + ' — Memorize: <span id="pin-v" style="color:#38bdf8;">' + code + '</span></h3><div class="row" style="margin-top:0.75rem;"><input type="text" id="p-in" placeholder="4-digit PIN" /><button type="button" id="p-ok" class="btn btn-green">Unlock</button></div>';
-      setTimeout(function() { const el = document.getElementById("pin-v"); if (el) el.textContent = "****"; }, 1800);
-      document.getElementById("p-ok").onclick = function() {
-        if (document.getElementById("p-in").value.trim() === code) {
-          playSfx("win");
-          awardPoints(game.title, 40);
-          stage.innerHTML = '<h3>Vault Unlocked! +40 XP!</h3>';
-        } else {
-          playSfx("boom");
-          alert("Wrong PIN!");
-        }
-      };
-    } else if (game.engine === "rps") {
-      stage.innerHTML = '<h3>' + game.title + '</h3><div class="row" style="margin-top:0.75rem;"><button type="button" class="btn r-m" data-m="Rock">Rock</button><button type="button" class="btn r-m" data-m="Paper">Paper</button><button type="button" class="btn r-m" data-m="Scissors">Scissors</button></div><p id="r-out" style="margin-top:0.5rem;"></p>';
-      stage.querySelectorAll(".r-m").forEach(function(b) {
-        b.onclick = function() {
-          const you = b.getAttribute("data-m");
-          const cpu = ["Rock", "Paper", "Scissors"][Math.floor(Math.random() * 3)];
-          playSfx("win");
-          document.getElementById("r-out").textContent = "You chose " + you + " vs CPU " + cpu + "!";
-          awardPoints(game.title, 15);
+      drawBoard();
+    } else if (game.engine === "reflex" || game.engine === "clicker") {
+      stage.innerHTML = '<h3>' + game.title + '</h3><button type="button" id="sm-act" class="btn" style="margin-top:1rem; padding:1.1rem 2rem;">Start</button><p id="sm-out" style="margin-top:0.75rem; font-weight:600;"></p>';
+      const btn = document.getElementById("sm-act");
+      if (game.engine === "reflex") {
+        let st = "idle", t0 = 0;
+        btn.onclick = function() {
+          if (st === "idle") {
+            st = "wait"; btn.style.background = "#dc2626"; btn.textContent = "Wait for GREEN...";
+            setTimeout(function() { st = "go"; t0 = Date.now(); btn.style.background = "#16a34a"; btn.textContent = "TAP NOW!"; playSfx("shoot"); }, 1200 + Math.random() * 2000);
+          } else if (st === "go") {
+            const ms = Date.now() - t0; st = "idle"; btn.style.background = "#2563eb"; btn.textContent = "Play Again";
+            playSfx("win"); document.getElementById("sm-out").textContent = "Speed: " + ms + " ms!"; awardPoints(game.title, Math.max(10, 500 - ms));
+          }
         };
-      });
+      } else {
+        let cnt = 0, run = false;
+        btn.onclick = function() {
+          playSfx("click");
+          if (!run) {
+            run = true; cnt = 1; btn.textContent = "TAP FAST! (1)";
+            setTimeout(function() { run = false; playSfx("win"); btn.textContent = "Retry"; document.getElementById("sm-out").textContent = "Total Taps: " + cnt; awardPoints(game.title, cnt); }, 10000);
+          } else { cnt += 1; btn.textContent = "TAP FAST! (" + cnt + ")"; }
+        };
+      }
     } else {
       const secret = 1 + Math.floor(Math.random() * 20);
-      stage.innerHTML = '<h3>' + game.title + ' (Guess 1 to 20)</h3><div class="row" style="margin-top:0.75rem;"><input type="number" id="g-in" min="1" max="20" /><button type="button" id="g-ok" class="btn">Guess</button></div><p id="g-out"></p>';
+      stage.innerHTML = '<h3>' + game.title + ' (1 - 20)</h3><div class="row" style="margin-top:1rem;"><input type="number" id="g-in" min="1" max="20" style="width:120px;" /><button type="button" id="g-ok" class="btn">Guess</button></div><p id="g-out" style="margin-top:0.5rem; font-weight:600;"></p>';
       document.getElementById("g-ok").onclick = function() {
         const val = Number(document.getElementById("g-in").value);
-        if (val === secret) {
-          playSfx("win");
-          awardPoints(game.title, 35);
-          document.getElementById("g-out").textContent = "Correct! It was " + secret + "! +35 XP!";
-        } else {
-          playSfx("click");
-          document.getElementById("g-out").textContent = val < secret ? "Higher!" : "Lower!";
-        }
+        if (val === secret) { playSfx("win"); awardPoints(game.title, 35); document.getElementById("g-out").textContent = "Correct! It was " + secret + " (+35 XP)!"; }
+        else { playSfx("click"); document.getElementById("g-out").textContent = val < secret ? "Higher!" : "Lower!"; }
       };
     }
   }
 
-  function renderCatalog() {
-    const grid = document.getElementById("arc-grid");
-    grid.innerHTML = "";
+  function renderSidebarList() {
+    const list = document.getElementById("arc-left-list");
+    list.innerHTML = "";
     GAMES_CATALOG.forEach(function(g) {
       const locked = state.unlockedLevel < g.reqLevel;
-      const card = document.createElement("div");
-      card.className = "card";
-      card.style.marginBottom = "0";
-      card.style.opacity = locked ? "0.55" : "1";
-
-      const badge = document.createElement("span");
-      badge.className = "badge " + (locked ? "bg-red" : "bg-blue");
-      badge.textContent = locked ? "LOCKED (LVL " + g.reqLevel + ")" : g.genre.toUpperCase();
-
-      const h3 = document.createElement("h3");
-      h3.style.marginTop = "0.5rem";
-      h3.style.fontSize = "1rem";
-      h3.textContent = g.id + ". " + g.title;
-
-      const best = document.createElement("p");
-      best.style.fontSize = "0.8rem";
-      best.style.color = "var(--text-muted)";
-      best.style.margin = "0.35rem 0 0.65rem 0";
-      best.textContent = "Best Score: " + (state.highScores[g.title] || 0);
-
-      const playBtn = document.createElement("button");
-      playBtn.type = "button";
-      playBtn.className = locked ? "btn btn-muted" : "btn btn-green";
-      playBtn.style.width = "100%";
-      playBtn.textContent = locked ? "Reach Level " + g.reqLevel : "Play Game";
-      playBtn.disabled = locked;
-      playBtn.onclick = function() { launchGame(g); };
-
-      card.appendChild(badge);
-      card.appendChild(h3);
-      card.appendChild(best);
-      card.appendChild(playBtn);
-      grid.appendChild(card);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "side-btn";
+      btn.style.width = "100%";
+      btn.style.marginBottom = "0.35rem";
+      btn.style.opacity = locked ? "0.5" : "1";
+      btn.disabled = locked;
+      btn.textContent = locked ? (g.id + ". " + g.title + " [Lvl " + g.reqLevel + "]") : (g.id + ". " + g.title + (g.screen === "full" ? " [Full]" : ""));
+      btn.onclick = function() { launchGame(g); };
+      list.appendChild(btn);
     });
   }
 
   updateHeaderStats();
-  renderCatalog();
+  renderSidebarList();
 };
-
-

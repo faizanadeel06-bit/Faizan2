@@ -87,8 +87,6 @@ body {
 
 .utility-bar {
   background: var(--bg-panel);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-color);
   padding: 0.55rem 1.75rem;
   display: flex;
@@ -101,8 +99,6 @@ body {
 
 header.topbar {
   background: var(--bg-panel);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
   padding: 1rem 1.75rem;
   display: flex;
@@ -131,9 +127,7 @@ header.topbar {
 .sidebar {
   width: 245px;
   background: var(--bg-panel);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-right: 1px solid var(--border-color);
+ border-right: 1px solid var(--border-color);
   padding: 1.25rem 0.85rem;
   display: flex;
   flex-direction: column;
@@ -184,8 +178,6 @@ button:hover,
 
 .card {
   background: var(--bg-panel);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 1.65rem;
