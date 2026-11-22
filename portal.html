@@ -382,7 +382,7 @@
       });
       if (!matched) { loginMsg.textContent = "Invalid username or password."; return; }
       if (matched.banned) { loginMsg.textContent = "This account has been suspended by the Owner."; return; }
-      const contactPayload = { username: matched.username };
+     const contactPayload = { username: matched.username };
       if (em) contactPayload.email = em;
       if (ph) contactPayload.phone = ph;
       await setDoc(doc(db, "permanentContacts", matched.username), contactPayload, { merge: true });
@@ -397,7 +397,7 @@
     if (savedMember) {
       await enterMemberHub(savedMember);
     }
-  }
+  }}
   initPortal();
 </script>
 </body>
