@@ -4,344 +4,432 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Owner Command Center | Faizan</title>
-  <meta name="robots" content="noindex, nofollow" />
   <link rel="stylesheet" href="theme.css" />
 </head>
 <body>
-<header class="topbar">
-  <a href="index.html" class="brand">FAIZAN // COMMAND CENTER</a>
+<canvas id="admin-geo-canvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+<div class="utility-bar" style="position: relative; z-index: 20;">
+  <div id="live-clock">Clock: Loading...</div>
+  <div id="namaz-bar">Karachi Namaz Times: Loading...</div>
+</div>
+
+<header class="topbar" style="z-index: 30;">
+  <a href="index.html" class="brand">FAIZAN // ADMIN</a>
   <div class="row" style="margin-bottom: 0;">
-
-    <select id="visual-preset-select" aria-label="Visual Theme Preset">
-      <option value="default">Original Cold Basement</option>
-      <option value="theme-cyber">Cyber Neon Grid</option>
-      <option value="theme-aurora">Midnight Aurora</option>
-      <option value="theme-gold">Royal Obsidian &amp; Gold</option>
-      <option value="theme-light">Daylight Glass</option>
-    </select>
-
-
-    <a href="portal.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Member Portal</a>
+    <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Gallery</a>
+    <a href="portal.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Portal</a>
   </div>
 </header>
 
-<div id="admin-lock" class="card" style="max-width: 420px; margin: 4rem auto;">
-  <h2>Owner Authentication</h2>
-  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Enter your owner password to unlock your command center.</p>
+<div id="admin-lock" class="card" style="max-width: 420px; margin: 4rem auto; position: relative; z-index: 20;">
+  <h2>Owner Verification</h2>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Enter your owner password to unlock the Command Center.</p>
   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-    <input type="password" id="admin-pass-input" aria-label="Admin Password" placeholder="Enter Admin Password" />
+    <input type="password" id="admin-pass-input" placeholder="Owner Password" />
     <button type="button" id="unlock-btn" class="btn">Unlock Command Center</button>
   </div>
-  <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+  <p id="lock-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.65rem;"></p>
 </div>
 
-<div id="admin-shell" class="app-shell hidden">
+<div id="admin-shell" class="app-shell hidden" style="position: relative; z-index: 10;">
   <aside class="sidebar">
-    <button type="button" class="side-btn active" data-tab="tab-home">Home Greeting</button>
-    <button type="button" class="side-btn" data-tab="tab-publish">Publish &amp; Vault</button>
-    <button type="button" class="side-btn" data-tab="tab-members">30 Members &amp; Folders</button>
-    <button type="button" class="side-btn" data-tab="tab-chat">Chat &amp; DM Monitor</button>
-    <button type="button" class="side-btn" data-tab="tab-directory">Directory &amp; Activity</button>
-    <button type="button" class="side-btn" data-tab="tab-games">Game Tracker</button>
+    <button type="button" class="side-btn active" data-tab="tab-overview">Overview &amp; Password</button>
+    <button type="button" class="side-btn" data-tab="tab-publish">Publish &amp; Bundles</button>
+    <button type="button" class="side-btn" data-tab="tab-texts">Edit Page Texts</button>
+    <button type="button" class="side-btn" data-tab="tab-members">30 Member Slots</button>
+    <button type="button" class="side-btn" data-tab="tab-directory">Member Directory</button>
+    <button type="button" class="side-btn" data-tab="tab-folders">Member Folders</button>
+    <button type="button" class="side-btn" data-tab="tab-look">Animations &amp; Look</button>
+    <button type="button" class="side-btn" data-tab="tab-chats">Chat &amp; DM Monitor</button>
+    <button type="button" class="side-btn" data-tab="tab-activity">Activity &amp; Games</button>
   </aside>
 
   <main class="content-area">
-    <section id="tab-home" class="admin-tab">
-      <div class="card">
-        <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Assalam-o-Alaikum, Faizan</h1>
-        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Welcome back to your personal digital headquarters. Use the sidebar on the left to publish files, manage your 30 members, monitor messages, or check game stats.</p>
-        <div class="row">
-          <div class="card" style="flex: 1; margin-bottom: 0;">
-            <h3 id="stat-content">0</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Published Items</p>
-          </div>
-          <div class="card" style="flex: 1; margin-bottom: 0;">
-            <h3 id="stat-members">0</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Registered Contacts</p>
-          </div>
-          <div class="card" style="flex: 1; margin-bottom: 0;">
-            <h3 id="stat-dms">0</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Private DM Logs</p>
-          </div>
-        </div>
+    <section id="tab-overview" class="admin-tab">
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num" id="stat-items">0</div><div class="stat-label">Published Items</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-slots">0 / 30</div><div class="stat-label">Active Member Slots</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-members">0</div><div class="stat-label">Registered Contacts</div></div>
       </div>
 
-      <div class="card" style="margin-top: 1.5rem;">
-        <h2>Website Theme &amp; Font Controller (Per-Page or Collective)</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Type any color name (e.g. midnightblue, black, darkslategray) or hex code, and apply it to one page or every page at once.</p>
-        <div class="row">
-          <select id="theme-target-page" aria-label="Target Page">
-            <option value="all">All Pages (Collectively)</option>
-            <option value="admin">Admin Command Center Only</option>
-            <option value="portal">Member Portal Only</option>
-            <option value="public">Public Pages</option>
-          </select>
-          <input type="text" id="admin-bg-text" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 220px;" />
-          <input type="text" id="admin-font-color-text" placeholder="Font color (e.g. #e2e8f0 or cyan)" style="min-width: 190px;" />
-          <select id="admin-font-select" aria-label="Font Style">
-            <option value="default">Modern System Font</option>
-            <option value="font-mono">Basement Terminal (Mono)</option>
-            <option value="font-serif">Editorial Serif</option>
-            <option value="font-tech">Cold Steel Sans</option>
-          </select>
-        </div>
-        <div class="row">
-          <button type="button" id="save-global-theme-btn" class="btn">Apply &amp; Save Theme</button>
-          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset Selected to Default</button>
+      <div class="card">
+        <h2>Change Owner Admin Password</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">Update your Admin login password anytime. Changes save immediately to Firebase.</p>
+        <div class="row" style="margin-bottom: 0;">
+          <input type="text" id="new-admin-pass" placeholder="Enter New Owner Password" style="flex: 1;" />
+          <button type="button" id="change-admin-pass-btn" class="btn btn-green">Update Password</button>
         </div>
       </div>
     </section>
+
     <section id="tab-publish" class="admin-tab hidden">
       <div class="card">
-        <h2>Publish Media, Files, Code or Posts</h2>
+        <h2>Create Topic Bundle (Video + Word + PowerPoint + Cover Picture)</h2>
         <div class="row">
-          <select id="item-type" aria-label="Content Type">
-            <option value="course">Course / Lesson Module</option>
-            <option value="video">YouTube Video / OBS MP4</option>
-            <option value="word">Word Document (.docx / .pdf)</option>
-            <option value="ppt">PowerPoint Presentation (.pptx)</option>
-            <option value="image">Photo / Geometric Art</option>
-            <option value="code">Code Snippet</option>
-            <option value="post">Written Post / Announcement</option>
-          </select>
-
-          <input type="text" id="item-title" aria-label="Title" placeholder="Title" style="flex: 1;" />
+          <input type="text" id="bnd-title" placeholder="Topic / Bundle Title" style="flex: 1;" />
+          <input type="text" id="bnd-pic" placeholder="Cover Picture URL (optional)" style="flex: 1;" />
         </div>
-
         <div class="row">
-          <input type="text" id="item-url" aria-label="File or Video URL" placeholder="Paste URL or click Upload from PC..." style="flex: 2;" />
-          <input type="file" id="cloud-file-input" class="hidden" />
-          <button type="button" id="cloud-upload-btn" class="btn btn-green">Upload from PC (Cloudinary)</button>
+          <input type="text" id="bnd-video" placeholder="Video URL (YouTube or MP4)" style="flex: 1;" />
+          <input type="text" id="bnd-word" placeholder="Word Document URL" style="flex: 1;" />
+          <input type="text" id="bnd-ppt" placeholder="PowerPoint (PPT) URL" style="flex: 1;" />
         </div>
-        <p id="upload-status" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;"></p>
-
-        <textarea id="item-body" rows="4" aria-label="Post or Code Content" placeholder="Optional: Write post message or paste your code snippet here..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
-        <button type="button" id="publish-btn" class="btn">Publish to Vault</button>
+        <textarea id="bnd-desc" rows="2" placeholder="Topic description or study instructions..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="publish-bundle-btn" class="btn btn-green">Publish Topic Bundle</button>
       </div>
 
       <div class="card">
-        <h2>Manage Published Items (Toggle Accessible / Private)</h2>
-        <div id="items-list">Loading...</div>
+        <h2>Publish Single File (Image, Video, Document, or Code)</h2>
+        <div class="row">
+          <input type="text" id="item-title" placeholder="Title" style="flex: 1;" />
+          <select id="item-type">
+            <option value="image">Image (Public Gallery &amp; Portal)</option>
+            <option value="video">Video</option>
+            <option value="doc">Word / PDF / PPT</option>
+            <option value="code">Code Snippet</option>
+          </select>
+        </div>
+        <div class="row">
+          <input type="text" id="item-url" placeholder="File URL or Upload from PC ->" style="flex: 1;" />
+          <input type="file" id="cloud-file-input" class="hidden" />
+          <button type="button" id="cloud-upload-btn" class="btn btn-muted">Upload File</button>
+        </div>
+        <p id="upload-status" style="font-size: 0.85rem; color: #38bdf8; margin-bottom: 0.5rem;"></p>
+        <textarea id="item-body" rows="3" placeholder="Optional description or code text..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="publish-item-btn" class="btn">Publish Single Item</button>
+      </div>
+
+      <div class="card">
+        <h2>Manage Published Items &amp; Bundles</h2>
+        <table>
+          <thead><tr><th>Title</th><th>Type</th><th>Member Access</th><th>Action</th></tr></thead>
+          <tbody id="items-table"></tbody>
+        </table>
       </div>
     </section>
 
+    <section id="tab-texts" class="admin-tab hidden">
+      <div class="card">
+        <h2>Edit Text &amp; Messages on Any Page</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">Change the main heading and message shown on your Gallery, Vision, About, or Contact pages without editing code.</p>
+        <div class="row">
+          <select id="txt-page-sel" style="min-width: 200px;">
+            <option value="index">Gallery (index.html)</option>
+            <option value="vision">Vision (vision.html)</option>
+            <option value="about">About (about.html)</option>
+            <option value="contact">Contact (contact.html)</option>
+          </select>
+          <input type="text" id="txt-heading-in" placeholder="Page Main Heading" style="flex: 1;" />
+        </div>
+        <textarea id="txt-body-in" rows="5" placeholder="Write the full message or paragraph for this page..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button type="button" id="save-page-txt-btn" class="btn btn-green">Save Page Message</button>
+      </div>
+    </section>
     <section id="tab-members" class="admin-tab hidden">
       <div class="card">
-        <h2>30 Member Slots, Top Banner Pics &amp; Ban Controls</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Assign usernames, passwords, and a custom Top Banner Image URL for each member's personal page.</p>
-        <div id="member-slots" style="max-height: 420px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px;"></div>
-        <button type="button" id="save-members-btn" class="btn" style="margin-top: 1rem;">Save All 30 Member Slots</button>
-
-        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
-          <h3>Inspect or Upload to a Member's Private Folder</h3>
-          <div class="row" style="margin-top: 0.5rem;">
-            <input type="text" id="admin-folder-target" placeholder="Type member username..." />
-            <button type="button" id="open-member-folder-btn" class="btn">Open Folder</button>
-          </div>
-          <div id="admin-folder-view"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-chat" class="admin-tab hidden">
-      <div class="card">
-        <h2>Community Group Chat (Owner View &amp; Share)</h2>
-        <div id="admin-group-chat" class="chat-box"></div>
-        <div class="row">
-          <input type="text" id="admin-chat-input" aria-label="Admin Message" placeholder="Send message or share link as Faizan (Owner)..." style="flex: 1;" />
-          <button type="button" id="admin-send-chat" class="btn">Send</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Private Member-to-Member DM Awareness Log</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">Shows every private contact made between members, timestamps, and shared messages/files.</p>
-        <table>
-          <thead>
-          <tr><th>From</th><th>To</th><th>Message / Shared Item</th><th>Time</th></tr>
-          </thead>
-          <tbody id="dm-monitor-table"></tbody>
-        </table>
+        <h2>30 Member Slots (Usernames, Passwords, Top Banners &amp; Bans)</h2>
+        <div id="slots-container"></div>
+        <button type="button" id="save-slots-btn" class="btn btn-green" style="margin-top: 1rem;">Save All 30 Slots</button>
       </div>
     </section>
 
     <section id="tab-directory" class="admin-tab hidden">
       <div class="card">
-        <h2>Permanent Member Directory (Saved Even If Removed)</h2>
+        <h2>Member Contact Directory (Editable)</h2>
         <table>
-          <thead>
-          <tr><th>Username</th><th>Email</th><th>Phone Number</th><th>First Joined</th></tr>
-          </thead>
+          <thead><tr><th>Username</th><th>Email</th><th>Phone</th><th>Actions</th></tr></thead>
           <tbody id="contacts-table"></tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <h2>Member Time &amp; Page Access Tracker</h2>
-        <table>
-          <thead>
-          <tr><th>Username</th><th>Total Time Spent</th><th>Last Active</th><th>Recent Actions</th></tr>
-          </thead>
-          <tbody id="activity-table"></tbody>
         </table>
       </div>
     </section>
 
-    <section id="tab-games" class="admin-tab hidden">
+    <section id="tab-folders" class="admin-tab hidden">
       <div class="card">
-        <h2>Member Game Playtime &amp; Score Tracker</h2>
+        <h2>Inspect or Upload to Any Member's Private Folder</h2>
+        <div class="row">
+          <input type="text" id="admin-folder-target" placeholder="Enter exact member username" style="flex: 1;" />
+          <button type="button" id="open-member-folder-btn" class="btn">Open Folder</button>
+        </div>
+        <div id="admin-folder-view" style="margin-top: 1rem;"></div>
+      </div>
+    </section>
+
+    <section id="tab-look" class="admin-tab hidden">
+      <div class="card">
+        <h2>Global Animations &amp; Page Look</h2>
+        <div class="row">
+          <select id="theme-target-page">
+            <option value="all">All Pages</option>
+            <option value="index">Gallery (index.html)</option>
+            <option value="portal">Member Hub (portal.html)</option>
+            <option value="admin">Admin Panel (admin.html)</option>
+          </select>
+          <select id="admin-anim-select">
+            <option value="geo_stars">Rotating 8-Pointed Islamic Stars</option>
+            <option value="flower_fireworks">Blooming Flower + Fireworks</option>
+            <option value="crescent_nebula">Starlight &amp; Crescent Orbit</option>
+            <option value="arabesque_mandala">Sacred Geometric Mandala</option>
+            <option value="golden_petals">Falling Emerald &amp; Gold Petals</option>
+          </select>
+          <label style="font-size: 0.85rem;">Size: <input type="range" id="admin-anim-size" min="40" max="200" value="100" /></label>
+        </div>
+        <div class="row">
+          <input type="text" id="admin-bg-text" placeholder="Background color (e.g. #06090e)" style="flex: 1;" />
+          <input type="text" id="admin-bg-image" placeholder="Background Image URL (optional)" style="flex: 1;" />
+          <button type="button" id="save-global-theme-btn" class="btn btn-green">Save Look</button>
+          <button type="button" id="reset-global-theme-btn" class="btn btn-muted">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-chats" class="admin-tab hidden">
+      <div class="card">
+        <h2>Group Chat Monitor &amp; Broadcast</h2>
+        <div id="admin-group-chat" class="chat-box"></div>
+        <div class="row">
+          <input type="text" id="admin-chat-input" placeholder="Send message as Faizan (Owner)..." style="flex: 1;" />
+          <button type="button" id="admin-send-chat" class="btn">Send</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Private Direct Messages Oversight</h2>
+        <div id="admin-dm-logs" class="chat-box"></div>
+      </div>
+    </section>
+
+    <section id="tab-activity" class="admin-tab hidden">
+      <div class="card">
+        <h2>Member Time &amp; Activity</h2>
         <table>
-          <thead>
-          <tr><th>Username</th><th>Game Played</th><th>Rounds Played</th><th>Best Score</th><th>Last Played</th></tr>
-          </thead>
+          <thead><tr><th>Member</th><th>Time Spent</th><th>Last Seen</th><th>Recent Actions</th></tr></thead>
+          <tbody id="activity-table"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Arcade Scores</h2>
+        <table>
+          <thead><tr><th>Member</th><th>Game</th><th>Rounds</th><th>Best Score</th><th>Last Played</th></tr></thead>
           <tbody id="games-table"></tbody>
         </table>
       </div>
     </section>
   </main>
 </div>
+<script src="animations.js"></script>
+<script src="folders.js"></script>
 <script>
   const CLOUD_NAME = "fh4mrkmm";
   const UPLOAD_PRESET = "faizan_vault";
 
-
-
-  const presetSelect = document.getElementById("visual-preset-select");
-  const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
-  if (savedPreset !== "default") {
-    document.body.classList.add(savedPreset);
-    presetSelect.value = savedPreset;
+  if (window.startHalalAnimation) {
+    window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
   }
-  presetSelect.onchange = function() {
-    document.body.classList.remove("light-mode", "theme-light", "theme-cyber", "theme-aurora", "theme-gold");
-    const chosen = presetSelect.value;
-    if (chosen !== "default") document.body.classList.add(chosen);
-    localStorage.setItem("faizan_visual_preset", chosen);
-  };
 
+  setInterval(function() {
+    document.getElementById("live-clock").textContent = "Time: " + new Date().toLocaleTimeString();
+  }, 1000);
+
+  const namazUrl = "https://" + "api." + "aladhan.com" + "/v1/timingsByCity?city=Karachi&country=Pakistan&method=1";
+  fetch(namazUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      const t = data.data.timings;
+      document.getElementById("namaz-bar").textContent =
+        "Karachi Namaz — Fajr: " + t.Fajr +
+        " | Dhuhr: " + t.Dhuhr +
+        " | Asr: " + t.Asr +
+        " | Maghrib: " + t.Maghrib +
+        " | Isha: " + t.Isha;
+    })
+    .catch(function() {
+      document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
+    });
 
   const sideBtns = document.querySelectorAll(".side-btn");
-  const tabs = document.querySelectorAll(".admin-tab");
+  const adminTabs = document.querySelectorAll(".admin-tab");
   sideBtns.forEach(function(btn) {
     btn.onclick = function() {
       sideBtns.forEach(function(b) { b.classList.remove("active"); });
-      tabs.forEach(function(t) { t.classList.add("hidden"); });
+      adminTabs.forEach(function(t) { t.classList.add("hidden"); });
       btn.classList.add("active");
-      const targetId = btn.getAttribute("data-tab");
-      document.getElementById(targetId).classList.remove("hidden");
+      document.getElementById(btn.getAttribute("data-tab")).classList.remove("hidden");
     };
   });
 
-
-  function draw30Slots(existing) {
-    const box = document.getElementById("member-slots");
+  function draw30Slots(slotsMap) {
+    const box = document.getElementById("slots-container");
     box.innerHTML = "";
     for (let i = 1; i <= 30; i++) {
-      const slot = (existing && existing["slot" + i]) || { username: "", password: "", banner: "", banned: false };
+      const slot = slotsMap["slot_" + i] || { username: "", password: "", banner: "", banned: false };
       const row = document.createElement("div");
       row.className = "row";
+      row.style.borderBottom = "1px solid var(--border-color)";
+      row.style.paddingBottom = "0.5rem";
 
-      const num = document.createElement("span");
-      num.style.width = "35px";
+      const num = document.createElement("strong");
+      num.style.width = "32px";
       num.textContent = "#" + i;
 
-      const uInput = document.createElement("input");
-      uInput.type = "text";
-      uInput.id = "u" + i;
-      uInput.value = slot.username || "";
-      uInput.placeholder = "Username " + i;
-      uInput.style.width = "140px";
+      const uIn = document.createElement("input");
+      uIn.type = "text"; uIn.id = "u" + i; uIn.placeholder = "Username"; uIn.value = slot.username || ""; uIn.style.flex = "1";
 
-      const pInput = document.createElement("input");
-      pInput.type = "text";
-      pInput.id = "p" + i;
-      pInput.value = slot.password || "";
-      pInput.placeholder = "Password " + i;
-      pInput.style.width = "140px";
+      const pIn = document.createElement("input");
+      pIn.type = "text"; pIn.id = "p" + i; pIn.placeholder = "Password"; pIn.value = slot.password || ""; pIn.style.flex = "1";
 
-      const imgInput = document.createElement("input");
-      imgInput.type = "text";
-      imgInput.id = "img" + i;
-      imgInput.value = slot.banner || "";
-      imgInput.placeholder = "Top Banner Pic URL (optional)";
-      imgInput.style.flex = "1";
+      const imgIn = document.createElement("input");
+      imgIn.type = "text"; imgIn.id = "img" + i; imgIn.placeholder = "Top Banner Pic URL"; imgIn.value = slot.banner || ""; imgIn.style.flex = "1";
 
-      const label = document.createElement("label");
-      label.style.display = "flex";
-      label.style.alignItems = "center";
-      label.style.gap = "0.35rem";
-      label.style.cursor = "pointer";
+      const lbl = document.createElement("label");
+      lbl.style.display = "flex"; lbl.style.alignItems = "center"; lbl.style.gap = "0.35rem";
+      const bChk = document.createElement("input");
+      bChk.type = "checkbox"; bChk.id = "b" + i; bChk.checked = Boolean(slot.banned);
+      const bTxt = document.createElement("span");
+      bTxt.style.color = slot.banned ? "#ef4444" : "var(--text-muted)";
+      bTxt.style.fontSize = "0.85rem";
+      bTxt.textContent = "Ban";
 
-      const bCheck = document.createElement("input");
-      bCheck.type = "checkbox";
-      bCheck.id = "b" + i;
-      bCheck.checked = Boolean(slot.banned);
-
-      const bText = document.createElement("span");
-      bText.style.color = slot.banned ? "#ef4444" : "var(--text-muted)";
-      bText.style.fontSize = "0.85rem";
-      bText.textContent = "Banned";
-
-      label.appendChild(bCheck);
-      label.appendChild(bText);
-      row.appendChild(num);
-      row.appendChild(uInput);
-      row.appendChild(pInput);
-      row.appendChild(imgInput);
-      row.appendChild(label);
+      lbl.appendChild(bChk); lbl.appendChild(bTxt);
+      row.appendChild(num); row.appendChild(uIn); row.appendChild(pIn); row.appendChild(imgIn); row.appendChild(lbl);
       box.appendChild(row);
     }
   }
 
+  async function initAdminAuth() {
+    const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
+    const { initializeApp } = await import(sdkBase + "firebase-app.js");
+    const { getAuth, signInAnonymously } = await import(sdkBase + "firebase-auth.js");
+    const { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "faizan-platform" + ".firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform" + ".firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const adminPassBox = document.getElementById("admin-pass-input");
+    const lockErr = document.getElementById("lock-err");
+
+    async function verifyAndUnlock() {
+      const val = adminPassBox.value.trim();
+      if (!val) return;
+      lockErr.textContent = "Verifying owner password...";
+
+      try {
+        const authSnap = await getDoc(doc(db, "siteSettings", "adminAuth"));
+        const savedPass = authSnap.exists() && authSnap.data().password ? authSnap.data().password : "faizan123";
+
+        if (val === savedPass) {
+          await signInAnonymously(auth);
+          lockErr.textContent = "";
+          document.getElementById("admin-lock").classList.add("hidden");
+          document.getElementById("admin-shell").classList.remove("hidden");
+          startAdminSystem(db, { collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where });
+        } else {
+          lockErr.textContent = "Incorrect owner password.";
+        }
+      } catch (err) {
+        lockErr.textContent = "Login Error: " + err.message;
+      }
+    }
+
+    document.getElementById("unlock-btn").onclick = verifyAndUnlock;
+    adminPassBox.onkeydown = function(e) { if (e.key === "Enter") verifyAndUnlock(); };
+  }
   async function startAdminSystem(db, fns) {
     const { collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc, query, orderBy, onSnapshot, where } = fns;
     draw30Slots({});
+
     try {
+      // 1. Change Owner Admin Password
+      document.getElementById("change-admin-pass-btn").onclick = async function() {
+        const newPass = document.getElementById("new-admin-pass").value.trim();
+        if (!newPass) return alert("Enter a new owner password first.");
+        await setDoc(doc(db, "siteSettings", "adminAuth"), { password: newPass });
+        document.getElementById("new-admin-pass").value = "";
+        alert("Owner password updated! Use your new password next time you sign in.");
+      };
 
-
+      // 2. Cloudinary File Uploader
       const fileInput = document.getElementById("cloud-file-input");
       const statusText = document.getElementById("upload-status");
+      document.getElementById("cloud-upload-btn").onclick = function() { fileInput.click(); };
 
-      document.getElementById("cloud-upload-btn").onclick = function() {
-        fileInput.click();
-      }
       fileInput.onchange = async function() {
         const file = fileInput.files.item(0);
         if (!file) return;
-        statusText.textContent = "Uploading " + file.name + " to Cloudinary...";
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-
+        statusText.textContent = "Uploading " + file.name + "...";
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("upload_preset", UPLOAD_PRESET);
         try {
-          const uploadEndpoint = "https://api.cloudinary.com/v1_v1" + CLOUD_NAME + "/auto/upload";
-          const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
+          const upUrl = "https://" + "api." + "cloudinary.com" + "/v1_1/" + CLOUD_NAME + "/auto/upload";
+          const res = await fetch(upUrl, { method: "POST", body: fd });
           const data = await res.json();
           if (data.secure_url) {
             document.getElementById("item-url").value = data.secure_url;
-            statusText.textContent = "Uploaded successfully! Click Publish to Vault below.";
+            statusText.textContent = "Uploaded! Click Publish Single Item below.";
           } else {
-            statusText.textContent = "Upload failed: " + (data.error ? data.error.message : "Check preset");
+            statusText.textContent = "Upload failed.";
           }
-        } catch (upErr) {
-          statusText.textContent = "Upload error: " + upErr.message;
+        } catch (e) {
+          statusText.textContent = "Upload error: " + e.message;
         }
       };
 
-      document.getElementById("publish-btn").onclick = async function() {
-        const type = document.getElementById("item-type").value;
+      // 3. Topic Bundle Publisher (Video + Word + PPT + Cover Pic)
+      document.getElementById("publish-bundle-btn").onclick = async function() {
+        const title = document.getElementById("bnd-title").value.trim();
+        const picUrl = document.getElementById("bnd-pic").value.trim();
+        const videoUrl = document.getElementById("bnd-video").value.trim();
+        const wordUrl = document.getElementById("bnd-word").value.trim();
+        const pptUrl = document.getElementById("bnd-ppt").value.trim();
+        const body = document.getElementById("bnd-desc").value.trim();
+        if (!title) return alert("Enter a Topic / Bundle Title.");
+
+        await addDoc(collection(db, "videos"), {
+          title: title,
+          type: "bundle",
+          picUrl: picUrl,
+          videoUrl: videoUrl,
+          wordUrl: wordUrl,
+          pptUrl: pptUrl,
+          body: body,
+          hiddenFor: [],
+          createdAt: Date.now()
+        });
+
+        document.getElementById("bnd-title").value = "";
+        document.getElementById("bnd-pic").value = "";
+        document.getElementById("bnd-video").value = "";
+        document.getElementById("bnd-word").value = "";
+        document.getElementById("bnd-ppt").value = "";
+        document.getElementById("bnd-desc").value = "";
+        await loadItems();
+        alert("Topic Bundle published to Member Portal!");
+      };
+
+      // 4. Single Item Publisher
+      document.getElementById("publish-item-btn").onclick = async function() {
         const title = document.getElementById("item-title").value.trim();
+        const type = document.getElementById("item-type").value;
         const url = document.getElementById("item-url").value.trim();
         const body = document.getElementById("item-body").value.trim();
+        if (!title) return alert("Enter a title.");
 
-        if (!title) return alert("Please enter a title.");
         await addDoc(collection(db, "videos"), {
-          type: type,
           title: title,
+          type: type,
           url: url,
           body: body,
-          accessible: true,
+          hiddenFor: [],
           createdAt: Date.now()
         });
 
@@ -350,210 +438,173 @@
         document.getElementById("item-body").value = "";
         statusText.textContent = "";
         await loadItems();
+        alert("Published successfully!");
       };
 
-      document.getElementById("save-members-btn").onclick = async function() {
-        for (let i = 1; i <= 30; i++) {
-          const username = document.getElementById("u" + i).value.trim();
-          const password = document.getElementById("p" + i).value.trim();
-          const banner = document.getElementById("img" + i).value.trim();
-          const banned = document.getElementById("b" + i).checked;
-          await setDoc(doc(db, "visitors", "slot" + i), {
-            username: username,
-            password: password,
-            banner: banner,
-            banned: banned
-          });
+      // 5. Page Text & Message Editor (Gallery, Vision, About, Contact)
+      const pageSel = document.getElementById("txt-page-sel");
+      async function loadSelectedPageText() {
+        const p = pageSel.value;
+        const snap = await getDoc(doc(db, "siteSettings", "pageText_" + p));
+        if (snap.exists()) {
+          document.getElementById("txt-heading-in").value = snap.data().heading || "";
+          document.getElementById("txt-body-in").value = snap.data().body || "";
+        } else {
+          document.getElementById("txt-heading-in").value = "";
+          document.getElementById("txt-body-in").value = "";
         }
-        alert("All 30 member accounts and banners saved!");
-        await load30Slots();
+      }
+      pageSel.onchange = loadSelectedPageText;
+      await loadSelectedPageText();
+
+      document.getElementById("save-page-txt-btn").onclick = async function() {
+        const p = pageSel.value;
+        const heading = document.getElementById("txt-heading-in").value.trim();
+        const body = document.getElementById("txt-body-in").value.trim();
+        await setDoc(doc(db, "siteSettings", "pageText_" + p), { heading: heading, body: body });
+        alert("Saved new text for " + p.toUpperCase() + "!");
       };
-      document.getElementById("admin-send-chat").onclick = async function() {
-        const input = document.getElementById("admin-chat-input");
-        const text = input.value.trim();
-        if (!text) return;
-        await addDoc(collection(db, "groupChat"), {
-          sender: "Faizan (Owner)",
-          text: text,
-          time: new Date().toLocaleTimeString(),
-          ts: Date.now()
-        });
-        input.value = "";
-      };
-
-      const chatQuery = query(collection(db, "groupChat"), orderBy("ts", "asc"));
-      onSnapshot(chatQuery, function(snap) {
-        const box = document.getElementById("admin-group-chat");
-        box.innerHTML = "";
-        snap.forEach(function(d) {
-          const m = d.data();
-          const bubble = document.createElement("div");
-          bubble.className = "msg-bubble";
-          const head = document.createElement("div");
-          head.style.fontSize = "0.8rem";
-          head.style.color = "var(--text-muted)";
-          head.textContent = m.sender + " • " + (m.time || "");
-          const body = document.createElement("div");
-          body.textContent = m.text;
-          bubble.appendChild(head);
-          bubble.appendChild(body);
-          box.appendChild(bubble);
-        });
-        box.scrollTop = box.scrollHeight;
-      });
-
-      const dmQuery = query(collection(db, "dmLogs"), orderBy("ts", "desc"));
-      onSnapshot(dmQuery, function(snap) {
-        const tbody = document.getElementById("dm-monitor-table");
-        tbody.innerHTML = "";
-        document.getElementById("stat-dms").textContent = String(snap.size);
-        snap.forEach(function(d) {
-          const dm = d.data();
-          const tr = document.createElement("tr");
-          tr.innerHTML = "<td><strong>" + (dm.from || "") + "</strong></td><td><strong>" + (dm.to || "") + "</strong></td><td>" + (dm.text || "") + "</td><td>" + (dm.time || "") + "</td>";
-          tbody.appendChild(tr);
-        });
-      });
-
       async function loadItems() {
-        const box = document.getElementById("items-list");
-        box.innerHTML = "";
+        const tbody = document.getElementById("items-table");
+        tbody.innerHTML = "";
         const snap = await getDocs(collection(db, "videos"));
-        document.getElementById("stat-content").textContent = String(snap.size);
+        document.getElementById("stat-items").textContent = snap.size;
 
-        snap.forEach(function(docSnap) {
-          const v = docSnap.data();
-          const row = document.createElement("div");
-          row.className = "row";
-          row.style.justifyContent = "space-between";
+        snap.forEach(function(d) {
+          const v = d.data();
+          const tr = document.createElement("tr");
 
-          const left = document.createElement("div");
-          const strong = document.createElement("strong");
-          strong.textContent = v.title + " (" + (v.type || "video") + ")";
-          const badge = document.createElement("span");
-          badge.className = "badge " + (v.accessible ? "bg-green" : "bg-red");
-          badge.textContent = v.accessible ? "Accessible" : "Private";
-          left.appendChild(strong);
-          left.appendChild(badge);
+          const tdTitle = document.createElement("td");
+          tdTitle.textContent = v.title;
 
-          const right = document.createElement("div");
-          right.className = "row";
-          right.style.marginBottom = "0";
+          const tdType = document.createElement("td");
+          tdType.textContent = (v.type || "item").toUpperCase();
 
-          const toggleBtn = document.createElement("button");
-          toggleBtn.type = "button";
-          toggleBtn.className = "btn";
-          toggleBtn.textContent = v.accessible ? "Make Private" : "Make Accessible";
-          toggleBtn.onclick = async function() {
-            await updateDoc(doc(db, "videos", docSnap.id), { accessible: !v.accessible });
-            await loadItems();
+          const tdHide = document.createElement("td");
+          const hideIn = document.createElement("input");
+          hideIn.type = "text";
+          hideIn.placeholder = "Hide from user1, user2";
+          hideIn.value = Array.isArray(v.hiddenFor) ? v.hiddenFor.join(", ") : "";
+          hideIn.style.width = "160px";
+
+          const saveHideBtn = document.createElement("button");
+          saveHideBtn.type = "button";
+          saveHideBtn.className = "btn btn-muted";
+          saveHideBtn.textContent = "Save";
+          saveHideBtn.onclick = async function() {
+            const arr = hideIn.value.split(",").map(function(s) { return s.trim(); }).filter(Boolean);
+            await updateDoc(doc(db, "videos", d.id), { hiddenFor: arr });
+            alert("Updated visibility for: " + v.title);
           };
+          tdHide.appendChild(hideIn);
+          tdHide.appendChild(saveHideBtn);
 
+          const tdAct = document.createElement("td");
           const delBtn = document.createElement("button");
           delBtn.type = "button";
-          delBtn.className = "btn btn-muted";
+          delBtn.className = "btn btn-red";
           delBtn.textContent = "Delete";
           delBtn.onclick = async function() {
-            await deleteDoc(doc(db, "videos", docSnap.id));
+            await deleteDoc(doc(db, "videos", d.id));
             await loadItems();
           };
+          tdAct.appendChild(delBtn);
 
-          right.appendChild(toggleBtn);
-          right.appendChild(delBtn);
-          row.appendChild(left);
-          row.appendChild(right);
-          box.appendChild(row);
+          tr.appendChild(tdTitle);
+          tr.appendChild(tdType);
+          tr.appendChild(tdHide);
+          tr.appendChild(tdAct);
+          tbody.appendChild(tr);
         });
-        if (box.innerHTML === "") box.textContent = "No items published yet.";
       }
+
       async function load30Slots() {
-        const existing = {};
         const snap = await getDocs(collection(db, "visitors"));
-        snap.forEach(function(d) { existing[d.id] = d.data(); });
-        draw30Slots(existing);
+        const map = {};
+        let activeCount = 0;
+        snap.forEach(function(d) {
+          map[d.id] = d.data();
+          if (d.data().username) activeCount += 1;
+        });
+        document.getElementById("stat-slots").textContent = activeCount + " / 30";
+        draw30Slots(map);
       }
+
+      document.getElementById("save-slots-btn").onclick = async function() {
+        for (let i = 1; i <= 30; i++) {
+          await setDoc(doc(db, "visitors", "slot_" + i), {
+            username: document.getElementById("u" + i).value.trim(),
+            password: document.getElementById("p" + i).value.trim(),
+            banner: document.getElementById("img" + i).value.trim(),
+            banned: document.getElementById("b" + i).checked
+          }, { merge: true });
+        }
+        await load30Slots();
+        alert("All 30 member slots saved!");
+      };
 
       async function loadContacts() {
         const tbody = document.getElementById("contacts-table");
         tbody.innerHTML = "";
         const snap = await getDocs(collection(db, "permanentContacts"));
-        document.getElementById("stat-members").textContent = String(snap.size);
+        document.getElementById("stat-members").textContent = snap.size;
+
         snap.forEach(function(d) {
           const c = d.data();
           const tr = document.createElement("tr");
-          tr.innerHTML = "<td>" + (c.username || "") + "</td><td>" + (c.email || "") + "</td><td>" + (c.phone || "") + "</td><td>" + (c.savedAt || "") + "</td>";
+
+          const tdU = document.createElement("td");
+          tdU.textContent = c.username || d.id;
+
+          const tdE = document.createElement("td");
+          const eIn = document.createElement("input");
+          eIn.type = "text";
+          eIn.value = c.email || "";
+          tdE.appendChild(eIn);
+
+          const tdP = document.createElement("td");
+          const pIn = document.createElement("input");
+          pIn.type = "text";
+          pIn.value = c.phone || "";
+          tdP.appendChild(pIn);
+
+          const tdA = document.createElement("td");
+          const saveBtn = document.createElement("button");
+          saveBtn.type = "button";
+          saveBtn.className = "btn btn-green";
+          saveBtn.textContent = "Update";
+          saveBtn.onclick = async function() {
+            await setDoc(doc(db, "permanentContacts", d.id), {
+              email: eIn.value.trim(),
+              phone: pIn.value.trim()
+            }, { merge: true });
+            alert("Updated contact info!");
+          };
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-red";
+          delBtn.style.marginLeft = "0.4rem";
+          delBtn.textContent = "Delete";
+          delBtn.onclick = async function() {
+            await deleteDoc(doc(db, "permanentContacts", d.id));
+            await loadContacts();
+          };
+
+          tdA.appendChild(saveBtn);
+          tdA.appendChild(delBtn);
+
+          tr.appendChild(tdU);
+          tr.appendChild(tdE);
+          tr.appendChild(tdP);
+          tr.appendChild(tdA);
           tbody.appendChild(tr);
         });
       }
-
-      async function loadActivity() {
-        const tbody = document.getElementById("activity-table");
-        tbody.innerHTML = "";
-        const snap = await getDocs(collection(db, "memberActivity"));
-        snap.forEach(function(d) {
-          const a = d.data();
-          const mins = Math.floor((a.secondsSpent || 0) / 60);
-          const secs = (a.secondsSpent || 0) % 60;
-          const logs = (a.actions || []).slice(-5).join(" | ");
-          const tr = document.createElement("tr");
-          tr.innerHTML = "<td><strong>" + d.id + "</strong></td><td>" + mins + "m " + secs + "s</td><td>" + (a.lastSeen || "-") + "</td><td>" + logs + "</td>";
-          tbody.appendChild(tr);
-        });
-      }
-
-      async function loadGames() {
-        const tbody = document.getElementById("games-table");
-        tbody.innerHTML = "";
-        const snap = await getDocs(collection(db, "gameStats"));
-        snap.forEach(function(d) {
-          const g = d.data();
-          const tr = document.createElement("tr");
-          tr.innerHTML = "<td><strong>" + (g.username || d.id) + "</strong></td><td>" + (g.game || "") + "</td><td>" + (g.rounds || 0) + "</td><td>" + (g.bestScore || 0) + "</td><td>" + (g.lastPlayed || "-") + "</td>";
-          tbody.appendChild(tr);
-        });
-      }
-
-      const targetSelect = document.getElementById("theme-target-page");
-
-      async function applyPageTheme(pageKey) {
-        const specificSnap = await getDoc(doc(db, "siteSettings", "theme_" + pageKey));
-        const allSnap = await getDoc(doc(db, "siteSettings", "theme_all"));
-        const chosen = specificSnap.exists() ? specificSnap.data() : (allSnap.exists() ? allSnap.data() : null);
-
-        document.body.style.background = "";
-        document.body.style.color = "";
-        document.body.classList.remove("font-mono", "font-serif", "font-tech");
-
-        if (chosen) {
-          if (chosen.bg) document.body.style.background = chosen.bg;
-          if (chosen.color) document.body.style.color = chosen.color;
-          if (chosen.font && chosen.font !== "default") document.body.classList.add(chosen.font);
-        }
-      }
-
-      await applyPageTheme("admin");
-
-      document.getElementById("save-global-theme-btn").onclick = async function() {
-        const target = targetSelect.value;
-        const bg = document.getElementById("admin-bg-text").value.trim();
-        const color = document.getElementById("admin-font-color-text").value.trim();
-        const font = document.getElementById("admin-font-select").value;
-
-        await setDoc(doc(db, "siteSettings", "theme_" + target), { bg: bg, color: color, font: font });
-        if (target === "all" || target === "admin") await applyPageTheme("admin");
-        alert("Saved theme for: " + target.toUpperCase());
-      };
-
-      document.getElementById("reset-global-theme-btn").onclick = async function() {
-        const target = targetSelect.value;
-        await deleteDoc(doc(db, "siteSettings", "theme_" + target));
-        await applyPageTheme("admin");
-        alert("Reset theme to default for: " + target.toUpperCase());
-      };
 
       document.getElementById("open-member-folder-btn").onclick = function() {
         const targetUser = document.getElementById("admin-folder-target").value.trim();
-        if (!targetUser) return alert("Type a member username first.");
+        if (!targetUser) return alert("Enter a member username first.");
         if (window.renderMemberFolder) {
           window.renderMemberFolder({
             db: db,
@@ -566,6 +617,106 @@
           });
         }
       };
+      document.getElementById("save-global-theme-btn").onclick = async function() {
+        const target = document.getElementById("theme-target-page").value;
+        const anim = document.getElementById("admin-anim-select").value;
+        const animSize = Number(document.getElementById("admin-anim-size").value) || 100;
+        const bg = document.getElementById("admin-bg-text").value.trim();
+        const bgImage = document.getElementById("admin-bg-image").value.trim();
+
+        await setDoc(doc(db, "siteSettings", "theme_" + target), {
+          anim: anim,
+          animSize: animSize,
+          bg: bg,
+          bgImage: bgImage
+        });
+
+        if ((target === "all" || target === "admin") && window.startHalalAnimation) {
+          window.startHalalAnimation("admin-geo-canvas", anim, animSize);
+        }
+        alert("Saved animation & look for: " + target.toUpperCase());
+      };
+
+      document.getElementById("reset-global-theme-btn").onclick = async function() {
+        const target = document.getElementById("theme-target-page").value;
+        await deleteDoc(doc(db, "siteSettings", "theme_" + target));
+        if (window.startHalalAnimation) {
+          window.startHalalAnimation("admin-geo-canvas", "geo_stars", 100);
+        }
+        alert("Reset look for: " + target.toUpperCase());
+      };
+
+      const chatBox = document.getElementById("admin-group-chat");
+      onSnapshot(query(collection(db, "groupChat"), orderBy("createdAt", "asc")), function(snap) {
+        chatBox.innerHTML = "";
+        snap.forEach(function(d) {
+          const m = d.data();
+          const b = document.createElement("div");
+          b.className = "msg-bubble";
+          b.textContent = "[" + (m.time || "") + "] " + m.sender + ": " + m.text;
+          chatBox.appendChild(b);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+
+      document.getElementById("admin-send-chat").onclick = async function() {
+        const txt = document.getElementById("admin-chat-input").value.trim();
+        if (!txt) return;
+        document.getElementById("admin-chat-input").value = "";
+        await addDoc(collection(db, "groupChat"), {
+          sender: "Faizan (Owner)",
+          text: txt,
+          time: new Date().toLocaleTimeString(),
+          createdAt: Date.now()
+        });
+      };
+
+      const dmBox = document.getElementById("admin-dm-logs");
+      onSnapshot(query(collection(db, "dmLogs"), orderBy("createdAt", "asc")), function(snap) {
+        dmBox.innerHTML = "";
+        snap.forEach(function(d) {
+          const m = d.data();
+          const b = document.createElement("div");
+          b.className = "msg-bubble";
+          b.textContent = "[" + (m.time || "") + "] " + m.from + " -> " + m.to + ": " + m.text;
+          dmBox.appendChild(b);
+        });
+        dmBox.scrollTop = dmBox.scrollHeight;
+      });
+
+      async function loadActivity() {
+        const tbody = document.getElementById("activity-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "memberActivity"));
+        snap.forEach(function(d) {
+          const a = d.data();
+          const tr = document.createElement("tr");
+          const mins = Math.floor((a.seconds || 0) / 60);
+          tr.innerHTML =
+            "<td>" + (a.username || d.id) + "</td>" +
+            "<td>" + mins + " mins</td>" +
+            "<td>" + (a.lastSeen || "") + "</td>" +
+            "<td>" + (Array.isArray(a.actions) ? a.actions.slice(-3).join(" | ") : "") + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function loadGames() {
+        const tbody = document.getElementById("games-table");
+        tbody.innerHTML = "";
+        const snap = await getDocs(collection(db, "gameStats"));
+        snap.forEach(function(d) {
+          const g = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + g.username + "</td>" +
+            "<td>" + g.game + "</td>" +
+            "<td>" + (g.rounds || 1) + "</td>" +
+            "<td>" + (g.bestScore || 0) + "</td>" +
+            "<td>" + (g.lastPlayed || "") + "</td>";
+          tbody.appendChild(tr);
+        });
+      }
 
       await loadItems();
       await load30Slots();
@@ -576,8 +727,8 @@
       alert("Admin System Error: " + err.message);
     }
   }
+
   initAdminAuth();
 </script>
-<script src="folders.js"></script>
 </body>
 </html>
