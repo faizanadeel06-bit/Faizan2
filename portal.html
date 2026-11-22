@@ -16,161 +16,115 @@
 
 <header class="topbar" style="z-index: 30;">
   <a href="index.html" class="brand">FAIZAN // MEMBER HUB</a>
-  <div class="row" style="margin-bottom: 0;">
-    <select id="visual-preset-select" aria-label="Visual Theme Preset">
-      <option value="default">Original Cold Basement</option>
-      <option value="theme-aurora">Midnight Aurora (Emerald)</option>
-      <option value="theme-gold">Royal Obsidian &amp; Gold</option>
-      <option value="theme-cyber">Cyber Neon Grid</option>
-      <option value="theme-light">Daylight Glass</option>
-    </select>
+  <nav class="row" style="margin-bottom: 0;">
     <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Gallery</a>
-    <button type="button" id="signout-btn" class="btn btn-muted hidden">Sign Out</button>
-  </div>
+    <a href="vision.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Vision</a>
+    <a href="about.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">About</a>
+    <a href="contact.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Contact</a>
+  </nav>
 </header>
 
-<div id="step-login" class="card" style="max-width: 420px; margin: 3rem auto; position: relative; z-index: 20;">
+<div id="login-card" class="card" style="max-width: 440px; margin: 3.5rem auto; position: relative; z-index: 20;">
   <h2>Member Sign In</h2>
-  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Enter your assigned credentials to open your personal page.</p>
-  <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-    <input type="text" id="in-user" aria-label="Username" placeholder="Username" />
-    <input type="password" id="in-pass" aria-label="Password" placeholder="Password" />
-    <button type="button" id="login-btn" class="btn">Continue</button>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Enter your assigned username and password. Phone and email are completely optional.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <input type="text" id="login-user" placeholder="Username (Required)" />
+    <input type="password" id="login-pass" placeholder="Password (Required)" />
+    <input type="email" id="login-email" placeholder="Email Address (Optional)" />
+    <input type="tel" id="login-phone" placeholder="Phone Number (Optional)" />
+    <button type="button" id="login-btn" class="btn">Enter Member Hub</button>
   </div>
-  <p id="login-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
-</div>
-
-<div id="step-contact" class="card hidden" style="max-width: 440px; margin: 3rem auto; position: relative; z-index: 20;">
-  <h2>Member Details</h2>
-  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">Please enter your email and phone number to complete your member record. Note: Your contact info and site activity are recorded by the administrator.</p>
-  <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-    <input type="email" id="in-email" aria-label="Email Address" placeholder="Your Email Address" />
-    <input type="tel" id="in-phone" aria-label="Phone Number" placeholder="Your Phone Number (e.g. 0300-1234567)" />
-    <button type="button" id="save-contact-btn" class="btn">Save &amp; Open My Page</button>
-  </div>
-  <p id="contact-err" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+  <p id="login-msg" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.75rem;"></p>
 </div>
 
 <div id="portal-shell" class="app-shell hidden" style="position: relative; z-index: 10;">
   <aside class="sidebar">
-    <button type="button" class="side-btn active" data-ptab="ptab-vault">Bundles &amp; Content</button>
-    <button type="button" class="side-btn" data-ptab="ptab-look">Look &amp; Draw Studio</button>
-    <button type="button" class="side-btn" data-ptab="ptab-folder">My Private Folder</button>
-    <button type="button" class="side-btn" data-ptab="ptab-group">Group Chat</button>
-    <button type="button" class="side-btn" data-ptab="ptab-dm">Private Messages</button>
-    <button type="button" class="side-btn" data-ptab="ptab-games">Arcade (30 Games)</button>
+    <button type="button" class="side-btn active" data-tab="ptab-feed">Topics &amp; Library</button>
+    <button type="button" class="side-btn" data-tab="ptab-arcade">30-Game Arcade</button>
+    <button type="button" class="side-btn" data-tab="ptab-folder">My Private Folder</button>
+    <button type="button" class="side-btn" data-tab="ptab-group">Group Chat</button>
+    <button type="button" class="side-btn" data-tab="ptab-dm">Direct Messages</button>
+    <button type="button" class="side-btn" data-tab="ptab-privacy">Privacy &amp; Contact</button>
+    <button type="button" id="logout-btn" class="btn btn-red" style="margin-top: 1rem;">Sign Out</button>
   </aside>
 
   <main class="content-area">
-    <img id="personal-banner" class="member-banner hidden" alt="Personal Page Banner" />
-
-    <div style="margin-bottom: 1.5rem;">
-      <h1 style="font-size: 2rem;"><span id="member-name"></span>'s Personal Page</h1>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Status: Active Member | Session tracked automatically</p>
+    <div id="member-welcome-card" class="card" style="border-left: 4px solid #10b981; margin-bottom: 1rem;">
+      <h2 id="welcome-user-title" style="color: #10b981;">Hello!</h2>
+      <p id="welcome-custom-msg" style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Welcome to your personal learning &amp; arcade space.</p>
     </div>
-    <section id="ptab-vault" class="portal-tab">
-      <div class="card">
-        <h2>Search Course Bundles, Videos, Word &amp; PPT</h2>
-        <div class="row" style="margin-bottom: 0;">
-          <input type="text" id="vault-search-input" placeholder="Search by bundle title, topic, video, Word, or PPT..." style="flex: 1;" />
-          <button type="button" id="vault-search-clear" class="btn btn-muted">Clear</button>
-        </div>
-      </div>
 
-      <div id="feed">Loading content...</div>
+    <section id="ptab-feed" class="portal-tab">
+      <div class="card">
+        <h2>Topic Bundles &amp; Study Files</h2>
+        <div id="portal-items-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;"></div>
+      </div>
     </section>
 
-    <section id="ptab-look" class="portal-tab hidden">
-      <div class="card">
-        <h2>Customize My Personal Page Look &amp; Animation</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Type any background color, set a background image, or pick any of the 10 halal animations and adjust its size.</p>
-        <div class="row">
-          <input type="text" id="user-bg-color" placeholder="Background color (e.g. #06090e or midnightblue)" style="min-width: 220px;" />
-
-          <input type="text" id="user-bg-image" placeholder="Background Image URL (or upload/draw)" style="flex: 1;" />
-          <input type="file" id="user-bg-file" accept="image/*" class="hidden" />
-          <button type="button" id="user-bg-upload-btn" class="btn btn-green">Upload Image</button>
-
-          <select id="user-font-select" aria-label="Font Style">
-            <option value="default">Modern System</option>
-            <option value="font-mono">Basement Terminal (Mono)</option>
-            <option value="font-serif">Classic Serif</option>
-            <option value="font-tech">Cold Steel Tech</option>
-          </select>
-        </div>
-        <div class="row">
-          <select id="user-anim-select" aria-label="Halal Animation">
-            <option value="geo_stars">2. Rotating 8-Pointed Islamic Stars</option>
-            <option value="flower_fireworks">1. Blooming Flower + Colorful Fireworks</option>
-            <option value="crescent_nebula">3. Starlight &amp; Crescent Orbit</option>
-            <option value="arabesque_mandala">4. Sacred Geometric Mandala</option>
-            <option value="golden_petals">5. Falling Emerald &amp; Gold Petals</option>
-            <option value="kaleidoscope">6. Geometric Kaleidoscope</option>
-            <option value="aurora_ribbons">7. Midnight Aurora Waves</option>
-            <option value="noor_lanterns">8. Floating Geometric Noor Lights</option>
-            <option value="crystal_lattice">9. Expanding Star Lattice</option>
-            <option value="golden_spiral">10. Golden Ratio Star Spiral</option>
-          </select>
-          <label style="font-size: 0.85rem;">Animation Size: <input type="range" id="user-anim-size" min="40" max="200" value="100" /></label>
-        </div>
-        <div class="row">
-          <button type="button" id="save-user-style-btn" class="btn">Save My Style</button>
-          <button type="button" id="reset-user-style-btn" class="btn btn-muted">Reset to Default</button>
-        </div>
-      </div>
-
-      <div id="user-draw-studio"></div>
+    <section id="ptab-arcade" class="portal-tab hidden">
+      <div id="arcade-mount"></div>
     </section>
 
     <section id="ptab-folder" class="portal-tab hidden">
-      <div id="my-personal-folder">Loading your private folder...</div>
+      <div class="card">
+        <h2>My Private Storage Folder</h2>
+        <div id="my-folder-mount"></div>
+      </div>
     </section>
 
     <section id="ptab-group" class="portal-tab hidden">
       <div class="card">
         <h2>Community Group Chat</h2>
-        <div id="member-group-chat" class="chat-box"></div>
+        <div id="portal-group-chat" class="chat-box"></div>
         <div class="row">
-          <input type="text" id="member-chat-input" aria-label="Group Message" placeholder="Write a message or share a link..." style="flex: 1;" />
-          <button type="button" id="member-send-chat" class="btn">Send</button>
+          <input type="text" id="portal-chat-input" placeholder="Write a message..." style="flex: 1;" />
+          <button type="button" id="portal-send-chat" class="btn">Send</button>
         </div>
       </div>
     </section>
 
     <section id="ptab-dm" class="portal-tab hidden">
       <div class="card">
-        <h2>Direct Message Another Member</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Note: Private conversations and shared links are logged for administrator oversight.</p>
+        <h2>Private Direct Message</h2>
         <div class="row">
-          <select id="dm-recipient" aria-label="Select Member" style="min-width: 180px;"></select>
-          <input type="text" id="dm-input" aria-label="Direct Message" placeholder="Message or link to share..." style="flex: 1;" />
+          <input type="text" id="dm-to-user" placeholder="Recipient Username (or Faizan)" style="flex: 1;" />
+          <input type="text" id="dm-msg-input" placeholder="Private message..." style="flex: 2;" />
           <button type="button" id="send-dm-btn" class="btn">Send DM</button>
         </div>
-        <div id="dm-history" class="chat-box" style="margin-top: 1rem;"></div>
+        <div id="portal-dm-list" class="chat-box"></div>
       </div>
     </section>
 
-    <section id="ptab-games" class="portal-tab hidden">
-      <div id="arcade-30-hub"></div>
+    <section id="ptab-privacy" class="portal-tab hidden">
+      <div class="card">
+        <h2>My Contact Info &amp; Privacy Controls</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Your phone number and email are completely optional. You stay in full control of your information below:</p>
+
+        <div class="row">
+          <input type="email" id="priv-email-in" placeholder="Optional Email Address" style="flex: 1;" />
+          <input type="tel" id="priv-phone-in" placeholder="Optional Phone Number" style="flex: 1;" />
+          <button type="button" id="priv-save-btn" class="btn">Save Optional Info</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.25rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <button type="button" id="priv-self-del-btn" class="btn btn-red">1. Delete My Phone &amp; Email Now (Self-Delete)</button>
+          <button type="button" id="priv-req-del-btn" class="btn btn-muted">2. Request Owner (Faizan) to Delete My Phone &amp; Email</button>
+          <button type="button" id="priv-allow-btn" class="btn btn-green">3. Allow Owner (Faizan) to Use My Phone &amp; Email</button>
+        </div>
+        <p id="priv-status-msg" style="margin-top: 0.85rem; font-weight: 600; color: #38bdf8;"></p>
+      </div>
     </section>
-
-
   </main>
 </div>
+<script src="animations.js?v=10"></script>
+<script src="folders.js?v=10"></script>
+<script src="arcade30.js?v=10"></script>
 <script>
-  const presetSelect = document.getElementById("visual-preset-select");
-  if (presetSelect) {
-    const savedPreset = localStorage.getItem("faizan_visual_preset") || "default";
-    if (savedPreset !== "default") {
-      document.body.classList.add(savedPreset);
-      presetSelect.value = savedPreset;
-    }
-    presetSelect.onchange = function() {
-      document.body.classList.remove("light-mode", "theme-light", "theme-cyber", "theme-aurora", "theme-gold");
-      const chosen = presetSelect.value;
-      if (chosen !== "default") document.body.classList.add(chosen);
-      localStorage.setItem("faizan_visual_preset", chosen);
-    };
+  const CLOUD_NAME = "fh4mrkmm";
+  const UPLOAD_PRESET = "faizan_vault";
+
+  if (window.startHalalAnimation) {
+    window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
   }
 
   setInterval(function() {
@@ -193,506 +147,239 @@
       document.getElementById("namaz-bar").textContent = "Karachi Namaz Reminder Active";
     });
 
-  const sideBtns = document.querySelectorAll(".side-btn");
-  const tabs = document.querySelectorAll(".portal-tab");
-  sideBtns.forEach(function(btn) {
+  const pSideBtns = document.querySelectorAll(".side-btn");
+  const pTabs = document.querySelectorAll(".portal-tab");
+  pSideBtns.forEach(function(btn) {
     btn.onclick = function() {
-      sideBtns.forEach(function(b) { b.classList.remove("active"); });
-      tabs.forEach(function(t) { t.classList.add("hidden"); });
+      pSideBtns.forEach(function(b) { b.classList.remove("active"); });
+      pTabs.forEach(function(t) { t.classList.add("hidden"); });
       btn.classList.add("active");
-      const targetId = btn.getAttribute("data-ptab");
-      document.getElementById(targetId).classList.remove("hidden");
-      if (targetId === "ptab-games" && window.launchArcade30) {
-        window.launchArcade30("arcade-30-hub", function() {});
-      }
-
+      document.getElementById(btn.getAttribute("data-tab")).classList.remove("hidden");
     };
   });
 
   async function initPortal() {
-    const err = document.getElementById("login-err");
-    try {
-      const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
-      const { initializeApp } = await import(sdkBase + "firebase-app.js");
-      const { getFirestore, collection, addDoc, getDocs, doc, getDoc, deleteDoc, setDoc, increment, arrayUnion, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
+    const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
+    const { initializeApp } = await import(sdkBase + "firebase-app.js");
+    const { getAuth, signInAnonymously } = await import(sdkBase + "firebase-auth.js");
+    const { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, onSnapshot, where } = await import(sdkBase + "firebase-firestore.js");
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
-        authDomain: "faizan-platform" + ".firebaseapp.com",
-        projectId: "faizan-platform",
-        storageBucket: "faizan-platform" + ".firebasestorage.app",
-        messagingSenderId: "801904702555",
-        appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNkvxgr430tAEKu-6ge2quISuwCgFClec",
+      authDomain: "faizan-platform" + ".firebaseapp.com",
+      projectId: "faizan-platform",
+      storageBucket: "faizan-platform" + ".firebasestorage.app",
+      messagingSenderId: "801904702555",
+      appId: "1:801904702555:web:28c95d693c5de8dd9bbb7e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    await signInAnonymously(auth);
+
+    // Load Global or Portal Animation & Look in Real Time
+    onSnapshot(doc(db, "siteSettings", "theme_all"), function(snap) {
+      if (snap.exists() && window.startHalalAnimation) {
+        const d = snap.data();
+        window.startHalalAnimation("portal-geo-canvas", d.anim || "geo_stars", d.animSize || 100);
+        if (d.bgImage) document.body.style.background = "url('" + d.bgImage + "') center / cover no-repeat fixed";
+        else if (d.bg) document.body.style.background = d.bg;
+      }
+    });
+
+    const loginMsg = document.getElementById("login-msg");
+
+    async function enterMemberHub(username) {
+      localStorage.setItem("faizan_member_user", username);
+      document.getElementById("login-card").classList.add("hidden");
+      document.getElementById("portal-shell").classList.remove("hidden");
+
+      // Personalized Welcome Message
+      document.getElementById("welcome-user-title").textContent = "Hello, " + username + "!";
+      const welcomeSnap = await getDoc(doc(db, "siteSettings", "pageText_welcome"));
+      if (welcomeSnap.exists()) {
+        if (welcomeSnap.data().heading) {
+          document.getElementById("welcome-user-title").textContent = "Hello, " + username + "! — " + welcomeSnap.data().heading;
+        }
+        if (welcomeSnap.data().body) {
+          document.getElementById("welcome-custom-msg").textContent = welcomeSnap.data().body;
+        }
+      }
+
+      // Load Topic Bundles & Study Files
+      const itemsGrid = document.getElementById("portal-items-list");
+      itemsGrid.innerHTML = "";
+      const vSnap = await getDocs(collection(db, "videos"));
+      vSnap.forEach(function(d) {
+        const v = d.data();
+        if (Array.isArray(v.hiddenFor) && v.hiddenFor.includes(username)) return;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.marginBottom = "0";
+
+        let linksHtml = "";
+        if (v.picUrl) linksHtml += '<img src="' + v.picUrl + '" alt="Cover" style="width:100%; height:140px; object-fit:cover; border-radius:8px; margin-bottom:0.5rem;" />';
+        if (v.type === "bundle") {
+          if (v.videoUrl) linksHtml += '<a href="' + v.videoUrl + '" target="_blank" class="btn" style="margin-right:0.35rem; margin-top:0.4rem;">Watch Video</a>';
+          if (v.wordUrl) linksHtml += '<a href="' + v.wordUrl + '" target="_blank" class="btn btn-green" style="margin-right:0.35rem; margin-top:0.4rem;">Word Doc</a>';
+          if (v.pptUrl) linksHtml += '<a href="' + v.pptUrl + '" target="_blank" class="btn btn-muted" style="margin-top:0.4rem;">PowerPoint</a>';
+        } else if (v.url) {
+          if (v.type === "image") linksHtml += '<img src="' + v.url + '" alt="' + v.title + '" style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:0.5rem;" />';
+          else linksHtml += '<a href="' + v.url + '" target="_blank" class="btn" style="margin-top:0.4rem;">Open File</a>';
+        }
+
+        card.innerHTML = "<h3>" + v.title + "</h3><p style='color:var(--text-muted); font-size:0.88rem; margin:0.35rem 0;'>" + (v.body || "") + "</p><div>" + linksHtml + "</div>";
+        itemsGrid.appendChild(card);
+      });
+
+      // Launch 30-Game Arcade
+      if (window.launchArcade30) {
+        window.launchArcade30("arcade-mount", async function(gameTitle, score) {
+          await setDoc(doc(db, "gameStats", username + "_" + gameTitle.replace(/\s+/g, "_")), {
+            username: username,
+            game: gameTitle,
+            bestScore: score,
+            lastPlayed: new Date().toLocaleString()
+          }, { merge: true });
+        });
+      }
+
+      // Mount Private Folder
+      if (window.renderMemberFolder) {
+        window.renderMemberFolder({
+          db: db,
+          firestoreFns: { collection, addDoc, getDocs, deleteDoc, doc, query, where },
+          targetUsername: username,
+          uploaderName: username,
+          containerId: "my-folder-mount",
+          cloudName: CLOUD_NAME,
+          uploadPreset: UPLOAD_PRESET
+        });
+      }
+
+      // Group Chat
+      const gBox = document.getElementById("portal-group-chat");
+      onSnapshot(query(collection(db, "groupChat"), orderBy("createdAt", "asc")), function(snap) {
+        gBox.innerHTML = "";
+        snap.forEach(function(d) {
+          const m = d.data();
+          const b = document.createElement("div");
+          b.className = "msg-bubble";
+          b.textContent = "[" + (m.time || "") + "] " + m.sender + ": " + m.text;
+          gBox.appendChild(b);
+        });
+        gBox.scrollTop = gBox.scrollHeight;
+      });
+
+      document.getElementById("portal-send-chat").onclick = async function() {
+        const txt = document.getElementById("portal-chat-input").value.trim();
+        if (!txt) return;
+        document.getElementById("portal-chat-input").value = "";
+        await addDoc(collection(db, "groupChat"), {
+          sender: username,
+          text: txt,
+          time: new Date().toLocaleTimeString(),
+          createdAt: Date.now()
+        });
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      let currentUser = null;
-      let currentSlotId = null;
-      let userBanner = "";
-      let allMembers = [];
-      let validAccounts = [];
-      let cachedVaultItems = [];
-
-      getDocs(collection(db, "visitors")).then(function(snap) {
+      // Direct Messages
+      const dmBox = document.getElementById("portal-dm-list");
+      onSnapshot(query(collection(db, "dmLogs"), orderBy("createdAt", "asc")), function(snap) {
+        dmBox.innerHTML = "";
         snap.forEach(function(d) {
-          const data = d.data();
-          if (data.username) validAccounts.push({ slotId: d.id, data: data });
+          const m = d.data();
+          if (m.from === username || m.to === username) {
+            const b = document.createElement("div");
+            b.className = "msg-bubble";
+            b.textContent = "[" + (m.time || "") + "] " + m.from + " -> " + m.to + ": " + m.text;
+            dmBox.appendChild(b);
+          }
         });
       });
 
-      const userBox = document.getElementById("in-user");
-      const passBox = document.getElementById("in-pass");
-
-      userBox.oninput = function() {
-        const typedU = userBox.value;
-        userBox.classList.remove("input-valid", "input-invalid");
-        if (typedU.length === 0) return;
-        const matchesAnyUser = validAccounts.some(function(acc) {
-          return acc.data.username.startsWith(typedU);
+      document.getElementById("send-dm-btn").onclick = async function() {
+        const toUser = document.getElementById("dm-to-user").value.trim();
+        const msgTxt = document.getElementById("dm-msg-input").value.trim();
+        if (!toUser || !msgTxt) return;
+        document.getElementById("dm-msg-input").value = "";
+        await addDoc(collection(db, "dmLogs"), {
+          from: username,
+          to: toUser,
+          text: msgTxt,
+          time: new Date().toLocaleTimeString(),
+          createdAt: Date.now()
         });
-        userBox.classList.add(matchesAnyUser ? "input-valid" : "input-invalid");
       };
 
-      passBox.oninput = function() {
-        const typedU = userBox.value.trim();
-        const typedP = passBox.value;
-        passBox.classList.remove("input-valid", "input-invalid");
-        if (typedP.length === 0) return;
-        const matchingAccount = validAccounts.find(function(acc) {
-          return acc.data.username === typedU;
-        });
-        if (matchingAccount && matchingAccount.data.password.startsWith(typedP)) {
-          passBox.classList.add("input-valid");
-        } else {
-          passBox.classList.add("input-invalid");
-        }
-      };
-
-      document.getElementById("login-btn").onclick = async function() {
-        const u = document.getElementById("in-user").value.trim();
-        const p = document.getElementById("in-pass").value.trim();
-        err.textContent = "Verifying...";
-
-        try {
-          const snap = await getDocs(collection(db, "visitors"));
-          let matchedUser = null;
-          allMembers = [];
-
-          snap.forEach(function(d) {
-            const data = d.data();
-            if (data.username) allMembers.push(data.username);
-            if (data.username === u && data.password === p && u !== "") {
-              matchedUser = data;
-              currentSlotId = d.id;
-            }
-          });
-
-          if (!matchedUser) {
-            err.textContent = "Invalid username or password.";
-            return;
-          }
-          if (matchedUser.banned) {
-            err.textContent = "Access Restricted: Your account has been suspended by the administrator.";
-            return;
-          }
-
-          currentUser = u;
-          userBanner = matchedUser.banner || "";
-          err.textContent = "";
-
-          const contactSnap = await getDoc(doc(db, "permanentContacts", currentUser));
-          if (contactSnap.exists()) {
-            await openPersonalSpace();
-          } else {
-            document.getElementById("step-login").classList.add("hidden");
-            document.getElementById("step-contact").classList.remove("hidden");
-          }
-        } catch (loginError) {
-          err.textContent = "Database Error: " + loginError.message;
-        }
-      };
-
-      document.getElementById("save-contact-btn").onclick = async function() {
-        const email = document.getElementById("in-email").value.trim();
-        const phone = document.getElementById("in-phone").value.trim();
-        const cErr = document.getElementById("contact-err");
-        if (!email || !phone) {
-          cErr.textContent = "Both email and phone number are required.";
-          return;
-        }
-
-        await setDoc(doc(db, "permanentContacts", currentUser), {
-          username: currentUser,
-          email: email,
-          phone: phone,
-          savedAt: new Date().toLocaleString()
-        });
-
-        await openPersonalSpace();
-      };
-
-      document.getElementById("signout-btn").onclick = function() {
-        location.reload();
-      };
-
-      async function openPersonalSpace() {
-        document.getElementById("step-login").classList.add("hidden");
-        document.getElementById("step-contact").classList.add("hidden");
-        document.getElementById("portal-shell").classList.remove("hidden");
-        document.getElementById("signout-btn").classList.remove("hidden");
-        document.getElementById("member-name").textContent = currentUser;
-
-        if (userBanner) {
-          const bannerImg = document.getElementById("personal-banner");
-          bannerImg.src = userBanner;
-          bannerImg.classList.remove("hidden");
-        }
-
-        if (window.renderMemberFolder) {
-          window.renderMemberFolder({
-            db: db,
-            firestoreFns: { collection, addDoc, getDocs, deleteDoc, doc, query, where },
-            targetUsername: currentUser,
-            uploaderName: currentUser,
-            containerId: "my-personal-folder",
-            cloudName: "fh4mrkmm",
-            uploadPreset: "faizan_vault"
-          });
-        }
-
-        populateDmRecipients();
-        startGroupChat();
-        startDmListener();
-        setupLookAndGames();
-
-        await logAction("Opened Personal Space");
-        await loadFeed();
-
-        setInterval(async function() {
-          await setDoc(doc(db, "memberActivity", currentUser), {
-            secondsSpent: increment(15),
-            lastSeen: new Date().toLocaleString()
-          }, { merge: true });
-        }, 15000);
+      // Load & Manage Optional Phone & Email + 3 Privacy Controls
+      const cRef = doc(db, "permanentContacts", username);
+      const cSnap = await getDoc(cRef);
+      const privStatus = document.getElementById("priv-status-msg");
+      if (cSnap.exists()) {
+        document.getElementById("priv-email-in").value = cSnap.data().email || "";
+        document.getElementById("priv-phone-in").value = cSnap.data().phone || "";
+        if (cSnap.data().deleteRequested) privStatus.textContent = "Status: Deletion request sent to Owner.";
+        else if (cSnap.data().ownerApproved) privStatus.textContent = "Status: You allowed Owner (Faizan) to use your phone & email.";
       }
 
-      async function logAction(actionText) {
-        await setDoc(doc(db, "memberActivity", currentUser), {
-          lastSeen: new Date().toLocaleString(),
-          actions: arrayUnion("[" + new Date().toLocaleTimeString() + "] " + actionText)
+      document.getElementById("priv-save-btn").onclick = async function() {
+        await setDoc(cRef, {
+          username: username,
+          email: document.getElementById("priv-email-in").value.trim(),
+          phone: document.getElementById("priv-phone-in").value.trim()
         }, { merge: true });
-      }
-      function setupLookAndGames() {
-
-        const userBgFile = document.getElementById("user-bg-file");
-        const userBgUploadBtn = document.getElementById("user-bg-upload-btn");
-        if (userBgUploadBtn && userBgFile) {
-          userBgUploadBtn.onclick = function() { userBgFile.click(); };
-          userBgFile.onchange = async function() {
-            const file = userBgFile.files.item(0);
-            if (!file) return;
-            userBgUploadBtn.textContent = "Uploading...";
-            const fd = new FormData();
-            fd.append("file", file);
-            fd.append("upload_preset", "faizan_vault");
-            const upUrl = "https://" + "api." + "cloudinary.com" + "/v1_1/fh4mrkmm/image/upload";
-            try {
-              const res = await fetch(upUrl, { method: "POST", body: fd });
-              const data = await res.json();
-              if (data.secure_url) {
-                document.getElementById("user-bg-image").value = data.secure_url;
-                document.getElementById("save-user-style-btn").click();
-              } else {
-                alert("Image upload failed.");
-              }
-            } catch (e) {
-              alert("Upload error: " + e.message);
-            }
-            userBgUploadBtn.textContent = "Upload Image";
-          };
-        }
-
-        function applyUserLook(styleObj) {
-          document.body.style.background = "";
-          document.body.style.backgroundImage = "";
-          document.body.style.color = "";
-          document.body.classList.remove("font-mono", "font-serif", "font-tech");
-
-          if (styleObj) {
-            if (styleObj.bgImage) {
-              document.body.style.background = "url('" + styleObj.bgImage + "') center / cover no-repeat fixed";
-            } else if (styleObj.bg) {
-              document.body.style.background = styleObj.bg;
-            }
-            if (styleObj.color) document.body.style.color = styleObj.color;
-            if (styleObj.font && styleObj.font !== "default") document.body.classList.add(styleObj.font);
-            if (window.startHalalAnimation) {
-              window.startHalalAnimation("portal-geo-canvas", styleObj.anim || "geo_stars", styleObj.animSize || 100);
-            }
-          } else if (window.startHalalAnimation) {
-            window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
-          }
-
-
-
-
-
-           else if (window.startHalalAnimation) {
-            window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
-          }
-        }
-
-        Promise.all([
-          getDoc(doc(db, "siteSettings", "theme_portal")),
-          getDoc(doc(db, "siteSettings", "theme_all")),
-          getDoc(doc(db, "userStyles", currentUser))
-        ]).then(function(snaps) {
-          const portalTheme = snaps.at(0).exists() ? snaps.at(0).data() : null;
-          const allTheme = snaps.at(1).exists() ? snaps.at(1).data() : null;
-          const userTheme = snaps.at(2).exists() ? snaps.at(2).data() : null;
-
-          const chosen = userTheme || portalTheme || allTheme;
-          applyUserLook(chosen);
-
-          if (userTheme) {
-            if (userTheme.bg) document.getElementById("user-bg-color").value = userTheme.bg;
-            if (userTheme.bgImage) document.getElementById("user-bg-image").value = userTheme.bgImage;
-            if (userTheme.font) document.getElementById("user-font-select").value = userTheme.font;
-            if (userTheme.anim) document.getElementById("user-anim-select").value = userTheme.anim;
-            if (userTheme.animSize) document.getElementById("user-anim-size").value = userTheme.animSize;
-          }
-        });
-
-        if (window.openDrawingStudio) {
-          window.openDrawingStudio({
-            containerId: "user-draw-studio",
-            cloudName: "fh4mrkmm",
-            uploadPreset: "faizan_vault",
-            onApplyBanner: async function(url) {
-              const bannerImg = document.getElementById("personal-banner");
-              bannerImg.src = url;
-              bannerImg.classList.remove("hidden");
-              if (currentSlotId) {
-                await setDoc(doc(db, "visitors", currentSlotId), { banner: url }, { merge: true });
-              }
-              await logAction("Drew & Updated Personal Banner");
-              alert("Your custom drawing is now your Top Banner!");
-            },
-            onApplyBackground: async function(url) {
-              document.getElementById("user-bg-image").value = url;
-              document.getElementById("save-user-style-btn").click();
-            }
-          });
-        }
-
-        document.getElementById("save-user-style-btn").onclick = async function() {
-          const bg = document.getElementById("user-bg-color").value.trim();
-          const bgImage = document.getElementById("user-bg-image").value.trim();
-          const font = document.getElementById("user-font-select").value;
-          const anim = document.getElementById("user-anim-select").value;
-          const animSize = Number(document.getElementById("user-anim-size").value) || 100;
-
-          const styleObj = { bg: bg, bgImage: bgImage, font: font, anim: anim, animSize: animSize };
-          applyUserLook(styleObj);
-          await setDoc(doc(db, "userStyles", currentUser), styleObj);
-          await logAction("Customized Page Look & Animation");
-          alert("Your personal page look & animation are saved!");
-        };
-
-        document.getElementById("reset-user-style-btn").onclick = async function() {
-          document.getElementById("user-bg-color").value = "";
-          document.getElementById("user-bg-image").value = "";
-          document.getElementById("user-font-select").value = "default";
-          document.getElementById("user-anim-select").value = "geo_stars";
-          document.getElementById("user-anim-size").value = 100;
-          await deleteDoc(doc(db, "userStyles", currentUser));
-          applyUserLook(null);
-          await logAction("Reset Page Look to Default");
-          alert("Page look reset to default Cold Basement!");
-        };
-        if (window.launchArcade30) {
-          window.launchArcade30("arcade-30-hub", recordGame);
-        }
-
-
-
-        let reflexState = "idle";
-        let startTime = 0;
-        let timerId = null;
-        const rBtn = document.getElementById("reflex-btn");
-        const rRes = document.getElementById("reflex-result");
-
-        rBtn.onclick = async function() {
-          if (reflexState === "idle") {
-            reflexState = "waiting";
-            rBtn.style.background = "#dc2626";
-            rBtn.textContent = "Wait for GREEN...";
-            rRes.textContent = "";
-            const delay = 1500 + Math.floor(Math.random() * 2500);
-            timerId = setTimeout(function() {
-              reflexState = "ready";
-              startTime = Date.now();
-              rBtn.style.background = "#16a34a";
-              rBtn.textContent = "TAP NOW!";
-            }, delay);
-          } else if (reflexState === "waiting") {
-            clearTimeout(timerId);
-            reflexState = "idle";
-            rBtn.style.background = "#2563eb";
-            rBtn.textContent = "Too Early! Click to Retry";
-          } else if (reflexState === "ready") {
-            const reactionMs = Date.now() - startTime;
-            reflexState = "idle";
-            rBtn.style.background = "#2563eb";
-            rBtn.textContent = "Play Again";
-            rRes.textContent = "Reaction Speed: " + reactionMs + " ms!";
-            await recordGame("Reflex Speed", reactionMs);
-          }
-        };
-
-        let secretNum = 1 + Math.floor(Math.random() * 20);
-        let attempts = 0;
-        const gRes = document.getElementById("guess-result");
-
-        document.getElementById("new-guess-btn").onclick = function() {
-          secretNum = 1 + Math.floor(Math.random() * 20);
-          attempts = 0;
-          gRes.textContent = "New secret number generated!";
-        };
-
-        document.getElementById("guess-btn").onclick = async function() {
-          const val = Number(document.getElementById("guess-input").value);
-          if (!val) return;
-          attempts += 1;
-          if (val === secretNum) {
-            gRes.textContent = "Correct! You guessed " + secretNum + " in " + attempts + " tries!";
-            await recordGame("Number Guess", attempts);
-            secretNum = 1 + Math.floor(Math.random() * 20);
-            attempts = 0;
-          } else if (val < secretNum) {
-            gRes.textContent = "Too low! Try higher.";
-          } else {
-            gRes.textContent = "Too high! Try lower.";
-          }
-        };
-        let mathAns = 0;
-        document.getElementById("math-new-btn").onclick = function() {
-          const a = 5 + Math.floor(Math.random() * 25);
-          const b = 5 + Math.floor(Math.random() * 25);
-          mathAns = a + b;
-          document.getElementById("math-q").textContent = "What is " + a + " + " + b + "?";
-          document.getElementById("math-res").textContent = "";
-        };
-        document.getElementById("math-check-btn").onclick = async function() {
-          const userVal = Number(document.getElementById("math-ans").value);
-          if (!mathAns) return;
-          if (userVal === mathAns) {
-            document.getElementById("math-res").textContent = "Correct!";
-            await recordGame("Math Blitz", 10);
-            mathAns = 0;
-          } else {
-            document.getElementById("math-res").textContent = "Wrong! Try again.";
-          }
-        };
-
-        let currentPin = "";
-        document.getElementById("pin-start-btn").onclick = function() {
-          currentPin = String(1000 + Math.floor(Math.random() * 9000));
-          const disp = document.getElementById("pin-display");
-          disp.textContent = currentPin;
-          document.getElementById("pin-res").textContent = "Memorize it...";
-          setTimeout(function() { disp.textContent = "****"; }, 1800);
-        };
-        document.getElementById("pin-check-btn").onclick = async function() {
-          const typed = document.getElementById("pin-input").value.trim();
-          if (currentPin && typed === currentPin) {
-            document.getElementById("pin-res").textContent = "Vault Unlocked!";
-            await recordGame("PIN Memory", 100);
-            currentPin = "";
-          } else {
-            document.getElementById("pin-res").textContent = "Access Denied!";
-          }
-        };
-
-        const moves = ["Rock", "Paper", "Scissors"];
-        document.querySelectorAll(".rps-btn").forEach(function(b) {
-          b.onclick = async function() {
-            const pMove = b.getAttribute("data-move");
-            const cpu = moves[Math.floor(Math.random() * 3)];
-            let outcome = "Draw!";
-            if ((pMove === "Rock" && cpu === "Scissors") || (pMove === "Paper" && cpu === "Rock") || (pMove === "Scissors" && cpu === "Paper")) {
-              outcome = "You Win!";
-              await recordGame("Rock Paper Scissors", 1);
-            } else if (pMove !== cpu) {
-              outcome = "CPU Wins!";
-              await recordGame("Rock Paper Scissors", 0);
-            }
-            document.getElementById("rps-res").textContent = "You: " + pMove + " vs CPU: " + cpu + " — " + outcome;
-          };
-        });
-
-        let clicks = 0;
-        let clickingActive = false;
-        const cBtn = document.getElementById("clicker-btn");
-        cBtn.onclick = function() {
-          if (!clickingActive) {
-            clickingActive = true;
-            clicks = 1;
-            cBtn.textContent = "TAP FAST! (1)";
-            setTimeout(async function() {
-              clickingActive = false;
-              cBtn.textContent = "Start 10s Clicker";
-              document.getElementById("clicker-res").textContent = "Finished! Total Taps: " + clicks;
-              await recordGame("10s Speed Clicker", clicks);
-            }, 10000);
-          } else {
-            clicks += 1;
-            cBtn.textContent = "TAP FAST! (" + clicks + ")";
-          }
-        };
-
-        let streak = 0;
-        async function flipCoin(choice) {
-          const side = Math.random() < 0.5 ? "Heads" : "Tails";
-          if (choice === side) {
-            streak += 1;
-            document.getElementById("coin-res").textContent = "It was " + side + "! Streak: " + streak;
-            await recordGame("Coin Flip Streak", streak);
-          } else {
-            streak = 0;
-            document.getElementById("coin-res").textContent = "It was " + side + "! Streak reset to 0.";
-          }
-        }
-        document.getElementById("coin-heads").onclick = function() { flipCoin("Heads"); };
-        document.getElementById("coin-tails").onclick = function() { flipCoin("Tails"); };
-      }
-
-      async function recordGame(gameName, scoreVal) {
-        const docId = currentUser + "_" + gameName.replace(/\s+/g, "");
-        await setDoc(doc(db, "gameStats", docId), {
-          username: currentUser,
-          game: gameName,
-          rounds: increment(1),
-          bestScore: scoreVal,
-          lastPlayed: new Date().toLocaleString()
-        }, { merge: true });
-        await logAction("Played " + gameName + " (Score: " + scoreVal + ")");
-      }
-
-    } catch (sdkError) {
-      err.textContent = "System Error: " + sdkError.message;
+        privStatus.textContent = "Saved optional contact info!";
+      };
+      document.getElementById("priv-self-del-btn").onclick = async function() {
+        document.getElementById("priv-email-in").value = "";
+        document.getElementById("priv-phone-in").value = "";
+        await setDoc(cRef, { username: username, email: "", phone: "", deleteRequested: false, ownerApproved: false }, { merge: true });
+        privStatus.textContent = "Deleted! Your phone & email have been permanently erased.";
+      };
+      document.getElementById("priv-req-del-btn").onclick = async function() {
+        await setDoc(cRef, { username: username, deleteRequested: true }, { merge: true });
+        privStatus.textContent = "Request Sent! Owner (Faizan) has been notified to delete your phone & email.";
+      };
+      document.getElementById("priv-allow-btn").onclick = async function() {
+        await setDoc(cRef, { username: username, ownerApproved: true, deleteRequested: false }, { merge: true });
+        privStatus.textContent = "Permission Saved! You allowed Owner (Faizan) to use your phone & email.";
+      };
     }
-  }
-</script>
-<script src="animations.js?v=5"></script>
-<script src="drawer.js"></script>
-<script src="arcade.js"></script>
-<script src="arcade30.js?v=5"></script>
-<script src="folders.js"></script>
-<script>
-  if (window.startHalalAnimation) {
-    window.startHalalAnimation("portal-geo-canvas", "geo_stars", 100);
+    document.getElementById("login-btn").onclick = async function() {
+      const u = document.getElementById("login-user").value.trim();
+      const p = document.getElementById("login-pass").value.trim();
+      const em = document.getElementById("login-email").value.trim();
+      const ph = document.getElementById("login-phone").value.trim();
+      if (!u || !p) { loginMsg.textContent = "Please enter your username and password."; return; }
+      loginMsg.textContent = "Checking member slot...";
+      const vSnap = await getDocs(collection(db, "visitors"));
+      let matched = null;
+      vSnap.forEach(function(d) {
+        const data = d.data();
+        if (data.username && data.username.toLowerCase() === u.toLowerCase() && data.password === p) {
+          matched = data;
+        }
+      });
+      if (!matched) { loginMsg.textContent = "Invalid username or password."; return; }
+      if (matched.banned) { loginMsg.textContent = "This account has been suspended by the Owner."; return; }
+// Save optional contact info if entered
+      const contactPayload = { username: matched.username };
+      if (em) contactPayload.email = em;
+      if (ph) contactPayload.phone = ph;
+      await setDoc(doc(db, "permanentContacts", matched.username), contactPayload, { merge: true });
+      loginMsg.textContent = "";
+      await enterMemberHub(matched.username);
+    };
+    document.getElementById("logout-btn").onclick = function() {
+      localStorage.removeItem("faizan_member_user");
+      location.reload();
+    };
+    const savedMember = localStorage.getItem("faizan_member_user");
+    if (savedMember) {
+      await enterMemberHub(savedMember);
+    }
   }
   initPortal();
 </script>
