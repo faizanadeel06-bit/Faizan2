@@ -26,12 +26,15 @@
 
 <div id="login-card" class="card" style="max-width: 440px; margin: 3.5rem auto; position: relative; z-index: 20;">
   <h2>Member Sign In</h2>
-  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Enter your assigned username and password. Phone and email are completely optional.</p>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Enter your username and password to enter the Member Hub.</p>
   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-    <input type="text" id="login-user" placeholder="Username (Required)" />
-    <input type="password" id="login-pass" placeholder="Password (Required)" />
-    <input type="email" id="login-email" placeholder="Email Address (Optional)" />
-    <input type="tel" id="login-phone" placeholder="Phone Number (Optional)" />
+    <input type="text" id="login-user" placeholder="Username" />
+    <input type="password" id="login-pass" placeholder="Password" />
+    <button type="button" id="toggle-opt-contact-btn" class="btn btn-muted" style="font-size: 0.85rem;">+ Add Optional Email &amp; Phone (First Time Only)</button>
+    <div id="opt-contact-fields" style="display: none; flex-direction: column; gap: 0.75rem;">
+      <input type="email" id="login-email" placeholder="Email Address (Optional)" />
+      <input type="tel" id="login-phone" placeholder="Phone Number (Optional)" />
+    </div>
     <button type="button" id="login-btn" class="btn">Enter Member Hub</button>
   </div>
   <p id="login-msg" style="color: #ef4444; font-size: 0.9rem; margin-top: 0.75rem;"></p>
@@ -116,9 +119,9 @@
     </section>
   </main>
 </div>
-<script src="animations.js?v=10"></script>
-<script src="folders.js?v=10"></script>
-<script src="arcade30.js?v=10"></script>
+<script src="animations.js?v=12"></script>
+<script src="folders.js?v=12"></script>
+<script src="arcade30.js?v=12"></script>
 <script>
   const CLOUD_NAME = "fh4mrkmm";
   const UPLOAD_PRESET = "faizan_vault";
@@ -158,6 +161,11 @@
     };
   });
 
+  document.getElementById("toggle-opt-contact-btn").onclick = function() {
+    const box = document.getElementById("opt-contact-fields");
+    box.style.display = box.style.display === "none" ? "flex" : "none";
+  };
+
   async function initPortal() {
     const sdkBase = "https://" + "www." + "gstatic.com" + "/firebasejs/10.12.0/";
     const { initializeApp } = await import(sdkBase + "firebase-app.js");
@@ -178,7 +186,6 @@
     const db = getFirestore(app);
     await signInAnonymously(auth);
 
-    // Load Global or Portal Animation & Look in Real Time
     onSnapshot(doc(db, "siteSettings", "theme_all"), function(snap) {
       if (snap.exists() && window.startHalalAnimation) {
         const d = snap.data();
@@ -195,7 +202,6 @@
       document.getElementById("login-card").classList.add("hidden");
       document.getElementById("portal-shell").classList.remove("hidden");
 
-      // Personalized Welcome Message
       document.getElementById("welcome-user-title").textContent = "Hello, " + username + "!";
       const welcomeSnap = await getDoc(doc(db, "siteSettings", "pageText_welcome"));
       if (welcomeSnap.exists()) {
@@ -207,7 +213,6 @@
         }
       }
 
-      // Load Topic Bundles & Study Files
       const itemsGrid = document.getElementById("portal-items-list");
       itemsGrid.innerHTML = "";
       const vSnap = await getDocs(collection(db, "videos"));
@@ -233,7 +238,6 @@
         itemsGrid.appendChild(card);
       });
 
-      // Launch 30-Game Arcade
       if (window.launchArcade30) {
         window.launchArcade30("arcade-mount", async function(gameTitle, score) {
           await setDoc(doc(db, "gameStats", username + "_" + gameTitle.replace(/\s+/g, "_")), {
@@ -245,7 +249,6 @@
         });
       }
 
-      // Mount Private Folder
       if (window.renderMemberFolder) {
         window.renderMemberFolder({
           db: db,
@@ -258,7 +261,6 @@
         });
       }
 
-      // Group Chat
       const gBox = document.getElementById("portal-group-chat");
       onSnapshot(query(collection(db, "groupChat"), orderBy("createdAt", "asc")), function(snap) {
         gBox.innerHTML = "";
@@ -284,7 +286,6 @@
         });
       };
 
-      // Direct Messages
       const dmBox = document.getElementById("portal-dm-list");
       onSnapshot(query(collection(db, "dmLogs"), orderBy("createdAt", "asc")), function(snap) {
         dmBox.innerHTML = "";
@@ -313,7 +314,6 @@
         });
       };
 
-      // Load & Manage Optional Phone & Email + 3 Privacy Controls
       const cRef = doc(db, "permanentContacts", username);
       const cSnap = await getDoc(cRef);
       const privStatus = document.getElementById("priv-status-msg");
@@ -364,7 +364,6 @@
       });
       if (!matched) { loginMsg.textContent = "Invalid username or password."; return; }
       if (matched.banned) { loginMsg.textContent = "This account has been suspended by the Owner."; return; }
-// Save optional contact info if entered
       const contactPayload = { username: matched.username };
       if (em) contactPayload.email = em;
       if (ph) contactPayload.phone = ph;
