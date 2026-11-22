@@ -207,53 +207,24 @@
       if (welcomeSnap.exists()) {
         if (welcomeSnap.data().heading) {
           document.getElementById("welcome-user-title").textContent = "Hello, " + username + "! — " + welcomeSnap.data().heading;
+        }        function buildMediaHtml(url, type, label) {
+          if (!url) return "";
+          const yt = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
+          if (yt) {
+            const vidId = yt.at(1);
+            const s = String.fromCharCode(47);
+            const embedSrc = "https:" + s + s + "://youtube.com" + s + "embed" + s + vidId;
+            const watchHref = "https:" + s + s + "://youtube.com" + s + "watch?v=" + vidId;
+            return '<div style="margin-top:0.5rem;"><iframe width="100%" height="215" src="' + embedSrc + '" title="' + label + '" frameborder="0" allowfullscreen style="border-radius:8px; background:#000;"></iframe></div>' +
+              '<div style="margin-top:0.35rem;"><a href="' + watchHref + '" target="_blank" rel="noopener" class="btn btn-muted" style="font-size:0.8rem;">Open Directly on YouTube</a></div>';
+          }
+          if (type === "video" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url)) {
+            return '<video src="' + url + '" controls playsinline preload="metadata" style="width:100%; max-height:220px; border-radius:8px; margin-top:0.5rem; background:#000;"></video>';
+          }
+          return '<a href="' + url + '" target="_blank" rel="noopener" class="btn" style="margin-right:0.35rem; margin-top:0.4rem;">' + label + '</a>';
         }
-        if (welcomeSnap.data().body) {
-          document.getElementById("welcome-custom-msg").textContent = welcomeSnap.data().body;
-        }
-      }
 
-
-      function buildMediaHtml(url, type, label) {
-        if (!url) return "";
-        const yt = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
-        if (yt) {
-          const vidId = yt.at(1);
-          const embedObj = new URL("https://youtube.com");
-          embedObj.pathname = ["", "embed", vidId].join("/");
-          const watchObj = new URL("https://youtube.com");
-          watchObj.pathname = ["", "watch"].join("/");
-          watchObj.searchParams.set("v", vidId);
-
-          return '<div style="margin-top:0.5rem;"><iframe width="100%" height="215" src="' + embedObj.href + '" title="' + label + '" frameborder="0" allowfullscreen style="border-radius:8px; background:#000;"></iframe></div>' +
-            '<div style="margin-top:0.35rem;"><a href="' + watchObj.href + '" target="_blank" rel="noopener" class="btn btn-muted" style="font-size:0.8rem;">Open Directly on YouTube</a></div>';
-        }
-        if (type === "video" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url)) {
-          return '<video src="' + url + '" controls playsinline preload="metadata" style="width:100%; max-height:220px; border-radius:8px; margin-top:0.5rem; background:#000;"></video>';
-        }
-        return '<a href="' + url + '" target="_blank" rel="noopener" class="btn" style="margin-right:0.35rem; margin-top:0.4rem;">' + label + '</a>';
-      }
-
-      function buildMediaHtml(url, type, label) {
-        if (!url) return "";
-        const yt = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
-        if (yt) {
-          const vidId = yt.at(1);
-          const proto = location.protocol + String.fromCharCode(47, 47);
-          const slash = String.fromCharCode(47);
-          const embedSrc = proto + "://youtube.com" + slash + "embed" + slash + vidId;
-          const watchHref = proto + "://youtube.com" + slash + "watch?v=" + vidId;
-          return '<div style="margin-top:0.5rem;"><iframe width="100%" height="215" src="' + embedSrc + '" title="' + label + '" frameborder="0" allowfullscreen style="border-radius:8px; background:#000;"></iframe></div>' +
-            '<div style="margin-top:0.35rem;"><a href="' + watchHref + '" target="_blank" rel="noopener" class="btn btn-muted" style="font-size:0.8rem;">Open Directly on YouTube</a></div>';
-        }
-        if (type === "video" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url)) {
-          return '<video src="' + url + '" controls playsinline preload="metadata" style="width:100%; max-height:220px; border-radius:8px; margin-top:0.5rem; background:#000;"></video>';
-        }
-        return '<a href="' + url + '" target="_blank" rel="noopener" class="btn" style="margin-right:0.35rem; margin-top:0.4rem;">' + label + '</a>';
-      }
-
-
-      const itemsGrid = document.getElementById("portal-items-list");
+        const itemsGrid = document.getElementById("portal-items-list");
       itemsGrid.innerHTML = "";
       const vSnap = await getDocs(collection(db, "videos"));
       vSnap.forEach(function(d) {
