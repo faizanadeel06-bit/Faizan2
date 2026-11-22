@@ -216,15 +216,24 @@
 
       function buildMediaHtml(url, type, label) {
         if (!url) return "";
-        const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        const yt = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
         if (yt) {
-          return '<div style="margin-top:0.5rem;"><iframe width="100%" height="210" src="https://youtube.com' + yt.at(1) + '" title="' + label + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:8px;"></iframe></div>';
+          const vidId = yt.at(1);
+          const embedObj = new URL("https://youtube.com");
+          embedObj.pathname = ["", "embed", vidId].join("/");
+          const watchObj = new URL("https://youtube.com");
+          watchObj.pathname = ["", "watch"].join("/");
+          watchObj.searchParams.set("v", vidId);
+
+          return '<div style="margin-top:0.5rem;"><iframe width="100%" height="215" src="' + embedObj.href + '" title="' + label + '" frameborder="0" allowfullscreen style="border-radius:8px; background:#000;"></iframe></div>' +
+            '<div style="margin-top:0.35rem;"><a href="' + watchObj.href + '" target="_blank" rel="noopener" class="btn btn-muted" style="font-size:0.8rem;">Open Directly on YouTube</a></div>';
         }
         if (type === "video" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url)) {
           return '<video src="' + url + '" controls playsinline preload="metadata" style="width:100%; max-height:220px; border-radius:8px; margin-top:0.5rem; background:#000;"></video>';
         }
         return '<a href="' + url + '" target="_blank" rel="noopener" class="btn" style="margin-right:0.35rem; margin-top:0.4rem;">' + label + '</a>';
       }
+
       function buildMediaHtml(url, type, label) {
         if (!url) return "";
         const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
